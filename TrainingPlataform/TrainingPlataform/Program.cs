@@ -1,7 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using Training.Data.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add services to context.
+builder.Services.AddDbContext<TrainingContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TrainingDB")
+    ).EnableSensitiveDataLogging());
 
 var app = builder.Build();
 
