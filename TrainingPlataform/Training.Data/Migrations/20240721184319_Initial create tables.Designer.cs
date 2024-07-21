@@ -12,8 +12,8 @@ using Training.Data.Context;
 namespace Training.Data.Migrations
 {
     [DbContext(typeof(TrainingContext))]
-    [Migration("20240721030739_Initial Migration Users")]
-    partial class InitialMigrationUsers
+    [Migration("20240721184319_Initial create tables")]
+    partial class Initialcreatetables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,12 +73,12 @@ namespace Training.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid>("UsersType_Id")
+                    b.Property<Guid>("UsersTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsersType_Id");
+                    b.HasIndex("UsersTypeId");
 
                     b.ToTable("Clients");
                 });
@@ -114,30 +114,41 @@ namespace Training.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ProfessionalRegistration")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<Guid>("ProfessionalTypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProfessionalTypes_Id")
+                    b.Property<Guid>("ProfessionalTypesId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UrlProfilePhoto")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid>("UsersType_Id")
+                    b.Property<Guid>("UsersTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfessionalTypeId");
+                    b.HasIndex("ProfessionalTypesId");
 
-                    b.HasIndex("UsersType_Id");
+                    b.HasIndex("UsersTypeId");
 
                     b.ToTable("Professionals");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f0e1d2c3-5b6a-7d8e-9f0c-1a2b3e4d5c6f"),
+                            Cpf = "30704958341",
+                            CurrentNumberClients = 0,
+                            DateRegistration = new DateTime(2024, 7, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Fone = "5562999999999",
+                            IsActive = true,
+                            Name = "Professional Default Admin",
+                            ProfessionalRegistration = "Admin",
+                            ProfessionalTypesId = new Guid("e2a1b0c9-8d7e-6f5a-4b3c-1e9d0c2b5a8f"),
+                            UsersTypeId = new Guid("c4b3e3a7-2f0b-4e6e-9f5e-8e2a1e1d8a4b")
+                        });
                 });
 
             modelBuilder.Entity("Training.Domain.Entities.ProfessionalType", b =>
@@ -157,6 +168,20 @@ namespace Training.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProfessionalTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("e2a1b0c9-8d7e-6f5a-4b3c-1e9d0c2b5a8f"),
+                            Description = "Usuário gerenciador do sistema. Possui acesso a manipulação de dados gerais e dados referente a usuários do tipo 'Professional'.",
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("4e5d6c7b-1a2f-3e8d-9b0c-5a6f7d8e2c1b"),
+                            Description = "Profissional da área de educação física. Possui acesso a manipulação de clientes, montagem de protocolos de treino e registros do cliente.",
+                            Name = "Personal"
+                        });
                 });
 
             modelBuilder.Entity("Training.Domain.Entities.UsersType", b =>
@@ -181,13 +206,36 @@ namespace Training.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UsersTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("c4b3e3a7-2f0b-4e6e-9f5e-8e2a1e1d8a4b"),
+                            AccessLevel = 0,
+                            Description = "Usuário gerenciador do sistema. Possui acesso a manipulação de dados gerais e dados referente a usuários do tipo 'Professional'.",
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("a8f6c1e1-9d5e-4a2d-8c6f-7b3e0f9d6a6e"),
+                            AccessLevel = 1,
+                            Description = "Usuário gerenciador de usuários do tipo 'Client'.",
+                            Name = "Professional"
+                        },
+                        new
+                        {
+                            Id = new Guid("b7d8f9e0-3c4a-4b6e-9d1f-2e5c6a7b8f0d"),
+                            AccessLevel = 2,
+                            Description = "Usuário final da plataforma. Possui gestão a suas próprias informações de perfil e registro de atividades.",
+                            Name = "Client"
+                        });
                 });
 
             modelBuilder.Entity("Training.Domain.Entities.Client", b =>
                 {
                     b.HasOne("Training.Domain.Entities.UsersType", "UsersType")
                         .WithMany("Clients")
-                        .HasForeignKey("UsersType_Id")
+                        .HasForeignKey("UsersTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -198,13 +246,13 @@ namespace Training.Data.Migrations
                 {
                     b.HasOne("Training.Domain.Entities.ProfessionalType", "ProfessionalType")
                         .WithMany("Professionals")
-                        .HasForeignKey("ProfessionalTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ProfessionalTypesId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Training.Domain.Entities.UsersType", "UsersType")
                         .WithMany("Professionals")
-                        .HasForeignKey("UsersType_Id")
+                        .HasForeignKey("UsersTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

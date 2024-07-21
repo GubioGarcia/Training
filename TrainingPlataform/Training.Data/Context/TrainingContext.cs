@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using Training.Data.Extensions;
 using Training.Data.Mappings;
 using Training.Domain.Entities;
 
@@ -28,6 +29,8 @@ namespace Training.Data.Context
             modelBuilder.ApplyConfiguration(new UsersTypeMap());
             modelBuilder.ApplyConfiguration(new ProfessionalMap());
             modelBuilder.ApplyConfiguration(new ClientMap());
+
+            modelBuilder.SeedData();
 
             base.OnModelCreating(modelBuilder);
         }

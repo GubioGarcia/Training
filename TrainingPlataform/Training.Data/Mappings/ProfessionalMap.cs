@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using Training.Domain.Entities;
@@ -25,7 +26,12 @@ namespace Training.Data.Mappings
 
             builder.HasOne(x => x.UsersType)
                    .WithMany(p => p.Professionals)
-                   .HasForeignKey(x => x.UsersType_Id)
+                   .HasForeignKey(x => x.UsersTypeId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.ProfessionalType)
+                   .WithMany(p => p.Professionals)
+                   .HasForeignKey(x => x.ProfessionalTypesId)
                    .OnDelete(DeleteBehavior.Restrict);
         }
     }

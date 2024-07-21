@@ -9,7 +9,7 @@ namespace Training.Domain.Entities
 {
     public class Client : EntityUsers
     {
-        public Guid UsersType_Id { get; set; }
+        public Guid UsersTypeId { get; set; }
         public UsersType UsersType { get; set; }
 
         public DateTime DateBirth { get; set; }

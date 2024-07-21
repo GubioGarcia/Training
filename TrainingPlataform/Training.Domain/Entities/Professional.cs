@@ -10,12 +10,12 @@ namespace Training.Domain.Entities
 {
     public class Professional: EntityUsers
     {
-        public Guid UsersType_Id { get; set; }
+        public Guid UsersTypeId { get; set; }
         public UsersType UsersType { get; set; }
-        public Guid ProfessionalTypes_Id { get; set; }
+        public Guid ProfessionalTypesId { get; set; }
         public ProfessionalType ProfessionalType { get; set; }
 
-        public string ProfessionalRegistration { get; set; }
+        public string? ProfessionalRegistration { get; set; }
         public int CurrentNumberClients { get; set; }
     }
 }

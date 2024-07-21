@@ -28,7 +28,7 @@ namespace Training.Data.Mappings
 
             builder.HasOne(x => x.UsersType)
                    .WithMany(u => u.Clients)
-                   .HasForeignKey(x => x.UsersType_Id)
+                   .HasForeignKey(x => x.UsersTypeId)
                    .OnDelete(DeleteBehavior.Restrict);
         }
     }
