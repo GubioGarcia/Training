@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Training.Data.Context;
 
@@ -11,9 +12,11 @@ using Training.Data.Context;
 namespace Training.Data.Migrations
 {
     [DbContext(typeof(TrainingContext))]
-    partial class TrainingContextModelSnapshot : ModelSnapshot
+    [Migration("20240721214706_Common Fields")]
+    partial class CommonFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,15 +170,9 @@ namespace Training.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("DateUpdated")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -190,14 +187,12 @@ namespace Training.Data.Migrations
                         {
                             Id = new Guid("e2a1b0c9-8d7e-6f5a-4b3c-1e9d0c2b5a8f"),
                             Description = "Usuário gerenciador do sistema. Possui acesso a manipulação de dados gerais e dados referente a usuários do tipo 'Professional'.",
-                            IsDeleted = false,
                             Name = "Admin"
                         },
                         new
                         {
                             Id = new Guid("4e5d6c7b-1a2f-3e8d-9b0c-5a6f7d8e2c1b"),
                             Description = "Profissional da área de educação física. Possui acesso a manipulação de clientes, montagem de protocolos de treino e registros do cliente.",
-                            IsDeleted = false,
                             Name = "Personal"
                         });
                 });
@@ -211,16 +206,10 @@ namespace Training.Data.Migrations
                     b.Property<int>("AccessLevel")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DateUpdated")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -237,7 +226,6 @@ namespace Training.Data.Migrations
                             Id = new Guid("c4b3e3a7-2f0b-4e6e-9f5e-8e2a1e1d8a4b"),
                             AccessLevel = 0,
                             Description = "Usuário gerenciador do sistema. Possui acesso a manipulação de dados gerais e dados referente a usuários do tipo 'Professional'.",
-                            IsDeleted = false,
                             Name = "Admin"
                         },
                         new
@@ -245,7 +233,6 @@ namespace Training.Data.Migrations
                             Id = new Guid("a8f6c1e1-9d5e-4a2d-8c6f-7b3e0f9d6a6e"),
                             AccessLevel = 1,
                             Description = "Usuário gerenciador de usuários do tipo 'Client'.",
-                            IsDeleted = false,
                             Name = "Professional"
                         },
                         new
@@ -253,7 +240,6 @@ namespace Training.Data.Migrations
                             Id = new Guid("b7d8f9e0-3c4a-4b6e-9d1f-2e5c6a7b8f0d"),
                             AccessLevel = 2,
                             Description = "Usuário final da plataforma. Possui gestão a suas próprias informações de perfil e registro de atividades.",
-                            IsDeleted = false,
                             Name = "Client"
                         });
                 });

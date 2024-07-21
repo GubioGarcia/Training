@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Training.Data.Context;
+using Training.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<TrainingContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TrainingDB")
     ).EnableSensitiveDataLogging());
+
+// Register application services.
+NativeInjector.RegisterServices(builder.Services);
 
 var app = builder.Build();
 

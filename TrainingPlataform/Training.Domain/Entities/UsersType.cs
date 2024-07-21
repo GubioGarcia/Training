@@ -12,6 +12,8 @@ namespace Training.Domain.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public int AccessLevel { get; set; }
+        public DateTime? DateUpdated { get; set; }
+        public bool IsDeleted { get; set; }
 
         public ICollection<Professional> Professionals { get; set; }
         public ICollection<Client> Clients { get; set; }

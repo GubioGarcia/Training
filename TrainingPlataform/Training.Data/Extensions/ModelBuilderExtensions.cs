@@ -78,7 +78,9 @@ namespace Training.Data.Extensions
                         Name = "Professional Default Admin",
                         DateRegistration = new DateTime(2024,07,21),
                         Fone = "5562999999999",
-                        CurrentNumberClients = 0
+                        CurrentNumberClients = 0,
+                        DateUpdated = null,
+                        IsDeleted = false
                     }
                 );
 

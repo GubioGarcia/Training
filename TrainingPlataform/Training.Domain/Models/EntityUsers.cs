@@ -16,5 +16,7 @@ namespace Training.Domain.Models
         public DateTime DateRegistration { get; set; }
         public string Fone { get; set; }
         public string? UrlProfilePhoto { get; set; }
+        public DateTime? DateUpdated { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
