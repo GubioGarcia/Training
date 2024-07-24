@@ -1,15 +1,44 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Training.Domain.Entities;
+using Training.Domain.Models;
 
 namespace Training.Data.Extensions
 {
     public static class ModelBuilderExtensions
     {
+        public static ModelBuilder ApplyGlobalConfiguration(this ModelBuilder builder)
+        {
+            foreach (IMutableEntityType entityType in builder.Model.GetEntityTypes())
+            {
+                foreach (IMutableProperty property in entityType.GetProperties())
+                {
+                    switch (property.Name)
+                    {
+                        case nameof(EntityUsers.Id):
+                            property.IsKey();   
+                            break;
+                        case nameof(EntityUsers.DateUpdated):
+                            property.IsNullable = true;
+                            break;
+                        case nameof(EntityUsers.IsDeleted):
+                            property.IsNullable = false;
+                            property.SetDefaultValue(false);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            return builder;
+        }
+
         public static ModelBuilder SeedData(this ModelBuilder builder)
         {
             builder.Entity<UsersType>()

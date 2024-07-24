@@ -10,5 +10,6 @@ namespace Training.Application.Interfaces
     public interface IUsersTypeService
     {
         List<UsersTypeViewModel> Get();
+        bool Post(UsersTypeViewModel usersTypeViewModel);
     }
 }

@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Training.Application.AutoMapper;
 using Training.Data.Context;
 using Training.IoC;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,8 @@ builder.Services.AddDbContext<TrainingContext>(options =>
 
 // Register application services.
 NativeInjector.RegisterServices(builder.Services);
+
+builder.Services.AddAutoMapper(typeof(AutoMapperSetup));
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,10 +14,12 @@ namespace Training.Application.Services
     public class UsersTypeService : IUsersTypeService
     {
         private readonly IUsersTypeRepository usersTypeRepository;
+        private readonly IMapper mapper;
 
-        public UsersTypeService(IUsersTypeRepository usersTypeRepository)
+        public UsersTypeService(IUsersTypeRepository usersTypeRepository, IMapper mapper)
         {
             this.usersTypeRepository = usersTypeRepository;
+            this.mapper = mapper;
         }
 
         public List<UsersTypeViewModel> Get()
@@ -24,10 +27,19 @@ namespace Training.Application.Services
             List<UsersTypeViewModel> _usersTypeViewModels = new List<UsersTypeViewModel>();
 
             IEnumerable<UsersType> _usersTypes = this.usersTypeRepository.GetAll();
-            foreach (var item in _usersTypes)
-                _usersTypeViewModels.Add(new UsersTypeViewModel { Id = item.Id, Name = item.Name, Description = item.Description});
+
+            _usersTypeViewModels = mapper.Map<List<UsersTypeViewModel>>(_usersTypes);
 
             return _usersTypeViewModels;
+        }
+
+        public bool Post(UsersTypeViewModel usersTypeViewModel)
+        {
+            UsersType _usersType = mapper.Map<UsersType>(usersTypeViewModel);
+
+            this.usersTypeRepository.Create(_usersType);
+
+            return true;
         }
     }
 }

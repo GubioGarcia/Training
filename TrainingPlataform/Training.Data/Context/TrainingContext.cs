@@ -30,6 +30,7 @@ namespace Training.Data.Context
             modelBuilder.ApplyConfiguration(new ProfessionalMap());
             modelBuilder.ApplyConfiguration(new ClientMap());
 
+            modelBuilder.ApplyGlobalConfiguration();
             modelBuilder.SeedData();
 
             base.OnModelCreating(modelBuilder);

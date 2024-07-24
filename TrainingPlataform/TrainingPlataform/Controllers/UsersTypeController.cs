@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Training.Application.Interfaces;
+using Training.Application.ViewModels;
 
 namespace TrainingPlataform.Controllers
 {
@@ -19,6 +20,12 @@ namespace TrainingPlataform.Controllers
         public IActionResult Get() 
         {
             return Ok(this.usersTypeService.Get());
+        }
+
+        [HttpPost]
+        public IActionResult Post(UsersTypeViewModel usersTypeViewModel)
+        {
+            return Ok(this.usersTypeService.Post(usersTypeViewModel));
         }
     }
 }
