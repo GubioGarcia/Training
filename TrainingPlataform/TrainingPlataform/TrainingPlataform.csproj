@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\api-doc.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
@@ -24,6 +28,7 @@
     <ProjectReference Include="..\Training.Application\Training.Application.csproj" />
     <ProjectReference Include="..\Training.Data\Training.Data.csproj" />
     <ProjectReference Include="..\Training.IoC\Training.IoC.csproj" />
+    <ProjectReference Include="..\Training.Swagger\Training.Swagger.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Training.Application.AutoMapper;
 using Training.Data.Context;
+using Training.Swagger;
 using Training.IoC;
-using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +18,7 @@ builder.Services.AddDbContext<TrainingContext>(options =>
 NativeInjector.RegisterServices(builder.Services);
 
 builder.Services.AddAutoMapper(typeof(AutoMapperSetup));
+builder.Services.AddSwaggerConfiguration();
 
 var app = builder.Build();
 
@@ -28,6 +29,8 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseSwaggerConfiguration();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
