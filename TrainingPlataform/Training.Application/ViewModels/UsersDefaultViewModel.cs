@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Training.Application.ViewModels
 {
-    public class UsersTypeViewModel : UsersDefaultViewModel
+    public class UsersDefaultViewModel
     {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 }
