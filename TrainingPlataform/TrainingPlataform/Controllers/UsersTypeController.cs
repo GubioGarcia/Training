@@ -17,7 +17,7 @@ namespace TrainingPlataform.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get() 
+        public IActionResult Get()
         {
             return Ok(this.usersTypeService.Get());
         }
@@ -26,6 +26,24 @@ namespace TrainingPlataform.Controllers
         public IActionResult Post(UsersTypeViewModel usersTypeViewModel)
         {
             return Ok(this.usersTypeService.Post(usersTypeViewModel));
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(string id)
+        {
+            return Ok(this.usersTypeService.GetById(id));
+        }
+
+        [HttpPut]
+        public IActionResult Put(UsersTypeViewModel usersTypeViewModel)
+        {
+            return Ok(this.usersTypeService.Put(usersTypeViewModel));
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(string id)
+        {
+            return Ok(this.usersTypeService.Delete(id));
         }
     }
 }

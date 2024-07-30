@@ -11,5 +11,8 @@ namespace Training.Application.Interfaces
     {
         List<UsersTypeViewModel> Get();
         bool Post(UsersTypeViewModel usersTypeViewModel);
+        UsersTypeViewModel GetById(string id);
+        bool Put(UsersTypeViewModel usersTypeViewModel);
+        bool Delete(string id);
     }
 }

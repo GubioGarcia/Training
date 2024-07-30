@@ -41,5 +41,42 @@ namespace Training.Application.Services
 
             return true;
         }
+
+        public UsersTypeViewModel GetById(string id)
+        {
+            if (!Guid.TryParse(id, out Guid userId))
+                throw new Exception("UserId is not valid");
+
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == userId && !x.IsDeleted);
+            if (_usersType == null)
+                throw new Exception("User not found");
+
+            return mapper.Map<UsersTypeViewModel>(_usersType);
+        }
+
+        public bool Put(UsersTypeViewModel usersTypeViewModel)
+        {
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == usersTypeViewModel.Id && !x.IsDeleted);
+            if (_usersType == null)
+                throw new Exception("User not found");
+
+            _usersType = mapper.Map<UsersType>(usersTypeViewModel);
+
+            this.usersTypeRepository.Update(_usersType);
+
+            return true;
+        }
+
+        public bool Delete(string id)
+        {
+            if (!Guid.TryParse(id, out Guid userId))
+                throw new Exception("UserId is not valid");
+
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == userId && !x.IsDeleted);
+            if (_usersType == null)
+                throw new Exception("User not found");
+
+            return this.usersTypeRepository.Delete(_usersType);
+        }
     }
 }

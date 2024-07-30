@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,34 @@ namespace Training.Data.Repositories
         public IEnumerable<UsersType> GetAll()
         {
             return Query(x => !x.IsDeleted);
+        }
+
+        public bool Delete(UsersType model)
+        {
+            try
+            {
+                if (model is UsersType)
+                {
+                    (model as UsersType).IsDeleted = true;
+                    EntityEntry<UsersType> _entry = _context.Entry(model);
+
+                    DbSet.Attach(model);
+
+                    _entry.State = EntityState.Modified;
+                }
+                else
+                {
+                    EntityEntry<UsersType> _entry = _context.Entry(model);
+                    DbSet.Attach(model);
+                    _entry.State = EntityState.Deleted;
+                }
+
+                return Save() > 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

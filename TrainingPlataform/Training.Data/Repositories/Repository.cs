@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Training.Domain.Interfaces;
 using Training.Data.Context;
 using Training.Domain.Models;
+using Training.Domain.Entities;
 
 namespace Training.Data.Repositories
 {
