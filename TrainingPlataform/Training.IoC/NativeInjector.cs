@@ -13,12 +13,14 @@ namespace Training.IoC
             #region Services
 
             services.AddScoped<IUsersTypeService, UsersTypeService>();
+            services.AddScoped<IProfessionalTypeService, ProfessionalTypeService>();
 
             #endregion
 
             #region Repositories
 
             services.AddScoped<IUsersTypeRepository, UsersTypeRepository>();
+            services.AddScoped<IProfessionalTypeRepository, ProfessionalTypeRepository>();
 
             #endregion
         }
