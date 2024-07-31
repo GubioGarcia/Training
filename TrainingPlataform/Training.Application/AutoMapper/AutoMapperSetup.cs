@@ -16,12 +16,14 @@ namespace Training.Application.AutoMapper
             #region ViewModelToDomain
 
             CreateMap<UsersTypeViewModel, UsersType>();
+            CreateMap<ProfessionalTypeViewModel, ProfessionalType>();
 
             #endregion
 
             #region DomainToViewModel
 
             CreateMap<UsersType, UsersTypeViewModel>();
+            CreateMap<ProfessionalType, ProfessionalTypeViewModel>();
 
             #endregion
         }
