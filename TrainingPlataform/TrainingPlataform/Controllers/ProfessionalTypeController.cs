@@ -1,6 +1,6 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Training.Application.Interfaces;
+using Training.Application.ViewModels;
 
 namespace TrainingPlataform.Controllers
 {
@@ -20,5 +20,20 @@ namespace TrainingPlataform.Controllers
         {
             return Ok(this.professionalTypeService.Get());
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(string id)
+        {
+
+            return Ok(this.professionalTypeService.GetById(id));
+        }
+
+        [HttpPost]
+        public IActionResult Post(ProfessionalTypeViewModel professionalTypeViewModel)
+        {
+            return Ok(this.professionalTypeService.Post(professionalTypeViewModel));
+        }
+
+        
     }
 }

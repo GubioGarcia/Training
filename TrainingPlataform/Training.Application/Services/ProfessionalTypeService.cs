@@ -32,5 +32,26 @@ namespace Training.Application.Services
 
             return _professionalTypeViewModels;
         }
+
+        public ProfessionalTypeViewModel GetById(string id)
+        {
+            if (!Guid.TryParse(id, out Guid professionalTypeId))
+                throw new Exception("Id is not valid");
+
+            ProfessionalType _professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalTypeId && !x.IsDeleted);
+            if (_professionalType == null)
+                throw new Exception("Professional type not found");
+
+            return mapper.Map<ProfessionalTypeViewModel>(_professionalType);
+        }
+
+        public bool Post(ProfessionalTypeViewModel professionalTypeViewModel)
+        {
+            ProfessionalType _professionalType = mapper.Map<ProfessionalType>(professionalTypeViewModel);
+
+            this.professionalTypeRepository.Create(_professionalType);
+
+            return true;
+        }
     }
 }

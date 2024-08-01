@@ -22,16 +22,16 @@ namespace TrainingPlataform.Controllers
             return Ok(this.usersTypeService.Get());
         }
 
-        [HttpPost]
-        public IActionResult Post(UsersTypeViewModel usersTypeViewModel)
-        {
-            return Ok(this.usersTypeService.Post(usersTypeViewModel));
-        }
-
         [HttpGet("{id}")]
         public IActionResult GetById(string id)
         {
             return Ok(this.usersTypeService.GetById(id));
+        }
+
+        [HttpPost]
+        public IActionResult Post(UsersTypeViewModel usersTypeViewModel)
+        {
+            return Ok(this.usersTypeService.Post(usersTypeViewModel));
         }
 
         [HttpPut]
