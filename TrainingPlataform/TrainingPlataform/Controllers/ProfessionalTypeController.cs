@@ -24,7 +24,6 @@ namespace TrainingPlataform.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(string id)
         {
-
             return Ok(this.professionalTypeService.GetById(id));
         }
 
@@ -34,6 +33,16 @@ namespace TrainingPlataform.Controllers
             return Ok(this.professionalTypeService.Post(professionalTypeViewModel));
         }
 
-        
+        [HttpPut]
+        public IActionResult Put(ProfessionalTypeViewModel professionalTypeViewModel)
+        {
+            return Ok(this.professionalTypeService.Put(professionalTypeViewModel));
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(string id)
+        {
+            return Ok(this.professionalTypeService.Delete(id));
+        }
     }
 }
