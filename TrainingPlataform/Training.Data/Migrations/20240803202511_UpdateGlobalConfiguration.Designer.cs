@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Training.Data.Context;
 
@@ -11,9 +12,11 @@ using Training.Data.Context;
 namespace Training.Data.Migrations
 {
     [DbContext(typeof(TrainingContext))]
-    partial class TrainingContextModelSnapshot : ModelSnapshot
+    [Migration("20240803202511_UpdateGlobalConfiguration")]
+    partial class UpdateGlobalConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,9 @@ namespace Training.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateRegistration")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 8, 3, 17, 25, 10, 887, DateTimeKind.Local).AddTicks(7197));
 
                     b.Property<DateTime?>("DateUpdated")
                         .HasColumnType("datetime2");
@@ -109,7 +114,9 @@ namespace Training.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateRegistration")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 8, 3, 17, 25, 10, 887, DateTimeKind.Local).AddTicks(7982));
 
                     b.Property<DateTime?>("DateUpdated")
                         .HasColumnType("datetime2");

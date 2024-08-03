@@ -11,7 +11,7 @@ namespace Training.Domain.Models
     public class EntityUsers
     {
         public Guid Id { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public string Cpf { get; set; }
         public string Password { get; set; }
         public string Name { get; set; }
@@ -19,7 +19,7 @@ namespace Training.Domain.Models
         public string Fone { get; set; }
         public string? UrlProfilePhoto { get; set; }
         public DateTime? DateUpdated { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
         private readonly IPasswordHasher _passwordHasher;
         private string _passwordHash;

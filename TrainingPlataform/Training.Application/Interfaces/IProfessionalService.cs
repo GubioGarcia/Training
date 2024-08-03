@@ -10,5 +10,7 @@ namespace Training.Application.Interfaces
     public interface IProfessionalService
     {
         List<ProfessionalViewModel> Get();
+        ProfessionalViewModel GetByid(string id);
+        bool Post(ProfessionalViewModel professionalViewModel);
     }
 }

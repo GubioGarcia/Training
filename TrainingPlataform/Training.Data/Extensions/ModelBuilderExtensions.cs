@@ -30,6 +30,13 @@ namespace Training.Data.Extensions
                             property.IsNullable = false;
                             property.SetDefaultValue(false);
                             break;
+                        case nameof(EntityUsers.IsActive):
+                            property.IsNullable = false;
+                            property.SetDefaultValue(true);
+                            break;
+                        case nameof(EntityUsers.DateRegistration):
+                            property.IsNullable = false;
+                            break;
                         default:
                             break;
                     }

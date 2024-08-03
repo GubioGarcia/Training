@@ -11,6 +11,9 @@ namespace Training.Domain.Entities
 {
     public class Professional : EntityUsers
     {
+        public Professional() : base(null) { }
+        public Professional(IPasswordHasher passwordHasher) : base(passwordHasher) { }
+
         public Guid UsersTypeId { get; set; }
         public UsersType UsersType { get; set; }
         public Guid ProfessionalTypesId { get; set; }
@@ -18,9 +21,5 @@ namespace Training.Domain.Entities
 
         public string? ProfessionalRegistration { get; set; }
         public int CurrentNumberClients { get; set; }
-
-        public Professional() : base(null) { }
-
-        public Professional(IPasswordHasher passwordHasher) : base(passwordHasher) { }
     }
 }

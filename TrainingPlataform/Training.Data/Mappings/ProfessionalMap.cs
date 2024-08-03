@@ -15,7 +15,7 @@ namespace Training.Data.Mappings
         public void Configure(EntityTypeBuilder<Professional> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.IsActive).IsRequired();
+            builder.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
             builder.Property(x => x.ProfessionalRegistration).HasMaxLength(50);
             builder.Property(x => x.Cpf).IsRequired().HasMaxLength(11);
             builder.Property(x => x.Password).IsRequired();
