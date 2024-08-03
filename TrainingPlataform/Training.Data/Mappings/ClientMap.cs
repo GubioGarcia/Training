@@ -17,6 +17,7 @@ namespace Training.Data.Mappings
             builder.Property(x => x.IsActive).IsRequired();
             builder.Property(x => x.Cpf).IsRequired().HasMaxLength(11);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
+            builder.Property(x => x.Password).IsRequired();
             builder.Property(x => x.DateRegistration).IsRequired();
             builder.Property(x => x.Fone).IsRequired().HasMaxLength(13);
             builder.Property(x => x.UrlProfilePhoto).HasMaxLength(255);

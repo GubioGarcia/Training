@@ -3,6 +3,7 @@ using Training.Application.Interfaces;
 using Training.Application.Services;
 using Training.Data.Repositories;
 using Training.Domain.Interfaces;
+using Training.Security;
 
 namespace Training.IoC
 {
@@ -23,6 +24,8 @@ namespace Training.IoC
             services.AddScoped<IProfessionalTypeRepository, ProfessionalTypeRepository>();
 
             #endregion
+
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
         }
     }
 }

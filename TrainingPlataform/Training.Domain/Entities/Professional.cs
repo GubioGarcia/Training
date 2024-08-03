@@ -4,11 +4,12 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Training.Domain.Interfaces;
 using Training.Domain.Models;
 
 namespace Training.Domain.Entities
 {
-    public class Professional: EntityUsers
+    public class Professional : EntityUsers
     {
         public Guid UsersTypeId { get; set; }
         public UsersType UsersType { get; set; }
@@ -17,5 +18,7 @@ namespace Training.Domain.Entities
 
         public string? ProfessionalRegistration { get; set; }
         public int CurrentNumberClients { get; set; }
+
+        public Professional(IPasswordHasher passwordHasher) : base(passwordHasher) { }
     }
 }
