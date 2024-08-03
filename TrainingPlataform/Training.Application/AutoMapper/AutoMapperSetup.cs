@@ -17,6 +17,7 @@ namespace Training.Application.AutoMapper
 
             CreateMap<UsersTypeViewModel, UsersType>();
             CreateMap<ProfessionalTypeViewModel, ProfessionalType>();
+            CreateMap<ProfessionalViewModel, Professional>();
 
             #endregion
 
@@ -24,6 +25,7 @@ namespace Training.Application.AutoMapper
 
             CreateMap<UsersType, UsersTypeViewModel>();
             CreateMap<ProfessionalType, ProfessionalTypeViewModel>();
+            CreateMap<Professional, ProfessionalViewModel>();
 
             #endregion
         }

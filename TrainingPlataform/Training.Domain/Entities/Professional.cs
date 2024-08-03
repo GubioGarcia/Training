@@ -19,6 +19,8 @@ namespace Training.Domain.Entities
         public string? ProfessionalRegistration { get; set; }
         public int CurrentNumberClients { get; set; }
 
+        public Professional() : base(null) { }
+
         public Professional(IPasswordHasher passwordHasher) : base(passwordHasher) { }
     }
 }

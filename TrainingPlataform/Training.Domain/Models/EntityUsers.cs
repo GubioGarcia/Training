@@ -31,11 +31,17 @@ namespace Training.Domain.Models
 
         public void SetPassword(string password)
         {
+            if (_passwordHasher == null)
+                throw new InvalidOperationException("Password hasher not initialized.");
+
             _passwordHash = _passwordHasher.HashPassword(password);
         }
 
         public bool VerifyPassword(string password)
         {
+            if (_passwordHasher == null)
+                throw new InvalidOperationException("Password hasher not initialized.");
+
             return _passwordHasher.VerifyPassword(password, _passwordHash);
         }
     }

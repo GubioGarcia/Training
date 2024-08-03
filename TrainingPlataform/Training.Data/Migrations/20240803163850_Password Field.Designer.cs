@@ -12,7 +12,7 @@ using Training.Data.Context;
 namespace Training.Data.Migrations
 {
     [DbContext(typeof(TrainingContext))]
-    [Migration("20240802233635_Password Field")]
+    [Migration("20240803163850_Password Field")]
     partial class PasswordField
     {
         /// <inheritdoc />

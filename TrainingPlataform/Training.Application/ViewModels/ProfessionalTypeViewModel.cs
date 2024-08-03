@@ -9,5 +9,6 @@ namespace Training.Application.ViewModels
 {
     public class ProfessionalTypeViewModel : UsersDefaultViewModel
     {
+        public string Description { get; set; }
     }
 }

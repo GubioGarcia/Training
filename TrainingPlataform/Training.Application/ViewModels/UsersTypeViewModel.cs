@@ -8,5 +8,6 @@ namespace Training.Application.ViewModels
 {
     public class UsersTypeViewModel : UsersDefaultViewModel
     {
+        public string Description { get; set; }
     }
 }
