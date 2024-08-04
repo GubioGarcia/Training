@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Template.Application.ViewModels;
 using Training.Application.ViewModels;
 
 namespace Training.Application.Interfaces
@@ -14,5 +15,7 @@ namespace Training.Application.Interfaces
         bool Post(ProfessionalViewModel professionalViewModel);
         bool Put(ProfessionalViewModel professionalViewModel);
         bool Delete(string id);
+
+        UserAuthenticateResponseViewModel Authenticate(UserAuthenticateRequestViewModel professional);
     }
 }

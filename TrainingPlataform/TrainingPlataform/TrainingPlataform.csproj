@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Training.Application\Training.Application.csproj" />
+    <ProjectReference Include="..\Training.Auth\Training.Auth.csproj" />
     <ProjectReference Include="..\Training.Data\Training.Data.csproj" />
     <ProjectReference Include="..\Training.IoC\Training.IoC.csproj" />
     <ProjectReference Include="..\Training.Swagger\Training.Swagger.csproj" />

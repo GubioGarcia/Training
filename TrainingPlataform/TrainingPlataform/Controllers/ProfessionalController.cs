@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Template.Application.ViewModels;
 using Training.Application.Interfaces;
 using Training.Application.ViewModels;
+using Training.Auth.Services;
 
 namespace TrainingPlataform.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class ProfessionalController : ControllerBase
     {
         private readonly IProfessionalService professionalService;
@@ -39,10 +43,18 @@ namespace TrainingPlataform.Controllers
             return Ok(this.professionalService.Put(professionalViewModel));
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(string id)
+        [HttpDelete]
+        public IActionResult Delete()
         {
-            return Ok(this.professionalService.Delete(id));
+            string _professionalId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+            
+            return Ok(this.professionalService.Delete(_professionalId));
+        }
+
+        [HttpPost("authenticate"), AllowAnonymous]
+        public IActionResult Authenticate(UserAuthenticateRequestViewModel professionalViewModel)
+        {
+            return Ok(this.professionalService.Authenticate(professionalViewModel));
         }
     }
 }

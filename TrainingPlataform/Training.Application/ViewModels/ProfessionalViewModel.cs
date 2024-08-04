@@ -14,6 +14,6 @@ namespace Training.Application.ViewModels
         public string Password { get; set; }
         public string Fone { get; set; }
         public int CurrentNumberClients { get; set; }
-        public string UrlProfilePhoto { get; set; }
+        public string? UrlProfilePhoto { get; set; }
     }
 }

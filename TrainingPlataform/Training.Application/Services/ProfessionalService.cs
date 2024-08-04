@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Template.Application.ViewModels;
 using Training.Application.Interfaces;
 using Training.Application.ViewModels;
 using Training.Domain.Entities;
 using Training.Domain.Interfaces;
+using Training.Auth.Services;
 
 namespace Training.Application.Services
 {
@@ -48,6 +50,7 @@ namespace Training.Application.Services
         public bool Post(ProfessionalViewModel professionalViewModel)
         {
             Professional _professional = mapper.Map<Professional>(professionalViewModel);
+            // criptografar password aqui
 
             _professional.DateRegistration = DateTime.Now;
 
@@ -63,6 +66,7 @@ namespace Training.Application.Services
                 throw new Exception("Professional not found");
 
             _professional = mapper.Map<Professional>(professionalViewModel);
+            // criptografar password aqui
 
             this.professionalRepository.Update(_professional);
 
@@ -79,6 +83,22 @@ namespace Training.Application.Services
                 throw new Exception("Professional not found");
 
             return this.professionalRepository.Delete(_professional);
+        }
+
+        public UserAuthenticateResponseViewModel Authenticate(UserAuthenticateRequestViewModel professional)
+        {
+            if(string.IsNullOrEmpty(professional.Cpf) || string.IsNullOrEmpty(professional.Password))
+                throw new Exception("CPF/Password is required");
+
+            // criptografar password aqui
+
+            Professional _professional = this.professionalRepository.Find(x => !x.IsDeleted 
+                                                                          && x.Cpf.ToLower() == professional.Cpf.ToLower()
+                                                                          && x.Password.ToLower() == professional.Password.ToLower());
+            if (_professional == null)
+                throw new Exception("Professional not found");
+
+            return new UserAuthenticateResponseViewModel(mapper.Map<ProfessionalViewModel>(_professional), TokenService.GenerateToken(_professional));
         }
     }
 }
