@@ -12,5 +12,7 @@ namespace Training.Application.Interfaces
         List<ProfessionalViewModel> Get();
         ProfessionalViewModel GetByid(string id);
         bool Post(ProfessionalViewModel professionalViewModel);
+        bool Put(ProfessionalViewModel professionalViewModel);
+        bool Delete(string id);
     }
 }

@@ -55,5 +55,30 @@ namespace Training.Application.Services
 
             return true;
         }
+
+        public bool Put(ProfessionalViewModel professionalViewModel)
+        {
+            Professional _professional = this.professionalRepository.Find(x => x.Id == professionalViewModel.Id && !x.IsDeleted);
+            if (_professional == null)
+                throw new Exception("Professional not found");
+
+            _professional = mapper.Map<Professional>(professionalViewModel);
+
+            this.professionalRepository.Update(_professional);
+
+            return true;
+        }
+
+        public bool Delete(string id)
+        {
+            if (!Guid.TryParse(id, out Guid professionalId))
+                throw new Exception("Id is not valid");
+
+            Professional _professional = this.professionalRepository.Find(x => x.Id == professionalId && !x.IsDeleted);
+            if (_professional == null)
+                throw new Exception("Professional not found");
+
+            return this.professionalRepository.Delete(_professional);
+        }
     }
 }

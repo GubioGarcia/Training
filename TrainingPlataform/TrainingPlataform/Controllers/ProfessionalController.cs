@@ -32,5 +32,17 @@ namespace TrainingPlataform.Controllers
         {
             return Ok(this.professionalService.Post(professionalViewModel));
         }
+
+        [HttpPut]
+        public IActionResult Put(ProfessionalViewModel professionalViewModel)
+        {
+            return Ok(this.professionalService.Put(professionalViewModel));
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(string id)
+        {
+            return Ok(this.professionalService.Delete(id));
+        }
     }
 }
