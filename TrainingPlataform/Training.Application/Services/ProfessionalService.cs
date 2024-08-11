@@ -17,11 +17,13 @@ namespace Training.Application.Services
     {
         private readonly IProfessionalRepository professionalRepository;
         private readonly IMapper mapper;
+        private readonly IChecker checker;
 
-        public ProfessionalService(IProfessionalRepository professionalRepository, IMapper mapper) 
+        public ProfessionalService(IProfessionalRepository professionalRepository, IMapper mapper, IChecker checker) 
         {
             this.professionalRepository = professionalRepository;
             this.mapper = mapper;
+            this.checker = checker;
         }
 
         public List<ProfessionalViewModel> Get()
@@ -49,6 +51,12 @@ namespace Training.Application.Services
 
         public bool Post(ProfessionalViewModel professionalViewModel)
         {
+            if (!checker.isValidCpf(professionalViewModel.Cpf))
+                throw new Exception("Invalid CPF");
+
+            if (!checker.isValidFone(professionalViewModel.Fone))
+                throw new Exception("Invalid Phone");
+
             Professional _professional = mapper.Map<Professional>(professionalViewModel);
             // criptografar password aqui
 
@@ -61,9 +69,15 @@ namespace Training.Application.Services
 
         public bool Put(ProfessionalViewModel professionalViewModel)
         {
+            if (!checker.isValidCpf(professionalViewModel.Cpf))
+                throw new Exception("Invalid CPF");
+
             Professional _professional = this.professionalRepository.Find(x => x.Id == professionalViewModel.Id && !x.IsDeleted);
             if (_professional == null)
                 throw new Exception("Professional not found");
+
+            if (!checker.isValidFone(professionalViewModel.Fone))
+                throw new Exception("Invalid Phone");
 
             _professional = mapper.Map<Professional>(professionalViewModel);
             // criptografar password aqui

@@ -17,6 +17,7 @@ namespace Training.IoC
             services.AddScoped<IUsersTypeService, UsersTypeService>();
             services.AddScoped<IProfessionalTypeService, ProfessionalTypeService>();
             services.AddScoped<IProfessionalService, ProfessionalService>();
+            services.AddScoped<IChecker, Checker>();
 
             #endregion
 
