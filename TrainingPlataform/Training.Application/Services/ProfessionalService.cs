@@ -16,12 +16,17 @@ namespace Training.Application.Services
     public class ProfessionalService : IProfessionalService
     {
         private readonly IProfessionalRepository professionalRepository;
+        private readonly IUsersTypeRepository usersTypeRepository;
+        private readonly IProfessionalTypeRepository professionalTypeRepository;
         private readonly IMapper mapper;
         private readonly IChecker checker;
 
-        public ProfessionalService(IProfessionalRepository professionalRepository, IMapper mapper, IChecker checker) 
+        public ProfessionalService(IProfessionalRepository professionalRepository, IUsersTypeRepository usersTypeRepository,
+                                   IProfessionalTypeRepository professionalTypeRepository, IMapper mapper, IChecker checker) 
         {
             this.professionalRepository = professionalRepository;
+            this.usersTypeRepository = usersTypeRepository;
+            this.professionalTypeRepository = professionalTypeRepository;
             this.mapper = mapper;
             this.checker = checker;
         }
@@ -52,14 +57,30 @@ namespace Training.Application.Services
         public bool Post(ProfessionalViewModel professionalViewModel)
         {
             if (!checker.isValidCpf(professionalViewModel.Cpf))
-                throw new Exception("Invalid CPF");
+                throw new Exception("CPF is not valid");
+
+            Professional _professional = this.professionalRepository.Find(x => x.Cpf == professionalViewModel.Cpf && !x.IsDeleted);
+            if (_professional != null)
+                throw new Exception("There is already a professional registered with this CPF");
 
             if (!checker.isValidFone(professionalViewModel.Fone))
-                throw new Exception("Invalid Phone");
+                throw new Exception("Phone is not valid");
+            
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == professionalViewModel.UsersTypeId && !x.IsDeleted);
+            if (_usersType == null)
+                throw new Exception("Id type users not found");
 
-            Professional _professional = mapper.Map<Professional>(professionalViewModel);
+            ProfessionalType _professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalViewModel.ProfessionalTypesId 
+                                                                                     && !x.IsDeleted);
+            if (_professionalType == null)
+                throw new Exception("Id professional type not found");
+
+            _professional = mapper.Map<Professional>(professionalViewModel);
             // criptografar password aqui
 
+            if (professionalViewModel.UrlProfilePhoto == "")
+                _professional.UrlProfilePhoto = null;
+            
             _professional.DateRegistration = DateTime.Now;
 
             this.professionalRepository.Create(_professional);
@@ -70,17 +91,29 @@ namespace Training.Application.Services
         public bool Put(ProfessionalViewModel professionalViewModel)
         {
             if (!checker.isValidCpf(professionalViewModel.Cpf))
-                throw new Exception("Invalid CPF");
+                throw new Exception("CPF is not valid");
 
             Professional _professional = this.professionalRepository.Find(x => x.Id == professionalViewModel.Id && !x.IsDeleted);
             if (_professional == null)
                 throw new Exception("Professional not found");
 
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == professionalViewModel.UsersTypeId && !x.IsDeleted);
+            if (_usersType == null)
+                throw new Exception("Id type users not found");
+
+            ProfessionalType professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalViewModel.ProfessionalTypesId
+                                                                                     && !x.IsDeleted);
+            if (professionalType == null)
+                throw new Exception("Id professional type not found");
+
             if (!checker.isValidFone(professionalViewModel.Fone))
-                throw new Exception("Invalid Phone");
+                throw new Exception("Phone is not valid");
 
             _professional = mapper.Map<Professional>(professionalViewModel);
             // criptografar password aqui
+
+            if (professionalViewModel.UrlProfilePhoto == "")
+                _professional.UrlProfilePhoto = null;
 
             this.professionalRepository.Update(_professional);
 
@@ -104,6 +137,9 @@ namespace Training.Application.Services
             if(string.IsNullOrEmpty(professional.Cpf) || string.IsNullOrEmpty(professional.Password))
                 throw new Exception("CPF/Password is required");
 
+            if (!checker.isValidCpf(professional.Cpf))
+                throw new Exception("CPF is not valid");
+
             // criptografar password aqui
 
             Professional _professional = this.professionalRepository.Find(x => !x.IsDeleted 
@@ -112,7 +148,8 @@ namespace Training.Application.Services
             if (_professional == null)
                 throw new Exception("Professional not found");
 
-            return new UserAuthenticateResponseViewModel(mapper.Map<ProfessionalViewModel>(_professional), TokenService.GenerateToken(_professional));
+            return new UserAuthenticateResponseViewModel(mapper.Map<ProfessionalViewModel>(_professional),
+                                                                TokenService.GenerateToken(_professional));
         }
     }
 }
