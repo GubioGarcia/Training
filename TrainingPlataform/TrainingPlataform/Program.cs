@@ -7,6 +7,8 @@ using System.Text;
 using Training.Auth.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Options;
+using Training.Auth.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,10 +26,16 @@ NativeInjector.RegisterServices(builder.Services);
 builder.Services.AddAutoMapper(typeof(AutoMapperSetup));
 builder.Services.AddSwaggerConfiguration();
 
+// Configure JWT settings
+var jwtSettingsSection = builder.Configuration.GetSection("JwtSettings");
+builder.Services.Configure<JwtSettings>(jwtSettingsSection);
+
+var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
+var key = Encoding.ASCII.GetBytes(jwtSettings.Secret);
+
 #region Authentication
 
-    var key = Encoding.ASCII.GetBytes(Settings.Secret);
-    builder.Services.AddAuthentication(x =>
+builder.Services.AddAuthentication(x =>
     {
         x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -55,6 +63,10 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+var serviceProvider = builder.Services.BuildServiceProvider();
+var TokenJwtSettings = serviceProvider.GetRequiredService<IOptions<JwtSettings>>();
+TokenService.Initialize(TokenJwtSettings);
 
 app.UseSwaggerConfiguration();
 
