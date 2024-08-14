@@ -20,29 +20,5 @@ namespace Training.Domain.Models
         public string? UrlProfilePhoto { get; set; }
         public DateTime? DateUpdated { get; set; }
         public bool IsDeleted { get; set; } = false;
-
-        private readonly IPasswordHasher _passwordHasher;
-        private string _passwordHash;
-
-        public EntityUsers(IPasswordHasher passwordHasher)
-        {
-            _passwordHasher = passwordHasher;
-        }
-
-        public void SetPassword(string password)
-        {
-            if (_passwordHasher == null)
-                throw new InvalidOperationException("Password hasher not initialized.");
-
-            _passwordHash = _passwordHasher.HashPassword(password);
-        }
-
-        public bool VerifyPassword(string password)
-        {
-            if (_passwordHasher == null)
-                throw new InvalidOperationException("Password hasher not initialized.");
-
-            return _passwordHasher.VerifyPassword(password, _passwordHash);
-        }
     }
 }

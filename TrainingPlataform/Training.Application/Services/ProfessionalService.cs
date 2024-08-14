@@ -76,7 +76,7 @@ namespace Training.Application.Services
                 throw new Exception("Id professional type not found");
 
             _professional = mapper.Map<Professional>(professionalViewModel);
-            // criptografar password aqui
+            _professional.Password = this.HashPassword(_professional.Password);
 
             if (professionalViewModel.UrlProfilePhoto == "")
                 _professional.UrlProfilePhoto = null;
@@ -110,7 +110,7 @@ namespace Training.Application.Services
                 throw new Exception("Phone is not valid");
 
             _professional = mapper.Map<Professional>(professionalViewModel);
-            // criptografar password aqui
+            _professional.Password = this.HashPassword(_professional.Password);
 
             if (professionalViewModel.UrlProfilePhoto == "")
                 _professional.UrlProfilePhoto = null;
@@ -140,16 +140,23 @@ namespace Training.Application.Services
             if (!checker.isValidCpf(professional.Cpf))
                 throw new Exception("CPF is not valid");
 
-            // criptografar password aqui
+            Professional _professional = this.professionalRepository.Find(x => !x.IsDeleted);
 
-            Professional _professional = this.professionalRepository.Find(x => !x.IsDeleted 
-                                                                          && x.Cpf.ToLower() == professional.Cpf.ToLower()
-                                                                          && x.Password.ToLower() == professional.Password.ToLower());
-            if (_professional == null)
+            if (_professional == null || !this.VerifyPassword(professional.Password, _professional.Password))
                 throw new Exception("Professional not found");
 
             return new UserAuthenticateResponseViewModel(mapper.Map<ProfessionalViewModel>(_professional),
                                                                 TokenService.GenerateToken(_professional));
+        }
+
+        private string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        private bool VerifyPassword(string password, string hashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
     }
 }

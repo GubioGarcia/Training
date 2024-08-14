@@ -18,9 +18,5 @@ namespace Training.Domain.Entities
         public decimal Heigth { get; set; }
         public decimal StartingWeight { get; set; }
         public decimal CurrentWeight { get; set; }
-
-        public Client() : base(null) { }
-
-        public Client(IPasswordHasher passwordHasher) : base(passwordHasher) { }
     }
 }
