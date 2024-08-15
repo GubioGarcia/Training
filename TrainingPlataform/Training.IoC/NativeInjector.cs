@@ -17,6 +17,7 @@ namespace Training.IoC
             services.AddScoped<IUserTypeService, UserTypeService>();
             services.AddScoped<IProfessionalTypeService, ProfessionalTypeService>();
             services.AddScoped<IProfessionalService, ProfessionalService>();
+            services.AddScoped<IClientService, ClientService>();
             services.AddScoped<IChecker, Checker>();
 
             #endregion
@@ -26,6 +27,7 @@ namespace Training.IoC
             services.AddScoped<IUsersTypeRepository, UsersTypeRepository>();
             services.AddScoped<IProfessionalTypeRepository, ProfessionalTypeRepository>();
             services.AddScoped<IProfessionalRepository, ProfessionalRepository>();
+            services.AddScoped<IClientRepository, ClientRepository>();
 
             #endregion
 
