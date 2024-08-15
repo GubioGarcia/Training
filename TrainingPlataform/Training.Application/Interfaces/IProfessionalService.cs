@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Template.Application.ViewModels;
-using Training.Application.ViewModels;
+using Training.Application.ViewModels.AuthenticateViewModels;
+using Training.Application.ViewModels.ProfessionalViewModels;
 
 namespace Training.Application.Interfaces
 {

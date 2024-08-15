@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Template.Application.ViewModels
+namespace Training.Application.ViewModels.AuthenticateViewModels
 {
     public class UserAuthenticateRequestViewModel
     {

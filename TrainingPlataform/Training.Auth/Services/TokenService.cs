@@ -19,10 +19,16 @@ namespace Training.Auth.Services
             _jwtSettings = jwtSettings.Value;
         }
 
-        public static string GenerateToken(EntityUsers user)
+        public static (string token, DateTime expiry) GenerateToken(EntityUsers user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
+
+            var brasiliaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+            var utcNow = DateTime.UtcNow;
+            var expiryDateUtc = utcNow.AddHours(3);
+            var expiryDateBrasilia = TimeZoneInfo.ConvertTimeFromUtc(expiryDateUtc, brasiliaTimeZone);
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -30,11 +36,13 @@ namespace Training.Auth.Services
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddHours(3),
+                Expires = expiryDateUtc,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return (tokenString, expiryDateBrasilia);
         }
 
         public static string GetValueFromClaim(IIdentity identity, string field)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Training.Domain.Entities
 {
-    public class UsersType
+    public sealed class UsersType
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

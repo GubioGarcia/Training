@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Template.Application.ViewModels;
 using Training.Application.Interfaces;
-using Training.Application.ViewModels;
+using Training.Application.ViewModels.AuthenticateViewModels;
+using Training.Application.ViewModels.ProfessionalViewModels;
 using Training.Auth.Services;
 
 namespace TrainingPlataform.Controllers

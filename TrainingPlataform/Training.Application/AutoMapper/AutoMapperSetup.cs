@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Training.Application.ViewModels;
+using Training.Application.ViewModels.ProfessionalViewModels;
 using Training.Domain.Entities;
 
 namespace Training.Application.AutoMapper

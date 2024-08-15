@@ -9,9 +9,9 @@ namespace TrainingPlataform.Controllers
     [ApiController]
     public class UsersTypeController : ControllerBase
     {
-        private readonly IUsersTypeService usersTypeService;
+        private readonly IUserTypeService usersTypeService;
 
-        public UsersTypeController(IUsersTypeService usersTypeService)
+        public UsersTypeController(IUserTypeService usersTypeService)
         {
             this.usersTypeService = usersTypeService;
         }

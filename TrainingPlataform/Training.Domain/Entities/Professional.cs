@@ -9,7 +9,7 @@ using Training.Domain.Models;
 
 namespace Training.Domain.Entities
 {
-    public class Professional : EntityUsers
+    public sealed class Professional : EntityUsers
     {
         public Guid UsersTypeId { get; set; }
         public UsersType UsersType { get; set; }

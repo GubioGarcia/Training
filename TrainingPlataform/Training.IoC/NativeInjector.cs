@@ -14,7 +14,7 @@ namespace Training.IoC
         {
             #region Services
 
-            services.AddScoped<IUsersTypeService, UsersTypeService>();
+            services.AddScoped<IUserTypeService, UserTypeService>();
             services.AddScoped<IProfessionalTypeService, ProfessionalTypeService>();
             services.AddScoped<IProfessionalService, ProfessionalService>();
             services.AddScoped<IChecker, Checker>();

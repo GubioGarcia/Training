@@ -7,7 +7,7 @@ using Training.Application.ViewModels;
 
 namespace Training.Application.Interfaces
 {
-    public interface IUsersTypeService
+    public interface IUserTypeService
     {
         List<UsersTypeViewModel> Get();
         UsersTypeViewModel GetById(string id);

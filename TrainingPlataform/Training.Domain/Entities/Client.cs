@@ -8,7 +8,7 @@ using Training.Domain.Models;
 
 namespace Training.Domain.Entities
 {
-    public class Client : EntityUsers
+    public sealed class Client : EntityUsers
     {
         public Guid UsersTypeId { get; set; }
         public UsersType UsersType { get; set; }

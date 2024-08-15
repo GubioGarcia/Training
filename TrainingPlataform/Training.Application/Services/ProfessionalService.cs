@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Template.Application.ViewModels;
 using Training.Application.Interfaces;
-using Training.Application.ViewModels;
 using Training.Domain.Entities;
 using Training.Domain.Interfaces;
 using Training.Auth.Services;
+using Training.Application.ViewModels.ProfessionalViewModels;
+using Training.Application.ViewModels.AuthenticateViewModels;
 
 namespace Training.Application.Services
 {
@@ -143,10 +143,15 @@ namespace Training.Application.Services
             Professional _professional = this.professionalRepository.Find(x => !x.IsDeleted);
 
             if (_professional == null || !this.VerifyPassword(professional.Password, _professional.Password))
-                throw new Exception("Professional not found");
+                throw new Exception("Invalid credentials");
 
-            return new UserAuthenticateResponseViewModel(mapper.Map<ProfessionalViewModel>(_professional),
-                                                                TokenService.GenerateToken(_professional));
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == _professional.UsersTypeId && !x.IsDeleted);
+            ProfessionalType _professionalType = this.professionalTypeRepository.Find(x => x.Id == _professional.ProfessionalTypesId && !x.IsDeleted );
+
+            var (_token, _expiry) = TokenService.GenerateToken(_professional);
+
+            return new UserAuthenticateResponseViewModel(_token, _expiry, _professional.Id, _professional.Cpf, _professional.Name,
+                                                         _usersType.Name, _professionalType.Name);
         }
 
         private string HashPassword(string password)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Training.Domain.Entities
 {
-    public class ProfessionalType
+    public sealed class ProfessionalType
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

@@ -11,12 +11,12 @@ using Training.Domain.Interfaces;
 
 namespace Training.Application.Services
 {
-    public class UsersTypeService : IUsersTypeService
+    public class UserTypeService : IUserTypeService
     {
         private readonly IUsersTypeRepository usersTypeRepository;
         private readonly IMapper mapper;
 
-        public UsersTypeService(IUsersTypeRepository usersTypeRepository, IMapper mapper)
+        public UserTypeService(IUsersTypeRepository usersTypeRepository, IMapper mapper)
         {
             this.usersTypeRepository = usersTypeRepository;
             this.mapper = mapper;
