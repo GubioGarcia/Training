@@ -111,6 +111,7 @@ namespace Training.Application.Services
 
             _professional = mapper.Map<Professional>(professionalViewModel);
             _professional.Password = this.HashPassword(_professional.Password);
+            _professional.DateUpdated = DateTime.UtcNow;
 
             if (professionalViewModel.UrlProfilePhoto == "")
                 _professional.UrlProfilePhoto = null;

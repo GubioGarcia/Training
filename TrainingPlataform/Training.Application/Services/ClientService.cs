@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Training.Application.Interfaces;
 using Training.Application.ViewModels;
+using Training.Application.ViewModels.ClientViewModels;
+using Training.Application.ViewModels.ProfessionalViewModels;
 using Training.Domain.Entities;
 using Training.Domain.Interfaces;
 
@@ -14,11 +17,13 @@ namespace Training.Application.Services
     public class ClientService : IClientService
     {
         private readonly IClientRepository clientRepository;
+        private readonly IChecker checker;
         private readonly IMapper mapper;
 
-        public ClientService(IClientRepository clientRepository, IMapper mapper)
+        public ClientService(IClientRepository clientRepository, IMapper mapper, IChecker checker)
         {
             this.clientRepository = clientRepository;
+            this.checker = checker;
             this.mapper = mapper;
         }
 
@@ -31,6 +36,51 @@ namespace Training.Application.Services
             _clientMinimalFieldViewModels = mapper.Map<List<ClientMinimalFieldViewModel>>(_clients);
 
             return _clientMinimalFieldViewModels;
-        } 
+        }
+
+        public ClientResponseViewModel GetById(string id)
+        {
+            if (!Guid.TryParse(id, out Guid clientId))
+                throw new Exception("Id is not valid");
+
+            Client _client = this.clientRepository.Find(x => x.Id == clientId && !x.IsDeleted);
+            if (_client == null)
+                throw new Exception("Client not found");
+
+            return mapper.Map<ClientResponseViewModel>(_client);
+        }
+
+        public bool Post(ClientRequestViewModel clientRequestViewModel)
+        {
+            if (!checker.isValidCpf(clientRequestViewModel.Cpf))
+                throw new Exception("CPF is not valid");
+
+            Client _client = this.clientRepository.Find(x => x.Cpf == clientRequestViewModel.Cpf);
+            if (_client != null)
+                throw new Exception("There is already a professional registered with this CPF");
+
+            if (!checker.isValidFone(clientRequestViewModel.Fone))
+                throw new Exception("Phone is not valid");
+            
+            _client = mapper.Map<Client>(clientRequestViewModel);
+            _client.Password = this.HashPassword(clientRequestViewModel.Password);
+
+            if (clientRequestViewModel.UrlProfilePhoto == "")
+                _client.UrlProfilePhoto = null;
+
+            this.clientRepository.Create(_client);
+
+            return true;
+        }
+
+        private string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        private bool VerifyPassword(string password, string hashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+        }
     }
 }

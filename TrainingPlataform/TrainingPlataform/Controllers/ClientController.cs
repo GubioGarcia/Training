@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Training.Application.Interfaces;
+using Training.Application.ViewModels.ClientViewModels;
 
 namespace TrainingPlataform.Controllers
 {
@@ -18,6 +19,18 @@ namespace TrainingPlataform.Controllers
         public IActionResult Get()
         {
             return Ok(this.clientService.Get());
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(string id)
+        {
+            return Ok(this.clientService.GetById(id));
+        }
+
+        [HttpPost]
+        public IActionResult Post(ClientRequestViewModel clientRequestView)
+        {
+            return Ok(this.clientService.Post(clientRequestView));
         }
     }
 }

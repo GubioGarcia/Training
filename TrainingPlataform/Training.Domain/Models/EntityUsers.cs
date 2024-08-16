@@ -15,7 +15,7 @@ namespace Training.Domain.Models
         public string Cpf { get; set; }
         public string Password { get; set; }
         public string Name { get; set; }
-        public DateTime DateRegistration { get; set; }
+        public DateTime DateRegistration { get; set; } = DateTime.Now;
         public string Fone { get; set; }
         public string? UrlProfilePhoto { get; set; }
         public DateTime? DateUpdated { get; set; }
