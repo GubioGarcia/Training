@@ -9,7 +9,7 @@ namespace Training.Application.ViewModels
     public class ClientMinimalFieldViewModel
     {
         public Guid Id { get; set; }
-        public Guid UsersTypeId { get; set; }
+        public Guid UserTypeId { get; set; }
         public string Cpf { get; set; }
         public string Name { get; set; }
     }

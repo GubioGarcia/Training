@@ -7,8 +7,8 @@ using Training.Domain.Entities;
 
 namespace Training.Domain.Interfaces
 {
-    public interface IUsersTypeRepository : IRepository<UsersType>
+    public interface IUserTypeRepository : IRepository<UserType>
     {
-        IEnumerable<UsersType> GetAll();
+        IEnumerable<UserType> GetAll();
     }
 }

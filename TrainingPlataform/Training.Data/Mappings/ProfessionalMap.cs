@@ -25,9 +25,9 @@ namespace Training.Data.Mappings
             builder.Property(x => x.CurrentNumberClients).IsRequired();
             builder.Property(x => x.UrlProfilePhoto).HasMaxLength(255);
 
-            builder.HasOne(x => x.UsersType)
+            builder.HasOne(x => x.UserType)
                    .WithMany(p => p.Professionals)
-                   .HasForeignKey(x => x.UsersTypeId)
+                   .HasForeignKey(x => x.UserTypeId)
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.ProfessionalType)

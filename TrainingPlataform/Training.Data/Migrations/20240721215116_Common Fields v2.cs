@@ -13,13 +13,13 @@ namespace Training.Data.Migrations
         {
             migrationBuilder.AddColumn<DateTime>(
                 name: "DateUpdated",
-                table: "UsersTypes",
+                table: "UserTypes",
                 type: "datetime2",
                 nullable: true);
 
             migrationBuilder.AddColumn<bool>(
                 name: "IsDeleted",
-                table: "UsersTypes",
+                table: "UserTypes",
                 type: "bit",
                 nullable: false,
                 defaultValue: false);
@@ -52,21 +52,21 @@ namespace Training.Data.Migrations
                 values: new object[] { null, false });
 
             migrationBuilder.UpdateData(
-                table: "UsersTypes",
+                table: "UserTypes",
                 keyColumn: "Id",
                 keyValue: new Guid("a8f6c1e1-9d5e-4a2d-8c6f-7b3e0f9d6a6e"),
                 columns: new[] { "DateUpdated", "IsDeleted" },
                 values: new object[] { null, false });
 
             migrationBuilder.UpdateData(
-                table: "UsersTypes",
+                table: "UserTypes",
                 keyColumn: "Id",
                 keyValue: new Guid("b7d8f9e0-3c4a-4b6e-9d1f-2e5c6a7b8f0d"),
                 columns: new[] { "DateUpdated", "IsDeleted" },
                 values: new object[] { null, false });
 
             migrationBuilder.UpdateData(
-                table: "UsersTypes",
+                table: "UserTypes",
                 keyColumn: "Id",
                 keyValue: new Guid("c4b3e3a7-2f0b-4e6e-9f5e-8e2a1e1d8a4b"),
                 columns: new[] { "DateUpdated", "IsDeleted" },
@@ -78,11 +78,11 @@ namespace Training.Data.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "DateUpdated",
-                table: "UsersTypes");
+                table: "UserTypes");
 
             migrationBuilder.DropColumn(
                 name: "IsDeleted",
-                table: "UsersTypes");
+                table: "UserTypes");
 
             migrationBuilder.DropColumn(
                 name: "DateUpdated",

@@ -81,12 +81,12 @@ namespace Training.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid>("UsersTypeId")
+                    b.Property<Guid>("UserTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsersTypeId");
+                    b.HasIndex("UserTypeId");
 
                     b.ToTable("Clients");
                 });
@@ -140,14 +140,14 @@ namespace Training.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid>("UsersTypeId")
+                    b.Property<Guid>("UserTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProfessionalTypesId");
 
-                    b.HasIndex("UsersTypeId");
+                    b.HasIndex("UserTypeId");
 
                     b.ToTable("Professionals");
 
@@ -164,7 +164,7 @@ namespace Training.Data.Migrations
                             Name = "Professional Default Admin",
                             ProfessionalRegistration = "Admin",
                             ProfessionalTypesId = new Guid("e2a1b0c9-8d7e-6f5a-4b3c-1e9d0c2b5a8f"),
-                            UsersTypeId = new Guid("c4b3e3a7-2f0b-4e6e-9f5e-8e2a1e1d8a4b")
+                            UserTypeId = new Guid("c4b3e3a7-2f0b-4e6e-9f5e-8e2a1e1d8a4b")
                         });
                 });
 
@@ -211,7 +211,7 @@ namespace Training.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Training.Domain.Entities.UsersType", b =>
+            modelBuilder.Entity("Training.Domain.Entities.UserType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -240,7 +240,7 @@ namespace Training.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UsersTypes");
+                    b.ToTable("UserTypes");
 
                     b.HasData(
                         new
@@ -271,13 +271,13 @@ namespace Training.Data.Migrations
 
             modelBuilder.Entity("Training.Domain.Entities.Client", b =>
                 {
-                    b.HasOne("Training.Domain.Entities.UsersType", "UsersType")
+                    b.HasOne("Training.Domain.Entities.UserType", "UserType")
                         .WithMany("Clients")
-                        .HasForeignKey("UsersTypeId")
+                        .HasForeignKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("UsersType");
+                    b.Navigation("UserType");
                 });
 
             modelBuilder.Entity("Training.Domain.Entities.Professional", b =>
@@ -288,15 +288,15 @@ namespace Training.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Training.Domain.Entities.UsersType", "UsersType")
+                    b.HasOne("Training.Domain.Entities.UserType", "UserType")
                         .WithMany("Professionals")
-                        .HasForeignKey("UsersTypeId")
+                        .HasForeignKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ProfessionalType");
 
-                    b.Navigation("UsersType");
+                    b.Navigation("UserType");
                 });
 
             modelBuilder.Entity("Training.Domain.Entities.ProfessionalType", b =>
@@ -304,7 +304,7 @@ namespace Training.Data.Migrations
                     b.Navigation("Professionals");
                 });
 
-            modelBuilder.Entity("Training.Domain.Entities.UsersType", b =>
+            modelBuilder.Entity("Training.Domain.Entities.UserType", b =>
                 {
                     b.Navigation("Clients");
 

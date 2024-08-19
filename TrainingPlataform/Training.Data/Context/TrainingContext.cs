@@ -17,7 +17,7 @@ namespace Training.Data.Context
 
         #region DbSets
 
-        public DbSet<UsersType> UsersTypes { get; set; }
+        public DbSet<UserType> UserTypes { get; set; }
         public DbSet<ProfessionalType> ProfessionalTypes { get; set; }
         public DbSet<Professional> Professionals { get; set; }
         public DbSet<Client> Clients { get; set; }
@@ -26,7 +26,7 @@ namespace Training.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new UsersTypeMap());
+            modelBuilder.ApplyConfiguration(new UserTypeMap());
             modelBuilder.ApplyConfiguration(new ProfessionalMap());
             modelBuilder.ApplyConfiguration(new ClientMap());
 

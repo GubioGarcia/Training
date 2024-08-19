@@ -14,6 +14,8 @@ namespace Training.Application.ViewModels.ClientViewModels
         public string InitialObjective { get; set; }
         public decimal Height { get; set; }
         public decimal StartingWeight { get; set; }
+        public decimal? CurrentWeight { get; set; }
         public string? UrlProfilePhoto { get; set; }
+        public DateTime? DateUpdated { get; set; }
     }
 }

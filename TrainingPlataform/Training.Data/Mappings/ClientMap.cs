@@ -23,13 +23,13 @@ namespace Training.Data.Mappings
             builder.Property(x => x.UrlProfilePhoto).HasMaxLength(255);
             builder.Property(x => x.DateBirth).IsRequired();
             builder.Property(x => x.InitialObjective).IsRequired().HasMaxLength(255);
-            builder.Property(x => x.Heigth).IsRequired().HasColumnType("decimal(3,2)");
+            builder.Property(x => x.Height).IsRequired().HasColumnType("decimal(3,2)");
             builder.Property(x => x.StartingWeight).IsRequired().HasColumnType("decimal(5,2)");
             builder.Property(x => x.CurrentWeight).IsRequired().HasColumnType("decimal(5,2)");
 
-            builder.HasOne(x => x.UsersType)
+            builder.HasOne(x => x.UserType)
                    .WithMany(u => u.Clients)
-                   .HasForeignKey(x => x.UsersTypeId)
+                   .HasForeignKey(x => x.UserTypeId)
                    .OnDelete(DeleteBehavior.Restrict);
         }
     }

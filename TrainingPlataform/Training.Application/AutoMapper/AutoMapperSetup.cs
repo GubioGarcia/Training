@@ -17,21 +17,23 @@ namespace Training.Application.AutoMapper
         {
             #region ViewModelToDomain
 
-            CreateMap<UsersTypeViewModel, UsersType>();
+            CreateMap<UserTypeViewModel, UserType>();
             CreateMap<ProfessionalTypeViewModel, ProfessionalType>();
             CreateMap<ProfessionalViewModel, Professional>();
             CreateMap<ClientMinimalFieldViewModel, Client>();
             CreateMap<ClientResponseViewModel, Client>();
+            CreateMap<ClientRequestViewModel, Client>();
 
             #endregion
 
             #region DomainToViewModel
 
-            CreateMap<UsersType, UsersTypeViewModel>();
+            CreateMap<UserType, UserTypeViewModel>();
             CreateMap<ProfessionalType, ProfessionalTypeViewModel>();
             CreateMap<Professional, ProfessionalViewModel>();
             CreateMap<Client, ClientMinimalFieldViewModel>();
             CreateMap<Client, ClientResponseViewModel>();
+            CreateMap<Client, ClientRequestViewModel>();
 
             #endregion
         }

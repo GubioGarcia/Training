@@ -24,7 +24,7 @@ namespace Training.IoC
 
             #region Repositories
 
-            services.AddScoped<IUsersTypeRepository, UsersTypeRepository>();
+            services.AddScoped<IUserTypeRepository, UserTypeRepository>();
             services.AddScoped<IProfessionalTypeRepository, ProfessionalTypeRepository>();
             services.AddScoped<IProfessionalRepository, ProfessionalRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();

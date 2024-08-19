@@ -16,16 +16,16 @@ namespace Training.Application.Services
     public class ProfessionalService : IProfessionalService
     {
         private readonly IProfessionalRepository professionalRepository;
-        private readonly IUsersTypeRepository usersTypeRepository;
+        private readonly IUserTypeRepository userTypeRepository;
         private readonly IProfessionalTypeRepository professionalTypeRepository;
         private readonly IMapper mapper;
         private readonly IChecker checker;
 
-        public ProfessionalService(IProfessionalRepository professionalRepository, IUsersTypeRepository usersTypeRepository,
+        public ProfessionalService(IProfessionalRepository professionalRepository, IUserTypeRepository userTypeRepository,
                                    IProfessionalTypeRepository professionalTypeRepository, IMapper mapper, IChecker checker) 
         {
             this.professionalRepository = professionalRepository;
-            this.usersTypeRepository = usersTypeRepository;
+            this.userTypeRepository = userTypeRepository;
             this.professionalTypeRepository = professionalTypeRepository;
             this.mapper = mapper;
             this.checker = checker;
@@ -66,8 +66,8 @@ namespace Training.Application.Services
             if (!checker.isValidFone(professionalViewModel.Fone))
                 throw new Exception("Phone is not valid");
             
-            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == professionalViewModel.UsersTypeId && !x.IsDeleted);
-            if (_usersType == null)
+            UserType _userType = this.userTypeRepository.Find(x => x.Id == professionalViewModel.UserTypeId && !x.IsDeleted);
+            if (_userType == null)
                 throw new Exception("Id type users not found");
 
             ProfessionalType _professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalViewModel.ProfessionalTypesId 
@@ -97,8 +97,8 @@ namespace Training.Application.Services
             if (_professional == null)
                 throw new Exception("Professional not found");
 
-            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == professionalViewModel.UsersTypeId && !x.IsDeleted);
-            if (_usersType == null)
+            UserType _userType = this.userTypeRepository.Find(x => x.Id == professionalViewModel.UserTypeId && !x.IsDeleted);
+            if (_userType == null)
                 throw new Exception("Id type users not found");
 
             ProfessionalType professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalViewModel.ProfessionalTypesId
@@ -142,17 +142,17 @@ namespace Training.Application.Services
                 throw new Exception("CPF is not valid");
 
             Professional _professional = this.professionalRepository.Find(x => !x.IsDeleted);
-
+            
             if (_professional == null || !this.VerifyPassword(professional.Password, _professional.Password))
                 throw new Exception("Invalid credentials");
-
-            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == _professional.UsersTypeId && !x.IsDeleted);
+            
+            UserType _userType = this.userTypeRepository.Find(x => x.Id == _professional.UserTypeId && !x.IsDeleted);
             ProfessionalType _professionalType = this.professionalTypeRepository.Find(x => x.Id == _professional.ProfessionalTypesId && !x.IsDeleted );
 
             var (_token, _expiry) = TokenService.GenerateToken(_professional);
 
             return new UserAuthenticateResponseViewModel(_token, _expiry, _professional.Id, _professional.Cpf, _professional.Name,
-                                                         _usersType.Name, _professionalType.Name);
+                                                         _userType.Name, _professionalType.Name);
         }
 
         private string HashPassword(string password)

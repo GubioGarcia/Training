@@ -27,7 +27,7 @@ namespace Training.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UsersTypes",
+                name: "UserTypes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -37,7 +37,7 @@ namespace Training.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UsersTypes", x => x.Id);
+                    table.PrimaryKey("PK_UserTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -45,7 +45,7 @@ namespace Training.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UsersTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     InitialObjective = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Heigth = table.Column<decimal>(type: "decimal(3,2)", nullable: false),
@@ -62,9 +62,9 @@ namespace Training.Data.Migrations
                 {
                     table.PrimaryKey("PK_Clients", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Clients_UsersTypes_UsersTypeId",
-                        column: x => x.UsersTypeId,
-                        principalTable: "UsersTypes",
+                        name: "FK_Clients_UserTypes_UserTypeId",
+                        column: x => x.UserTypeId,
+                        principalTable: "UserTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -74,7 +74,7 @@ namespace Training.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UsersTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProfessionalTypesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProfessionalRegistration = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CurrentNumberClients = table.Column<int>(type: "int", nullable: false),
@@ -95,9 +95,9 @@ namespace Training.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Professionals_UsersTypes_UsersTypeId",
-                        column: x => x.UsersTypeId,
-                        principalTable: "UsersTypes",
+                        name: "FK_Professionals_UserTypes_UserTypeId",
+                        column: x => x.UserTypeId,
+                        principalTable: "UserTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -112,7 +112,7 @@ namespace Training.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "UsersTypes",
+                table: "UserTypes",
                 columns: new[] { "Id", "AccessLevel", "Description", "Name" },
                 values: new object[,]
                 {
@@ -123,13 +123,13 @@ namespace Training.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Professionals",
-                columns: new[] { "Id", "Cpf", "CurrentNumberClients", "DateRegistration", "Fone", "IsActive", "Name", "ProfessionalRegistration", "ProfessionalTypesId", "UrlProfilePhoto", "UsersTypeId" },
+                columns: new[] { "Id", "Cpf", "CurrentNumberClients", "DateRegistration", "Fone", "IsActive", "Name", "ProfessionalRegistration", "ProfessionalTypesId", "UrlProfilePhoto", "UserTypeId" },
                 values: new object[] { new Guid("f0e1d2c3-5b6a-7d8e-9f0c-1a2b3e4d5c6f"), "30704958341", 0, new DateTime(2024, 7, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), "5562999999999", true, "Professional Default Admin", "Admin", new Guid("e2a1b0c9-8d7e-6f5a-4b3c-1e9d0c2b5a8f"), null, new Guid("c4b3e3a7-2f0b-4e6e-9f5e-8e2a1e1d8a4b") });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clients_UsersTypeId",
+                name: "IX_Clients_UserTypeId",
                 table: "Clients",
-                column: "UsersTypeId");
+                column: "UserTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Professionals_ProfessionalTypesId",
@@ -137,9 +137,9 @@ namespace Training.Data.Migrations
                 column: "ProfessionalTypesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Professionals_UsersTypeId",
+                name: "IX_Professionals_UserTypeId",
                 table: "Professionals",
-                column: "UsersTypeId");
+                column: "UserTypeId");
         }
 
         /// <inheritdoc />
@@ -155,7 +155,7 @@ namespace Training.Data.Migrations
                 name: "ProfessionalTypes");
 
             migrationBuilder.DropTable(
-                name: "UsersTypes");
+                name: "UserTypes");
         }
     }
 }

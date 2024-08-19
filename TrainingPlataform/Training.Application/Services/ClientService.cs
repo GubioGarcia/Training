@@ -17,6 +17,7 @@ namespace Training.Application.Services
     public class ClientService : IClientService
     {
         private readonly IClientRepository clientRepository;
+        private readonly IUserTypeRepository userTypeRepository;
         private readonly IChecker checker;
         private readonly IMapper mapper;
 
@@ -61,14 +62,39 @@ namespace Training.Application.Services
 
             if (!checker.isValidFone(clientRequestViewModel.Fone))
                 throw new Exception("Phone is not valid");
-            
+
+            UserType _userType = this.userTypeRepository.Find(x => x.Id == clientRequestViewModel.UserTypeId && !x.IsDeleted);
+            if (_userType == null)
+                throw new Exception("Id type users not found");
+
             _client = mapper.Map<Client>(clientRequestViewModel);
             _client.Password = this.HashPassword(clientRequestViewModel.Password);
+
+            if (clientRequestViewModel.CurrentWeight == null || clientRequestViewModel.CurrentWeight == 0)
+                _client.CurrentWeight = _client.StartingWeight;
 
             if (clientRequestViewModel.UrlProfilePhoto == "")
                 _client.UrlProfilePhoto = null;
 
             this.clientRepository.Create(_client);
+
+            return true;
+        }
+
+        public bool Put(ClientRequestViewModel clientRequestViewModel)
+        {
+            if (!checker.isValidCpf(clientRequestViewModel.Cpf))
+                throw new Exception("CPF is not valid");
+
+            Client _client = this.clientRepository.Find(x => x.Id == clientRequestViewModel.Id);
+            if (_client != null)
+                throw new Exception("Client not found");
+
+            _client = mapper.Map<Client>(clientRequestViewModel);
+            _client.Password = this.HashPassword(clientRequestViewModel.Password);
+            _client.DateUpdated = DateTime.UtcNow;
+
+            this.clientRepository.Update(_client);
 
             return true;
         }

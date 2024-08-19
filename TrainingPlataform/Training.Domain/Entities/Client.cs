@@ -10,12 +10,12 @@ namespace Training.Domain.Entities
 {
     public sealed class Client : EntityUsers
     {
-        public Guid UsersTypeId { get; set; }
-        public UsersType UsersType { get; set; }
+        public Guid UserTypeId { get; set; }
+        public UserType UserType { get; set; }
 
         public DateTime DateBirth { get; set; }
         public string InitialObjective { get; set; }
-        public decimal Heigth { get; set; }
+        public decimal Height { get; set; }
         public decimal StartingWeight { get; set; }
         public decimal CurrentWeight { get; set; }
     }

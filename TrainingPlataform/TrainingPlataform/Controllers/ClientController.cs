@@ -32,5 +32,11 @@ namespace TrainingPlataform.Controllers
         {
             return Ok(this.clientService.Post(clientRequestView));
         }
+
+        [HttpPut]
+        public IActionResult Put(ClientRequestViewModel clientRequestView)
+        {
+            return Ok(this.clientService.Put(clientRequestView));
+        }
     }
 }
