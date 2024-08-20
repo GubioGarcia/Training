@@ -34,9 +34,9 @@ namespace TrainingPlataform.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put(ClientRequestViewModel clientRequestView)
+        public IActionResult Put(ClientUpdateRequestViewModel clientUpdateRequestViewModel)
         {
-            return Ok(this.clientService.Put(clientRequestView));
+            return Ok(this.clientService.Put(clientUpdateRequestViewModel));
         }
     }
 }

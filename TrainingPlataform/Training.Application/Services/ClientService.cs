@@ -70,6 +70,7 @@ namespace Training.Application.Services
 
             _client = mapper.Map<Client>(clientRequestViewModel);
             _client.Password = this.HashPassword(clientRequestViewModel.Password);
+            _client.DateRegistration = DateTime.Now;
 
             if (clientRequestViewModel.UrlProfilePhoto == "")
                 _client.UrlProfilePhoto = null;
@@ -79,22 +80,32 @@ namespace Training.Application.Services
             return true;
         }
 
-        public bool Put(ClientRequestViewModel clientRequestViewModel)
+        public bool Put(ClientUpdateRequestViewModel clientUpdateRequestViewModel)
         {
-            if (!checker.isValidCpf(clientRequestViewModel.Cpf))
-                throw new Exception("CPF is not valid");
-
-            Client _client = this.clientRepository.Find(x => x.Id == clientRequestViewModel.Id);
-            if (_client != null)
+            Client _client = this.clientRepository.Find(x => x.Id == clientUpdateRequestViewModel.Id);
+            if (_client == null)
                 throw new Exception("Client not found");
+            
+            if (clientUpdateRequestViewModel.Cpf != null)
+            {
+                if (!checker.isValidCpf(clientUpdateRequestViewModel.Cpf))
+                    throw new Exception("CPF is not valid");
 
-            _client = mapper.Map<Client>(clientRequestViewModel);
-            _client.Password = this.HashPassword(clientRequestViewModel.Password);
+                Client _auxClient = this.clientRepository.Find(x => x.Cpf == clientUpdateRequestViewModel.Cpf);
+
+                if (_auxClient.Id != _client.Id)
+                    throw new Exception("There is already a client registered with this CPF");
+            }
+
+            _client = mapper.Map<Client>(clientUpdateRequestViewModel);
             _client.DateUpdated = DateTime.UtcNow;
-            /*
-            if (clientRequestViewModel.CurrentWeight == null || clientRequestViewModel.CurrentWeight == 0)
+
+            if (clientUpdateRequestViewModel.Password != null)
+                _client.Password = this.HashPassword(clientUpdateRequestViewModel.Password);
+
+            if (clientUpdateRequestViewModel.CurrentWeight == null || clientUpdateRequestViewModel.CurrentWeight == 0)
                 _client.CurrentWeight = _client.StartingWeight;
-            */
+            
             this.clientRepository.Update(_client);
 
             return true;

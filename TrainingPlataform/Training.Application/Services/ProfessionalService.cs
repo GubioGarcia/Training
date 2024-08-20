@@ -77,12 +77,11 @@ namespace Training.Application.Services
 
             _professional = mapper.Map<Professional>(professionalViewModel);
             _professional.Password = this.HashPassword(_professional.Password);
+            _professional.DateRegistration = DateTime.Now;
 
             if (professionalViewModel.UrlProfilePhoto == "")
                 _professional.UrlProfilePhoto = null;
             
-            _professional.DateRegistration = DateTime.Now;
-
             this.professionalRepository.Create(_professional);
 
             return true;
