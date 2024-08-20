@@ -9,9 +9,9 @@ using Training.Domain.Entities;
 
 namespace Training.Data.Mappings
 {
-    public class UserTypeMap : IEntityTypeConfiguration<UserType>
+    public class UsersTypeMap : IEntityTypeConfiguration<UsersType>
     {
-        public void Configure(EntityTypeBuilder<UserType> builder) 
+        public void Configure(EntityTypeBuilder<UsersType> builder) 
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(100);

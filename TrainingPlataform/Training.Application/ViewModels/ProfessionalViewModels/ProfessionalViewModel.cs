@@ -8,7 +8,7 @@ namespace Training.Application.ViewModels.ProfessionalViewModels
 {
     public class ProfessionalViewModel : UsersDefaultViewModel
     {
-        public Guid UserTypeId { get; set; }
+        public Guid UsersTypeId { get; set; }
         public Guid ProfessionalTypesId { get; set; }
         public string Cpf { get; set; }
         public string Password { get; set; }

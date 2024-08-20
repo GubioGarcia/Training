@@ -11,24 +11,24 @@ using Training.Domain.Interfaces;
 
 namespace Training.Data.Repositories
 {
-    public class UserTypeRepository : Repository<UserType>, IUserTypeRepository
+    public class UsersTypeRepository : Repository<UsersType>, IUsersTypeRepository
     {
-        public UserTypeRepository(TrainingContext context)
+        public UsersTypeRepository(TrainingContext context)
             : base(context) { }
 
-        public IEnumerable<UserType> GetAll()
+        public IEnumerable<UsersType> GetAll()
         {
             return Query(x => !x.IsDeleted);
         }
 
-        public bool Delete(UserType model)
+        public bool Delete(UsersType model)
         {
             try
             {
-                if (model is UserType)
+                if (model is UsersType)
                 {
-                    (model as UserType).IsDeleted = true;
-                    EntityEntry<UserType> _entry = _context.Entry(model);
+                    (model as UsersType).IsDeleted = true;
+                    EntityEntry<UsersType> _entry = _context.Entry(model);
 
                     DbSet.Attach(model);
 
@@ -36,7 +36,7 @@ namespace Training.Data.Repositories
                 }
                 else
                 {
-                    EntityEntry<UserType> _entry = _context.Entry(model);
+                    EntityEntry<UsersType> _entry = _context.Entry(model);
                     DbSet.Attach(model);
                     _entry.State = EntityState.Deleted;
                 }

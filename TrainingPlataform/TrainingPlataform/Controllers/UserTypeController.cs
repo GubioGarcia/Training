@@ -7,43 +7,43 @@ namespace TrainingPlataform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserTypeController : ControllerBase
+    public class UsersTypeController : ControllerBase
     {
-        private readonly IUserTypeService userTypeService;
+        private readonly IUsersTypeService usersTypeService;
 
-        public UserTypeController(IUserTypeService userTypeService)
+        public UsersTypeController(IUsersTypeService usersTypeService)
         {
-            this.userTypeService = userTypeService;
+            this.usersTypeService = usersTypeService;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(this.userTypeService.Get());
+            return Ok(this.usersTypeService.Get());
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(string id)
         {
-            return Ok(this.userTypeService.GetById(id));
+            return Ok(this.usersTypeService.GetById(id));
         }
 
         [HttpPost]
-        public IActionResult Post(UserTypeViewModel userTypeViewModel)
+        public IActionResult Post(UsersTypeViewModel usersTypeViewModel)
         {
-            return Ok(this.userTypeService.Post(userTypeViewModel));
+            return Ok(this.usersTypeService.Post(usersTypeViewModel));
         }
 
         [HttpPut]
-        public IActionResult Put(UserTypeViewModel userTypeViewModel)
+        public IActionResult Put(UsersTypeViewModel usersTypeViewModel)
         {
-            return Ok(this.userTypeService.Put(userTypeViewModel));
+            return Ok(this.usersTypeService.Put(usersTypeViewModel));
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            return Ok(this.userTypeService.Delete(id));
+            return Ok(this.usersTypeService.Delete(id));
         }
     }
 }

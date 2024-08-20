@@ -27,9 +27,9 @@ namespace Training.Data.Mappings
             builder.Property(x => x.StartingWeight).IsRequired().HasColumnType("decimal(5,2)");
             builder.Property(x => x.CurrentWeight).IsRequired().HasColumnType("decimal(5,2)");
 
-            builder.HasOne(x => x.UserType)
+            builder.HasOne(x => x.UsersType)
                    .WithMany(u => u.Clients)
-                   .HasForeignKey(x => x.UserTypeId)
+                   .HasForeignKey(x => x.UsersTypeId)
                    .OnDelete(DeleteBehavior.Restrict);
         }
     }

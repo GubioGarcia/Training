@@ -17,13 +17,14 @@ namespace Training.Application.Services
     public class ClientService : IClientService
     {
         private readonly IClientRepository clientRepository;
-        private readonly IUserTypeRepository userTypeRepository;
+        private readonly IUsersTypeRepository usersTypeRepository;
         private readonly IChecker checker;
         private readonly IMapper mapper;
 
-        public ClientService(IClientRepository clientRepository, IMapper mapper, IChecker checker)
+        public ClientService(IClientRepository clientRepository, IUsersTypeRepository usersTypeRepository ,IMapper mapper, IChecker checker)
         {
             this.clientRepository = clientRepository;
+            this.usersTypeRepository = usersTypeRepository;
             this.checker = checker;
             this.mapper = mapper;
         }
@@ -63,15 +64,12 @@ namespace Training.Application.Services
             if (!checker.isValidFone(clientRequestViewModel.Fone))
                 throw new Exception("Phone is not valid");
 
-            UserType _userType = this.userTypeRepository.Find(x => x.Id == clientRequestViewModel.UserTypeId && !x.IsDeleted);
-            if (_userType == null)
-                throw new Exception("Id type users not found");
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == clientRequestViewModel.UsersTypeId && !x.IsDeleted);
+            if (_usersType == null)
+                throw new Exception("Id type user not found");
 
             _client = mapper.Map<Client>(clientRequestViewModel);
             _client.Password = this.HashPassword(clientRequestViewModel.Password);
-
-            if (clientRequestViewModel.CurrentWeight == null || clientRequestViewModel.CurrentWeight == 0)
-                _client.CurrentWeight = _client.StartingWeight;
 
             if (clientRequestViewModel.UrlProfilePhoto == "")
                 _client.UrlProfilePhoto = null;
@@ -93,7 +91,10 @@ namespace Training.Application.Services
             _client = mapper.Map<Client>(clientRequestViewModel);
             _client.Password = this.HashPassword(clientRequestViewModel.Password);
             _client.DateUpdated = DateTime.UtcNow;
-
+            /*
+            if (clientRequestViewModel.CurrentWeight == null || clientRequestViewModel.CurrentWeight == 0)
+                _client.CurrentWeight = _client.StartingWeight;
+            */
             this.clientRepository.Update(_client);
 
             return true;

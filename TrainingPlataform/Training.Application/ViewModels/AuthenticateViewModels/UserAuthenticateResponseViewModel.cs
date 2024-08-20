@@ -14,18 +14,18 @@ namespace Training.Application.ViewModels.AuthenticateViewModels
         public Guid Id { get; set; }
         public string Cpf { get; set; }
         public string Name { get; set; }
-        public string UserType { get; set; }
+        public string UsersType { get; set; }
         public string ProfessionalType { get; set; }
 
         public UserAuthenticateResponseViewModel(string token, DateTime validityToken, Guid id,
-                                                 string cpf, string name, string userType, string professionalType)
+                                                 string cpf, string name, string usersType, string professionalType)
         {
             Token = token;
             ValidityToken = validityToken;
             Id = id;
             Cpf = cpf;
             Name = name;
-            UserType = userType;
+            UsersType = usersType;
             ProfessionalType = professionalType;
         }
     }

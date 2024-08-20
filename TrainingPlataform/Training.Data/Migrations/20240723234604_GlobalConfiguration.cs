@@ -12,7 +12,7 @@ namespace Training.Data.Migrations
         {
             migrationBuilder.AlterColumn<bool>(
                 name: "IsDeleted",
-                table: "UserTypes",
+                table: "UsersTypes",
                 type: "bit",
                 nullable: false,
                 defaultValue: false,
@@ -52,7 +52,7 @@ namespace Training.Data.Migrations
         {
             migrationBuilder.AlterColumn<bool>(
                 name: "IsDeleted",
-                table: "UserTypes",
+                table: "UsersTypes",
                 type: "bit",
                 nullable: false,
                 oldClrType: typeof(bool),

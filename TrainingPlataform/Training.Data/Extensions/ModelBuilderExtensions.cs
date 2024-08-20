@@ -48,9 +48,9 @@ namespace Training.Data.Extensions
 
         public static ModelBuilder SeedData(this ModelBuilder builder)
         {
-            builder.Entity<UserType>()
+            builder.Entity<UsersType>()
                 .HasData(
-                    new UserType 
+                    new UsersType 
                     {
                         Id = Guid.Parse("c4b3e3a7-2f0b-4e6e-9f5e-8e2a1e1d8a4b"),
                         Name = "Admin",
@@ -59,9 +59,9 @@ namespace Training.Data.Extensions
                     }
                 );
 
-            builder.Entity<UserType>()
+            builder.Entity<UsersType>()
                 .HasData(
-                    new UserType
+                    new UsersType
                     {
                         Id = Guid.Parse("a8f6c1e1-9d5e-4a2d-8c6f-7b3e0f9d6a6e"),
                         Name = "Professional",
@@ -70,9 +70,9 @@ namespace Training.Data.Extensions
                     }
                 );
 
-            builder.Entity<UserType>()
+            builder.Entity<UsersType>()
                 .HasData(
-                    new UserType
+                    new UsersType
                     {
                         Id = Guid.Parse("b7d8f9e0-3c4a-4b6e-9d1f-2e5c6a7b8f0d"),
                         Name = "Client",
@@ -106,7 +106,7 @@ namespace Training.Data.Extensions
                     new Professional
                     {
                         Id = Guid.Parse("f0e1d2c3-5b6a-7d8e-9f0c-1a2b3e4d5c6f"),
-                        UserTypeId = Guid.Parse("c4b3e3a7-2f0b-4e6e-9f5e-8e2a1e1d8a4b"),
+                        UsersTypeId = Guid.Parse("c4b3e3a7-2f0b-4e6e-9f5e-8e2a1e1d8a4b"),
                         ProfessionalTypesId = Guid.Parse("e2a1b0c9-8d7e-6f5a-4b3c-1e9d0c2b5a8f"),
                         ProfessionalRegistration = "Admin",
                         IsActive = true,

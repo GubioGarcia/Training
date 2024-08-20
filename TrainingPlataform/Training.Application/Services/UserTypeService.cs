@@ -11,58 +11,58 @@ using Training.Domain.Interfaces;
 
 namespace Training.Application.Services
 {
-    public class UserTypeService : IUserTypeService
+    public class UsersTypeService : IUsersTypeService
     {
-        private readonly IUserTypeRepository userTypeRepository;
+        private readonly IUsersTypeRepository usersTypeRepository;
         private readonly IMapper mapper;
 
-        public UserTypeService(IUserTypeRepository userTypeRepository, IMapper mapper)
+        public UsersTypeService(IUsersTypeRepository usersTypeRepository, IMapper mapper)
         {
-            this.userTypeRepository = userTypeRepository;
+            this.usersTypeRepository = usersTypeRepository;
             this.mapper = mapper;
         }
 
-        public List<UserTypeViewModel> Get()
+        public List<UsersTypeViewModel> Get()
         {
-            List<UserTypeViewModel> _userTypeViewModels = new List<UserTypeViewModel>();
+            List<UsersTypeViewModel> _usersTypeViewModels = new List<UsersTypeViewModel>();
 
-            IEnumerable<UserType> _userTypes = this.userTypeRepository.GetAll();
+            IEnumerable<UsersType> _usersTypes = this.usersTypeRepository.GetAll();
 
-            _userTypeViewModels = mapper.Map<List<UserTypeViewModel>>(_userTypes);
+            _usersTypeViewModels = mapper.Map<List<UsersTypeViewModel>>(_usersTypes);
 
-            return _userTypeViewModels;
+            return _usersTypeViewModels;
         }
 
-        public UserTypeViewModel GetById(string id)
+        public UsersTypeViewModel GetById(string id)
         {
             if (!Guid.TryParse(id, out Guid userId))
                 throw new Exception("Id is not valid");
 
-            UserType _userType = this.userTypeRepository.Find(x => x.Id == userId && !x.IsDeleted);
-            if (_userType == null)
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == userId && !x.IsDeleted);
+            if (_usersType == null)
                 throw new Exception("User type not found");
 
-            return mapper.Map<UserTypeViewModel>(_userType);
+            return mapper.Map<UsersTypeViewModel>(_usersType);
         }
 
-        public bool Post(UserTypeViewModel userTypeViewModel)
+        public bool Post(UsersTypeViewModel usersTypeViewModel)
         {
-            UserType _userType = mapper.Map<UserType>(userTypeViewModel);
+            UsersType _usersType = mapper.Map<UsersType>(usersTypeViewModel);
 
-            this.userTypeRepository.Create(_userType);
+            this.usersTypeRepository.Create(_usersType);
 
             return true;
         }
 
-        public bool Put(UserTypeViewModel userTypeViewModel)
+        public bool Put(UsersTypeViewModel usersTypeViewModel)
         {
-            UserType _userType = this.userTypeRepository.Find(x => x.Id == userTypeViewModel.Id && !x.IsDeleted);
-            if (_userType == null)
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == usersTypeViewModel.Id && !x.IsDeleted);
+            if (_usersType == null)
                 throw new Exception("User not found");
 
-            _userType = mapper.Map<UserType>(userTypeViewModel);
+            _usersType = mapper.Map<UsersType>(usersTypeViewModel);
 
-            this.userTypeRepository.Update(_userType);
+            this.usersTypeRepository.Update(_usersType);
 
             return true;
         }
@@ -72,11 +72,11 @@ namespace Training.Application.Services
             if (!Guid.TryParse(id, out Guid userId))
                 throw new Exception("Id is not valid");
 
-            UserType _userType = this.userTypeRepository.Find(x => x.Id == userId && !x.IsDeleted);
-            if (_userType == null)
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == userId && !x.IsDeleted);
+            if (_usersType == null)
                 throw new Exception("User type not found");
 
-            return this.userTypeRepository.Delete(_userType);
+            return this.usersTypeRepository.Delete(_usersType);
         }
     }
 }

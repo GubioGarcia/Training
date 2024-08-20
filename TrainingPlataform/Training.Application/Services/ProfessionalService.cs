@@ -16,16 +16,16 @@ namespace Training.Application.Services
     public class ProfessionalService : IProfessionalService
     {
         private readonly IProfessionalRepository professionalRepository;
-        private readonly IUserTypeRepository userTypeRepository;
+        private readonly IUsersTypeRepository usersTypeRepository;
         private readonly IProfessionalTypeRepository professionalTypeRepository;
         private readonly IMapper mapper;
         private readonly IChecker checker;
 
-        public ProfessionalService(IProfessionalRepository professionalRepository, IUserTypeRepository userTypeRepository,
+        public ProfessionalService(IProfessionalRepository professionalRepository, IUsersTypeRepository usersTypeRepository,
                                    IProfessionalTypeRepository professionalTypeRepository, IMapper mapper, IChecker checker) 
         {
             this.professionalRepository = professionalRepository;
-            this.userTypeRepository = userTypeRepository;
+            this.usersTypeRepository = usersTypeRepository;
             this.professionalTypeRepository = professionalTypeRepository;
             this.mapper = mapper;
             this.checker = checker;
@@ -66,9 +66,9 @@ namespace Training.Application.Services
             if (!checker.isValidFone(professionalViewModel.Fone))
                 throw new Exception("Phone is not valid");
             
-            UserType _userType = this.userTypeRepository.Find(x => x.Id == professionalViewModel.UserTypeId && !x.IsDeleted);
-            if (_userType == null)
-                throw new Exception("Id type users not found");
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == professionalViewModel.UsersTypeId && !x.IsDeleted);
+            if (_usersType == null)
+                throw new Exception("Id type user not found");
 
             ProfessionalType _professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalViewModel.ProfessionalTypesId 
                                                                                      && !x.IsDeleted);
@@ -97,9 +97,9 @@ namespace Training.Application.Services
             if (_professional == null)
                 throw new Exception("Professional not found");
 
-            UserType _userType = this.userTypeRepository.Find(x => x.Id == professionalViewModel.UserTypeId && !x.IsDeleted);
-            if (_userType == null)
-                throw new Exception("Id type users not found");
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == professionalViewModel.UsersTypeId && !x.IsDeleted);
+            if (_usersType == null)
+                throw new Exception("Id type user not found");
 
             ProfessionalType professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalViewModel.ProfessionalTypesId
                                                                                      && !x.IsDeleted);
@@ -146,13 +146,13 @@ namespace Training.Application.Services
             if (_professional == null || !this.VerifyPassword(professional.Password, _professional.Password))
                 throw new Exception("Invalid credentials");
             
-            UserType _userType = this.userTypeRepository.Find(x => x.Id == _professional.UserTypeId && !x.IsDeleted);
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == _professional.UsersTypeId && !x.IsDeleted);
             ProfessionalType _professionalType = this.professionalTypeRepository.Find(x => x.Id == _professional.ProfessionalTypesId && !x.IsDeleted );
 
             var (_token, _expiry) = TokenService.GenerateToken(_professional);
 
             return new UserAuthenticateResponseViewModel(_token, _expiry, _professional.Id, _professional.Cpf, _professional.Name,
-                                                         _userType.Name, _professionalType.Name);
+                                                         _usersType.Name, _professionalType.Name);
         }
 
         private string HashPassword(string password)

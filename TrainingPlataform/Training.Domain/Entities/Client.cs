@@ -10,8 +10,8 @@ namespace Training.Domain.Entities
 {
     public sealed class Client : EntityUsers
     {
-        public Guid UserTypeId { get; set; }
-        public UserType UserType { get; set; }
+        public Guid UsersTypeId { get; set; }
+        public UsersType UsersType { get; set; }
 
         public DateTime DateBirth { get; set; }
         public string InitialObjective { get; set; }

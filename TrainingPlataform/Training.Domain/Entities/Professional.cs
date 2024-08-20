@@ -11,8 +11,8 @@ namespace Training.Domain.Entities
 {
     public sealed class Professional : EntityUsers
     {
-        public Guid UserTypeId { get; set; }
-        public UserType UserType { get; set; }
+        public Guid UsersTypeId { get; set; }
+        public UsersType UsersType { get; set; }
         public Guid ProfessionalTypesId { get; set; }
         public ProfessionalType ProfessionalType { get; set; }
         public string? ProfessionalRegistration { get; set; }

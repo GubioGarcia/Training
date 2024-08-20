@@ -7,12 +7,12 @@ using Training.Application.ViewModels;
 
 namespace Training.Application.Interfaces
 {
-    public interface IUserTypeService
+    public interface IUsersTypeService
     {
-        List<UserTypeViewModel> Get();
-        UserTypeViewModel GetById(string id);
-        bool Post(UserTypeViewModel userTypeViewModel);
-        bool Put(UserTypeViewModel userTypeViewModel);
+        List<UsersTypeViewModel> Get();
+        UsersTypeViewModel GetById(string id);
+        bool Post(UsersTypeViewModel usersTypeViewModel);
+        bool Put(UsersTypeViewModel usersTypeViewModel);
         bool Delete(string id);
     }
 }
