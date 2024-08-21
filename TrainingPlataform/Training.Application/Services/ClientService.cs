@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 using Training.Application.Interfaces;
 using Training.Application.Mapper;
 using Training.Application.ViewModels;
+using Training.Application.ViewModels.AuthenticateViewModels;
 using Training.Application.ViewModels.ClientViewModels;
 using Training.Application.ViewModels.ProfessionalViewModels;
+using Training.Auth.Services;
 using Training.Domain.Entities;
 using Training.Domain.Interfaces;
 
@@ -113,6 +115,38 @@ namespace Training.Application.Services
             this.clientRepository.Update(_client);
 
             return true;
+        }
+        public bool Delete(string id)
+        {
+            if (!Guid.TryParse(id, out Guid clientId))
+                throw new Exception("Id is not valid");
+
+            Client _client = this.clientRepository.Find(x => x.Id == clientId && !x.IsDeleted);
+            if (_client == null)
+                throw new Exception("Professional not found");
+
+            return this.clientRepository.Delete(_client);
+        }
+
+        public UserAuthenticateResponseViewModel Authenticate(UserAuthenticateRequestViewModel client)
+        {
+            if (string.IsNullOrEmpty(client.Cpf) || string.IsNullOrEmpty(client.Password))
+                throw new Exception("CPF/Password is required");
+
+            if (!checker.isValidCpf(client.Cpf))
+                throw new Exception("CPF is not valid");
+
+            Client _client = this.clientRepository.Find(x => x.Cpf == client.Cpf && !x.IsDeleted);
+
+            if (_client == null || !this.VerifyPassword(client.Password, _client.Password))
+                throw new Exception("Invalid credentials");
+
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == _client.UsersTypeId && !x.IsDeleted);
+
+            var (_token, _expiry) = TokenService.GenerateToken(_client);
+
+            return new UserAuthenticateResponseViewModel(_token, _expiry, _client.Id, _client.Cpf, _client.Name,
+                                                         _usersType.Name);
         }
 
         private string HashPassword(string password)

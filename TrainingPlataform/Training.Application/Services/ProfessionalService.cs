@@ -140,7 +140,7 @@ namespace Training.Application.Services
             if (!checker.isValidCpf(professional.Cpf))
                 throw new Exception("CPF is not valid");
 
-            Professional _professional = this.professionalRepository.Find(x => !x.IsDeleted);
+            Professional _professional = this.professionalRepository.Find(x => x.Cpf == professional.Cpf && !x.IsDeleted);
             
             if (_professional == null || !this.VerifyPassword(professional.Password, _professional.Password))
                 throw new Exception("Invalid credentials");
@@ -150,7 +150,7 @@ namespace Training.Application.Services
 
             var (_token, _expiry) = TokenService.GenerateToken(_professional);
 
-            return new UserAuthenticateResponseViewModel(_token, _expiry, _professional.Id, _professional.Cpf, _professional.Name,
+            return new ProfessionalAuthenticateResponseViewModel(_token, _expiry, _professional.Id, _professional.Cpf, _professional.Name,
                                                          _usersType.Name, _professionalType.Name);
         }
 

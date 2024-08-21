@@ -15,10 +15,9 @@ namespace Training.Application.ViewModels.AuthenticateViewModels
         public string Cpf { get; set; }
         public string Name { get; set; }
         public string UsersType { get; set; }
-        public string ProfessionalType { get; set; }
 
         public UserAuthenticateResponseViewModel(string token, DateTime validityToken, Guid id,
-                                                 string cpf, string name, string usersType, string professionalType)
+                                                 string cpf, string name, string usersType)
         {
             Token = token;
             ValidityToken = validityToken;
@@ -26,7 +25,6 @@ namespace Training.Application.ViewModels.AuthenticateViewModels
             Cpf = cpf;
             Name = name;
             UsersType = usersType;
-            ProfessionalType = professionalType;
         }
     }
 }

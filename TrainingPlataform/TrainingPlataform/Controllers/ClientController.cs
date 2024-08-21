@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Training.Application.Interfaces;
+using Training.Application.ViewModels.AuthenticateViewModels;
 using Training.Application.ViewModels.ClientViewModels;
+using Training.Auth.Services;
 
 namespace TrainingPlataform.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class ClientController : ControllerBase
     {
         private readonly IClientService clientService;
@@ -37,6 +41,20 @@ namespace TrainingPlataform.Controllers
         public IActionResult Put(ClientUpdateRequestViewModel clientUpdateRequestViewModel)
         {
             return Ok(this.clientService.Put(clientUpdateRequestViewModel));
+        }
+
+        [HttpDelete]
+        public IActionResult Delete()
+        {
+            string _clientId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.clientService.Delete(_clientId));
+        }
+
+        [HttpPost("authenticate"), AllowAnonymous]
+        public IActionResult Authenticate(UserAuthenticateRequestViewModel clientViewModel)
+        {
+            return Ok(this.clientService.Authenticate(clientViewModel));
         }
     }
 }
