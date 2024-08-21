@@ -1,4 +1,6 @@
-# Análise Inicial do Projeto
+# Training Plataform
+
+## Análise Inicial do Projeto
 
 Desenvolvimento de uma plataforma WEB que reúne funcionalidades para profissionais da área de educação física, permitindo a gestão de informações sobre seus alunos. Além disso, a plataforma possibilita o acompanhamento de treinos (musculação, funcional e cross) ofertados ao aluno. O aluno, por sua vez, poderá acessar seu perfil e obter as atualizações do personal, registrando os dias de execução dos treinos e informações como cargas usadas, séries e repetições efetuadas.
 
