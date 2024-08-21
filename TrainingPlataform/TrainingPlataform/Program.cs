@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
 using Training.Auth.Services;
+using Training.Application.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,8 @@ NativeInjector.RegisterServices(builder.Services);
 
 builder.Services.AddAutoMapper(typeof(AutoMapperSetup));
 builder.Services.AddSwaggerConfiguration();
+
+builder.Services.AddScoped<ManualMapperSetup>();
 
 // Configure JWT settings
 var jwtSettingsSection = builder.Configuration.GetSection("JwtSettings");

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Training.Application.Interfaces;
+using Training.Application.Mapper;
 using Training.Application.ViewModels;
 using Training.Application.ViewModels.ClientViewModels;
 using Training.Application.ViewModels.ProfessionalViewModels;
@@ -20,13 +21,16 @@ namespace Training.Application.Services
         private readonly IUsersTypeRepository usersTypeRepository;
         private readonly IChecker checker;
         private readonly IMapper mapper;
+        private readonly ManualMapperSetup manualMapper;
 
-        public ClientService(IClientRepository clientRepository, IUsersTypeRepository usersTypeRepository ,IMapper mapper, IChecker checker)
+        public ClientService(IClientRepository clientRepository, IUsersTypeRepository usersTypeRepository,
+                             IMapper mapper, IChecker checker, ManualMapperSetup manualMapper)
         {
             this.clientRepository = clientRepository;
             this.usersTypeRepository = usersTypeRepository;
             this.checker = checker;
             this.mapper = mapper;
+            this.manualMapper = manualMapper;
         }
 
         public List<ClientMinimalFieldViewModel> Get()
@@ -97,7 +101,7 @@ namespace Training.Application.Services
                     throw new Exception("There is already a client registered with this CPF");
             }
 
-            _client = mapper.Map<Client>(clientUpdateRequestViewModel);
+            manualMapper.MapClientUpdateRequestToClient(clientUpdateRequestViewModel, _client);
             _client.DateUpdated = DateTime.UtcNow;
 
             if (clientUpdateRequestViewModel.Password != null)
