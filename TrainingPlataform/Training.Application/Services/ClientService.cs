@@ -86,36 +86,36 @@ namespace Training.Application.Services
             return true;
         }
 
-        public bool Put(ClientUpdateRequestViewModel clientUpdateRequestViewModel)
+        public bool Put(ClientRequestUpdateViewModel clientRequestUpdateViewModel)
         {
-            Client _client = this.clientRepository.Find(x => x.Id == clientUpdateRequestViewModel.Id);
+            Client _client = this.clientRepository.Find(x => x.Id == clientRequestUpdateViewModel.Id);
             if (_client == null)
                 throw new Exception("Client not found");
             
-            if (clientUpdateRequestViewModel.Cpf != null)
+            if (clientRequestUpdateViewModel.Cpf != null)
             {
-                if (!checker.isValidCpf(clientUpdateRequestViewModel.Cpf))
+                if (!checker.isValidCpf(clientRequestUpdateViewModel.Cpf))
                     throw new Exception("CPF is not valid");
 
-                Client _auxClient = this.clientRepository.Find(x => x.Cpf == clientUpdateRequestViewModel.Cpf);
-
+                Client _auxClient = this.clientRepository.Find(x => x.Cpf == clientRequestUpdateViewModel.Cpf);
                 if (_auxClient.Id != _client.Id)
                     throw new Exception("There is already a client registered with this CPF");
             }
 
-            manualMapper.MapClientUpdateRequestToClient(clientUpdateRequestViewModel, _client);
+            manualMapper.MapClientRequestUpdateToClient(clientRequestUpdateViewModel, _client);
             _client.DateUpdated = DateTime.UtcNow;
 
-            if (clientUpdateRequestViewModel.Password != null)
-                _client.Password = this.HashPassword(clientUpdateRequestViewModel.Password);
+            if (clientRequestUpdateViewModel.Password != null)
+                _client.Password = this.HashPassword(clientRequestUpdateViewModel.Password);
 
-            if (clientUpdateRequestViewModel.CurrentWeight == null || clientUpdateRequestViewModel.CurrentWeight == 0)
+            if (clientRequestUpdateViewModel.CurrentWeight == null || clientRequestUpdateViewModel.CurrentWeight == 0)
                 _client.CurrentWeight = _client.StartingWeight;
             
             this.clientRepository.Update(_client);
 
             return true;
         }
+
         public bool Delete(string id)
         {
             if (!Guid.TryParse(id, out Guid clientId))

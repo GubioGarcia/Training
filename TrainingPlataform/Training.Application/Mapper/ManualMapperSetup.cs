@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Training.Application.ViewModels.ClientViewModels;
+using Training.Application.ViewModels.ProfessionalViewModels;
 using Training.Domain.Entities;
 
 namespace Training.Application.Mapper
@@ -12,7 +13,7 @@ namespace Training.Application.Mapper
     {
         #region ViewModelToDomain
 
-        public void MapClientUpdateRequestToClient(ClientUpdateRequestViewModel source, Client destination)
+        public void MapClientRequestUpdateToClient(ClientRequestUpdateViewModel source, Client destination)
         {
             if (source.Cpf != null && source.Cpf != "")
                 destination.Cpf = source.Cpf;
@@ -48,6 +49,34 @@ namespace Training.Application.Mapper
                 destination.IsActive = source.IsActive.Value;
         }
 
+        public void MapProfessionalRequestUpdateToProfessional(ProfessionalRequestUpdateViewModel source, Professional destination)
+        {
+            if (source.Cpf != null && source.Cpf != "")
+                destination.Cpf = source.Cpf;
+
+            if (source.Name != null && source.Name != "")
+                destination.Name = source.Name;
+
+            if (source.Password != null && source.Password != "")
+                destination.Password = source.Password;
+
+            if (source.Fone != null && source.Fone != "")
+                destination.Fone = source.Fone;
+
+            if (source.CurrentNumberClients != null && source.CurrentNumberClients != 0)
+                destination.CurrentNumberClients = source.CurrentNumberClients.Value;
+
+            if (source.ProfessionalRegistration != null && source.ProfessionalRegistration != "")
+                destination.ProfessionalRegistration = source.ProfessionalRegistration;
+
+            if (source.UrlProfilePhoto != null && source.UrlProfilePhoto != "")
+                destination.UrlProfilePhoto= source.UrlProfilePhoto;
+
+            if (source.IsActive != null)
+                destination.IsActive = source.IsActive.Value;
+        }
+
         #endregion
+    
     }
 }

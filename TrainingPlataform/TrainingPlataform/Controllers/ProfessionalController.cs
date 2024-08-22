@@ -32,15 +32,15 @@ namespace TrainingPlataform.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(ProfessionalViewModel professionalViewModel)
+        public IActionResult Post(ProfessionalRequestViewModel professionalRequestViewModel)
         {
-            return Ok(this.professionalService.Post(professionalViewModel));
+            return Ok(this.professionalService.Post(professionalRequestViewModel));
         }
 
         [HttpPut]
-        public IActionResult Put(ProfessionalViewModel professionalViewModel)
+        public IActionResult Put(ProfessionalRequestUpdateViewModel professionalRequestUpdateViewModel)
         {
-            return Ok(this.professionalService.Put(professionalViewModel));
+            return Ok(this.professionalService.Put(professionalRequestUpdateViewModel));
         }
 
         [HttpDelete]

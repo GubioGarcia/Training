@@ -10,10 +10,10 @@ namespace Training.Application.Interfaces
 {
     public interface IProfessionalService
     {
-        List<ProfessionalViewModel> Get();
-        ProfessionalViewModel GetByid(string id);
-        bool Post(ProfessionalViewModel professionalViewModel);
-        bool Put(ProfessionalViewModel professionalViewModel);
+        List<ProfessionalMinimalFieldViewModel> Get();
+        ProfessionalResponseViewModel GetByid(string id);
+        bool Post(ProfessionalRequestViewModel professionalViewModel);
+        bool Put(ProfessionalRequestUpdateViewModel professionalViewModel);
         bool Delete(string id);
 
         UserAuthenticateResponseViewModel Authenticate(UserAuthenticateRequestViewModel professional);

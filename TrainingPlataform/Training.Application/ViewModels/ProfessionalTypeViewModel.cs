@@ -7,8 +7,10 @@ using Training.Application.Interfaces;
 
 namespace Training.Application.ViewModels
 {
-    public class ProfessionalTypeViewModel : UsersDefaultViewModel
+    public class ProfessionalTypeViewModel
     {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
     }
 }

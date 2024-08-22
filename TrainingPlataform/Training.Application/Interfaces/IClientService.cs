@@ -14,7 +14,7 @@ namespace Training.Application.Interfaces
         List<ClientMinimalFieldViewModel> Get();
         ClientResponseViewModel GetById(string id);
         bool Post(ClientRequestViewModel clientRequestViewModel);
-        bool Put(ClientUpdateRequestViewModel ClientUpdateRequestViewModel);
+        bool Put(ClientRequestUpdateViewModel ClientRequestUpdateViewModel);
         bool Delete(string id);
         UserAuthenticateResponseViewModel Authenticate(UserAuthenticateRequestViewModel client);
     }

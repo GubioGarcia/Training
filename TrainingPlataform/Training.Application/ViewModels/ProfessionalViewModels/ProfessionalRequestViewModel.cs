@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Training.Application.ViewModels.ProfessionalViewModels
 {
-    public class ProfessionalViewModel : UsersDefaultViewModel
+    public class ProfessionalRequestViewModel : ProfessionalMinimalFieldViewModel
     {
         public Guid UsersTypeId { get; set; }
         public Guid ProfessionalTypesId { get; set; }

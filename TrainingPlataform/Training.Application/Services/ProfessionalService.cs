@@ -10,6 +10,7 @@ using Training.Domain.Interfaces;
 using Training.Auth.Services;
 using Training.Application.ViewModels.ProfessionalViewModels;
 using Training.Application.ViewModels.AuthenticateViewModels;
+using Training.Application.Mapper;
 
 namespace Training.Application.Services
 {
@@ -20,29 +21,31 @@ namespace Training.Application.Services
         private readonly IProfessionalTypeRepository professionalTypeRepository;
         private readonly IMapper mapper;
         private readonly IChecker checker;
+        private readonly ManualMapperSetup manualMapper;
 
-        public ProfessionalService(IProfessionalRepository professionalRepository, IUsersTypeRepository usersTypeRepository,
-                                   IProfessionalTypeRepository professionalTypeRepository, IMapper mapper, IChecker checker) 
+        public ProfessionalService(IProfessionalRepository professionalRepository, IUsersTypeRepository usersTypeRepository, IProfessionalTypeRepository professionalTypeRepository, 
+                                   IMapper mapper, IChecker checker, ManualMapperSetup manualMapper) 
         {
             this.professionalRepository = professionalRepository;
             this.usersTypeRepository = usersTypeRepository;
             this.professionalTypeRepository = professionalTypeRepository;
             this.mapper = mapper;
             this.checker = checker;
+            this.manualMapper = manualMapper;
         }
 
-        public List<ProfessionalViewModel> Get()
+        public List<ProfessionalMinimalFieldViewModel> Get()
         {
-            List<ProfessionalViewModel> _professionalViewModels = new List<ProfessionalViewModel>();
+            List<ProfessionalMinimalFieldViewModel> _professionalMinimalFieldViewModels = new List<ProfessionalMinimalFieldViewModel>();
 
             IEnumerable<Professional> _professionals = this.professionalRepository.GetAll();
 
-            _professionalViewModels = mapper.Map<List<ProfessionalViewModel>>(_professionals);
+            _professionalMinimalFieldViewModels = mapper.Map<List<ProfessionalMinimalFieldViewModel>>(_professionals);
             
-            return _professionalViewModels;
+            return _professionalMinimalFieldViewModels;
         }
 
-        public ProfessionalViewModel GetByid(string id)
+        public ProfessionalResponseViewModel GetByid(string id)
         {
             if (!Guid.TryParse(id, out Guid professionalId))
                 throw new Exception("Id is not valid");
@@ -51,35 +54,35 @@ namespace Training.Application.Services
             if (_professional == null)
                 throw new Exception("Professional not found");
 
-            return mapper.Map<ProfessionalViewModel>(_professional);
+            return mapper.Map<ProfessionalResponseViewModel>(_professional);
         }
 
-        public bool Post(ProfessionalViewModel professionalViewModel)
+        public bool Post(ProfessionalRequestViewModel professionalRequestViewModel)
         {
-            if (!checker.isValidCpf(professionalViewModel.Cpf))
+            if (!checker.isValidCpf(professionalRequestViewModel.Cpf))
                 throw new Exception("CPF is not valid");
 
-            Professional _professional = this.professionalRepository.Find(x => x.Cpf == professionalViewModel.Cpf && !x.IsDeleted);
+            Professional _professional = this.professionalRepository.Find(x => x.Cpf == professionalRequestViewModel.Cpf && !x.IsDeleted);
             if (_professional != null)
                 throw new Exception("There is already a professional registered with this CPF");
 
-            if (!checker.isValidFone(professionalViewModel.Fone))
+            if (!checker.isValidFone(professionalRequestViewModel.Fone))
                 throw new Exception("Phone is not valid");
             
-            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == professionalViewModel.UsersTypeId && !x.IsDeleted);
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == professionalRequestViewModel.UsersTypeId && !x.IsDeleted);
             if (_usersType == null)
                 throw new Exception("Id type user not found");
 
-            ProfessionalType _professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalViewModel.ProfessionalTypesId 
+            ProfessionalType _professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalRequestViewModel.ProfessionalTypesId 
                                                                                      && !x.IsDeleted);
             if (_professionalType == null)
                 throw new Exception("Id professional type not found");
 
-            _professional = mapper.Map<Professional>(professionalViewModel);
+            _professional = mapper.Map<Professional>(professionalRequestViewModel);
             _professional.Password = this.HashPassword(_professional.Password);
             _professional.DateRegistration = DateTime.Now;
 
-            if (professionalViewModel.UrlProfilePhoto == "")
+            if (professionalRequestViewModel.UrlProfilePhoto == "")
                 _professional.UrlProfilePhoto = null;
             
             this.professionalRepository.Create(_professional);
@@ -87,33 +90,39 @@ namespace Training.Application.Services
             return true;
         }
 
-        public bool Put(ProfessionalViewModel professionalViewModel)
+        public bool Put(ProfessionalRequestUpdateViewModel professionalRequestUpdateViewModel)
         {
-            if (!checker.isValidCpf(professionalViewModel.Cpf))
-                throw new Exception("CPF is not valid");
-
-            Professional _professional = this.professionalRepository.Find(x => x.Id == professionalViewModel.Id && !x.IsDeleted);
+            Professional _professional = this.professionalRepository.Find(x => x.Id == professionalRequestUpdateViewModel.Id && !x.IsDeleted);
             if (_professional == null)
                 throw new Exception("Professional not found");
 
-            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == professionalViewModel.UsersTypeId && !x.IsDeleted);
-            if (_usersType == null)
-                throw new Exception("Id type user not found");
+            if (professionalRequestUpdateViewModel.Cpf != null)
+            {
+                if (!checker.isValidCpf(professionalRequestUpdateViewModel.Cpf))
+                    throw new Exception("CPF is not valid");
 
-            ProfessionalType professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalViewModel.ProfessionalTypesId
-                                                                                     && !x.IsDeleted);
-            if (professionalType == null)
-                throw new Exception("Id professional type not found");
+                Professional _auxProfessional = this.professionalRepository.Find(x => x.Cpf == professionalRequestUpdateViewModel.Cpf);
+                if (_auxProfessional.Id != _professional.Id)
+                    throw new Exception("There is already a professional registered with this CPF");
+            }
 
-            if (!checker.isValidFone(professionalViewModel.Fone))
-                throw new Exception("Phone is not valid");
+            if (professionalRequestUpdateViewModel.ProfessionalTypeId != null)
+            {
+                ProfessionalType professionalType = this.professionalTypeRepository.Find(
+                                                         x => x.Id == professionalRequestUpdateViewModel.ProfessionalTypeId && !x.IsDeleted);
+                if (professionalType == null)
+                    throw new Exception("Id professional type not found");
+            }
 
-            _professional = mapper.Map<Professional>(professionalViewModel);
-            _professional.Password = this.HashPassword(_professional.Password);
+            if (professionalRequestUpdateViewModel.Fone != null)
+                if (!checker.isValidFone(professionalRequestUpdateViewModel.Fone))
+                    throw new Exception("Phone is not valid");
+            
+            manualMapper.MapProfessionalRequestUpdateToProfessional(professionalRequestUpdateViewModel, _professional);
             _professional.DateUpdated = DateTime.UtcNow;
 
-            if (professionalViewModel.UrlProfilePhoto == "")
-                _professional.UrlProfilePhoto = null;
+            if (professionalRequestUpdateViewModel.Password != null)
+                _professional.Password = this.HashPassword(_professional.Password);         
 
             this.professionalRepository.Update(_professional);
 
