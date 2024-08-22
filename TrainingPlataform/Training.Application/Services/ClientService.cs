@@ -58,7 +58,7 @@ namespace Training.Application.Services
             return mapper.Map<ClientResponseViewModel>(_client);
         }
 
-        public bool Post(ClientRequestViewModel clientRequestViewModel)
+        public ClientMinimalFieldViewModel Post(ClientRequestViewModel clientRequestViewModel)
         {
             if (!checker.isValidCpf(clientRequestViewModel.Cpf))
                 throw new Exception("CPF is not valid");
@@ -83,10 +83,10 @@ namespace Training.Application.Services
 
             this.clientRepository.Create(_client);
 
-            return true;
+            return mapper.Map<ClientMinimalFieldViewModel>(_client);
         }
 
-        public bool Put(ClientRequestUpdateViewModel clientRequestUpdateViewModel)
+        public ClientResponseViewModel Put(ClientRequestUpdateViewModel clientRequestUpdateViewModel)
         {
             Client _client = this.clientRepository.Find(x => x.Id == clientRequestUpdateViewModel.Id);
             if (_client == null)
@@ -113,7 +113,7 @@ namespace Training.Application.Services
             
             this.clientRepository.Update(_client);
 
-            return true;
+            return mapper.Map<ClientResponseViewModel>(_client);
         }
 
         public bool Delete(string id)

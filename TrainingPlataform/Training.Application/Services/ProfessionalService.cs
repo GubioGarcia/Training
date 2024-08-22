@@ -57,7 +57,7 @@ namespace Training.Application.Services
             return mapper.Map<ProfessionalResponseViewModel>(_professional);
         }
 
-        public bool Post(ProfessionalRequestViewModel professionalRequestViewModel)
+        public ProfessionalMinimalFieldViewModel Post(ProfessionalRequestViewModel professionalRequestViewModel)
         {
             if (!checker.isValidCpf(professionalRequestViewModel.Cpf))
                 throw new Exception("CPF is not valid");
@@ -87,10 +87,10 @@ namespace Training.Application.Services
             
             this.professionalRepository.Create(_professional);
 
-            return true;
+            return mapper.Map<ProfessionalMinimalFieldViewModel>(_professional);
         }
 
-        public bool Put(ProfessionalRequestUpdateViewModel professionalRequestUpdateViewModel)
+        public ProfessionalResponseViewModel Put(ProfessionalRequestUpdateViewModel professionalRequestUpdateViewModel)
         {
             Professional _professional = this.professionalRepository.Find(x => x.Id == professionalRequestUpdateViewModel.Id && !x.IsDeleted);
             if (_professional == null)
@@ -126,7 +126,7 @@ namespace Training.Application.Services
 
             this.professionalRepository.Update(_professional);
 
-            return true;
+            return mapper.Map<ProfessionalResponseViewModel>(_professional); ;
         }
 
         public bool Delete(string id)

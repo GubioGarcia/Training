@@ -12,8 +12,8 @@ namespace Training.Application.Interfaces
     {
         List<ProfessionalMinimalFieldViewModel> Get();
         ProfessionalResponseViewModel GetByid(string id);
-        bool Post(ProfessionalRequestViewModel professionalViewModel);
-        bool Put(ProfessionalRequestUpdateViewModel professionalViewModel);
+        ProfessionalMinimalFieldViewModel Post(ProfessionalRequestViewModel professionalViewModel);
+        ProfessionalResponseViewModel Put(ProfessionalRequestUpdateViewModel professionalViewModel);
         bool Delete(string id);
 
         UserAuthenticateResponseViewModel Authenticate(UserAuthenticateRequestViewModel professional);

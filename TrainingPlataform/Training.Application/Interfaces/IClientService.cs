@@ -13,8 +13,8 @@ namespace Training.Application.Interfaces
     {
         List<ClientMinimalFieldViewModel> Get();
         ClientResponseViewModel GetById(string id);
-        bool Post(ClientRequestViewModel clientRequestViewModel);
-        bool Put(ClientRequestUpdateViewModel ClientRequestUpdateViewModel);
+        ClientMinimalFieldViewModel Post(ClientRequestViewModel clientRequestViewModel);
+        ClientResponseViewModel Put(ClientRequestUpdateViewModel ClientRequestUpdateViewModel);
         bool Delete(string id);
         UserAuthenticateResponseViewModel Authenticate(UserAuthenticateRequestViewModel client);
     }
