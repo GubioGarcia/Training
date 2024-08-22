@@ -102,7 +102,7 @@ namespace Training.Application.Services
                     throw new Exception("CPF is not valid");
 
                 Professional _auxProfessional = this.professionalRepository.Find(x => x.Cpf == professionalRequestUpdateViewModel.Cpf);
-                if (_auxProfessional.Id != _professional.Id)
+                if (_auxProfessional != null && _auxProfessional.Id != _professional.Id)
                     throw new Exception("There is already a professional registered with this CPF");
             }
 

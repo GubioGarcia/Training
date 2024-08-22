@@ -98,7 +98,7 @@ namespace Training.Application.Services
                     throw new Exception("CPF is not valid");
 
                 Client _auxClient = this.clientRepository.Find(x => x.Cpf == clientRequestUpdateViewModel.Cpf);
-                if (_auxClient.Id != _client.Id)
+                if (_auxClient != null && _auxClient.Id != _client.Id)
                     throw new Exception("There is already a client registered with this CPF");
             }
 
