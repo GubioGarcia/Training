@@ -21,6 +21,7 @@ namespace Training.Data.Context
         public DbSet<ProfessionalType> ProfessionalTypes { get; set; }
         public DbSet<Professional> Professionals { get; set; }
         public DbSet<Client> Clients { get; set; }
+        public DbSet<ClientProfessional> ClientProfessionals { get; set; }
 
         #endregion
 
@@ -29,6 +30,7 @@ namespace Training.Data.Context
             modelBuilder.ApplyConfiguration(new UsersTypeMap());
             modelBuilder.ApplyConfiguration(new ProfessionalMap());
             modelBuilder.ApplyConfiguration(new ClientMap());
+            modelBuilder.ApplyConfiguration(new ClientProfessionalMap());
 
             modelBuilder.ApplyGlobalConfiguration();
             modelBuilder.SeedData();

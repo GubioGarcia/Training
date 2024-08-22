@@ -20,5 +20,7 @@ namespace Training.Domain.Models
         public string? UrlProfilePhoto { get; set; }
         public DateTime? DateUpdated { get; set; }
         public bool IsDeleted { get; set; } = false;
+
+        public ICollection<ClientProfessional> ClientProfessionals { get; set; } = new List<ClientProfessional>();
     }
 }
