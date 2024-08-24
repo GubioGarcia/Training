@@ -19,14 +19,18 @@ namespace Training.Application.AutoMapper
 
             CreateMap<UsersTypeViewModel, UsersType>();
             CreateMap<ProfessionalTypeViewModel, ProfessionalType>();
+
             CreateMap<ProfessionalMinimalFieldViewModel, Professional>();
             CreateMap<ProfessionalResponseViewModel, Professional>();
             CreateMap<ProfessionalRequestViewModel, Professional>();
             CreateMap<ProfessionalRequestUpdateViewModel, Professional>();
+            
             CreateMap<ClientMinimalFieldViewModel, Client>();
             CreateMap<ClientResponseViewModel, Client>();
             CreateMap<ClientRequestViewModel, Client>();
             CreateMap<ClientRequestUpdateViewModel, Client>();
+
+            CreateMap<ClientProfessionalViewModel, ClientProfessional>();
 
             #endregion
 
@@ -34,14 +38,18 @@ namespace Training.Application.AutoMapper
 
             CreateMap<UsersType, UsersTypeViewModel>();
             CreateMap<ProfessionalType, ProfessionalTypeViewModel>();
+
             CreateMap<Professional, ProfessionalMinimalFieldViewModel>();
             CreateMap<Professional, ProfessionalResponseViewModel>();
             CreateMap<Professional, ProfessionalRequestViewModel>();
             CreateMap<Professional, ProfessionalRequestUpdateViewModel>();
+            
             CreateMap<Client, ClientMinimalFieldViewModel>();
             CreateMap<Client, ClientResponseViewModel>();
             CreateMap<Client, ClientRequestViewModel>();
             CreateMap<Client, ClientRequestUpdateViewModel>();
+
+            CreateMap<ClientProfessional, ClientProfessionalViewModel>();
 
             #endregion
         }
