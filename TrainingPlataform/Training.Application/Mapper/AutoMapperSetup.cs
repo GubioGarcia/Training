@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Training.Application.ViewModels;
+using Training.Application.ViewModels.ClientProfessionalViewModels;
 using Training.Application.ViewModels.ClientViewModels;
 using Training.Application.ViewModels.ProfessionalViewModels;
 using Training.Domain.Entities;
@@ -31,6 +32,8 @@ namespace Training.Application.AutoMapper
             CreateMap<ClientRequestUpdateViewModel, Client>();
 
             CreateMap<ClientProfessionalViewModel, ClientProfessional>();
+            CreateMap<ClientProfessionalRequestViewModel, ClientProfessional>();
+            CreateMap<ClientProfessionalRequestUpdateViewModel, ClientProfessional>();
 
             #endregion
 
@@ -50,6 +53,8 @@ namespace Training.Application.AutoMapper
             CreateMap<Client, ClientRequestUpdateViewModel>();
 
             CreateMap<ClientProfessional, ClientProfessionalViewModel>();
+            CreateMap<ClientProfessional, ClientProfessionalRequestViewModel>();
+            CreateMap<ClientProfessional, ClientProfessionalRequestUpdateViewModel>();
 
             #endregion
         }

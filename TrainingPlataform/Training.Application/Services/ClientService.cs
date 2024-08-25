@@ -103,7 +103,7 @@ namespace Training.Application.Services
             }
 
             manualMapper.MapClientRequestUpdateToClient(clientRequestUpdateViewModel, _client);
-            _client.DateUpdated = DateTime.UtcNow;
+            _client.DateUpdated = DateTime.Now;
 
             if (clientRequestUpdateViewModel.Password != null)
                 _client.Password = this.HashPassword(clientRequestUpdateViewModel.Password);

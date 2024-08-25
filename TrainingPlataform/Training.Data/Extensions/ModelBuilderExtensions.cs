@@ -111,7 +111,7 @@ namespace Training.Data.Extensions
                         ProfessionalRegistration = "Admin",
                         IsActive = true,
                         Cpf = "30704958341",
-                        Password = "$2a$12$X7E9OQ9y9.H7rYVcOGBZQ.uoP.eNgpVpDw2G9hI9T7upICGq8kgy6",
+                        Password = "$2a$11$e34Jq7J0U4e8FT6DjnQilOXYWvKtx7iIz5jSid5YMwHsxO.pbNgTS",
                         Name = "Professional Default Admin",
                         DateRegistration = new DateTime(2024,07,21),
                         Fone = "5562999999999",

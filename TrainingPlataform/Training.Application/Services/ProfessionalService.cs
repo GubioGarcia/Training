@@ -119,7 +119,7 @@ namespace Training.Application.Services
                     throw new Exception("Phone is not valid");
             
             manualMapper.MapProfessionalRequestUpdateToProfessional(professionalRequestUpdateViewModel, _professional);
-            _professional.DateUpdated = DateTime.UtcNow;
+            _professional.DateUpdated = DateTime.Now;
 
             if (professionalRequestUpdateViewModel.Password != null)
                 _professional.Password = this.HashPassword(_professional.Password);         
