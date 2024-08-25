@@ -24,15 +24,17 @@ namespace Training.Application.Services
         private readonly IChecker checker;
         private readonly IMapper mapper;
         private readonly ManualMapperSetup manualMapper;
+        private readonly IClientProfessionalService clientProfessionalService;
 
         public ClientService(IClientRepository clientRepository, IUsersTypeRepository usersTypeRepository,
-                             IMapper mapper, IChecker checker, ManualMapperSetup manualMapper)
+                             IMapper mapper, IChecker checker, ManualMapperSetup manualMapper, IClientProfessionalService clientProfessionalService)
         {
             this.clientRepository = clientRepository;
             this.usersTypeRepository = usersTypeRepository;
             this.checker = checker;
             this.mapper = mapper;
             this.manualMapper = manualMapper;
+            this.clientProfessionalService = clientProfessionalService;
         }
 
         public List<ClientMinimalFieldViewModel> Get()
@@ -70,13 +72,14 @@ namespace Training.Application.Services
             if (!checker.isValidFone(clientRequestViewModel.Fone))
                 throw new Exception("Phone is not valid");
 
-            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == clientRequestViewModel.UsersTypeId && !x.IsDeleted);
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Name == "Client" && !x.IsDeleted);
             if (_usersType == null)
                 throw new Exception("Id type user not found");
 
             _client = mapper.Map<Client>(clientRequestViewModel);
             _client.Password = this.HashPassword(clientRequestViewModel.Password);
             _client.DateRegistration = DateTime.Now;
+            _client.UsersTypeId = _usersType.Id;
 
             if (clientRequestViewModel.UrlProfilePhoto == "")
                 _client.UrlProfilePhoto = null;

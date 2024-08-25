@@ -8,7 +8,6 @@ namespace Training.Application.ViewModels.ClientViewModels
 {
     public class ClientRequestViewModel : ClientMinimalFieldViewModel
     {
-        public Guid UsersTypeId { get; set; }
         public string Password { get; set; }
         public string Fone { get; set; }
         public DateTime DateBirth { get; set; }
