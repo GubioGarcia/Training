@@ -9,11 +9,11 @@ namespace Training.Application.Interfaces
 {
     public interface IClientProfessionalService
     {
-        List<ClientProfessionalViewModel> Get();
-        ClientProfessionalViewModel GetById(string id);
-        List<ClientProfessionalViewModel> GetClientsByProfessionalId(string id);
-        ClientProfessionalViewModel Post(ClientProfessionalRequestViewModel clientProfessionalRequestViewModels);
-        ClientProfessionalViewModel Put(ClientProfessionalRequestUpdateViewModel clientProfessionalRequestUpdateViewModels);
+        List<ClientProfessionalViewModel> Get(string tokenId);
+        ClientProfessionalViewModel GetById(string tokenId, string id);
+        List<ClientProfessionalViewModel> GetClientsByProfessionalId(string tokenId, string id);
+        ClientProfessionalViewModel Post(string tokenId, ClientProfessionalRequestViewModel clientProfessionalRequestViewModels);
+        ClientProfessionalViewModel Put(string tokenId, ClientProfessionalRequestUpdateViewModel clientProfessionalRequestUpdateViewModels);
         bool Delete(string tokenId, string professionalId, string clientId);
     }
 }

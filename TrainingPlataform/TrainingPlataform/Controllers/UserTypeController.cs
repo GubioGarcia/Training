@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Training.Application.Interfaces;
 using Training.Application.ViewModels;
+using Training.Auth.Services;
 
 namespace TrainingPlataform.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class UsersTypeController : ControllerBase
     {
         private readonly IUsersTypeService usersTypeService;
@@ -19,31 +22,41 @@ namespace TrainingPlataform.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(this.usersTypeService.Get());
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.usersTypeService.Get(_tokenId));
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(string id)
         {
-            return Ok(this.usersTypeService.GetById(id));
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.usersTypeService.GetById(_tokenId, id));
         }
 
         [HttpPost]
         public IActionResult Post(UsersTypeViewModel usersTypeViewModel)
         {
-            return Ok(this.usersTypeService.Post(usersTypeViewModel));
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.usersTypeService.Post(_tokenId, usersTypeViewModel));
         }
 
         [HttpPut]
         public IActionResult Put(UsersTypeViewModel usersTypeViewModel)
         {
-            return Ok(this.usersTypeService.Put(usersTypeViewModel));
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.usersTypeService.Put(_tokenId, usersTypeViewModel));
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            return Ok(this.usersTypeService.Delete(id));
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.usersTypeService.Delete(_tokenId, id));
         }
     }
 }

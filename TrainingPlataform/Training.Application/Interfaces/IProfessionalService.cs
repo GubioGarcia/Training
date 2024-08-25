@@ -17,5 +17,6 @@ namespace Training.Application.Interfaces
         bool Delete(string id);
 
         UserAuthenticateResponseViewModel Authenticate(UserAuthenticateRequestViewModel professional);
+        Guid PullUsersTypeId(string tokenId);
     }
 }

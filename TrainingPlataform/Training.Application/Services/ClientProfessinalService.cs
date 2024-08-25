@@ -15,23 +15,27 @@ namespace Training.Application.Services
     public class ClientProfessinalService : IClientProfessionalService
     {
         private readonly IClientProfessionalRepository clientProfessionalRepository;
-        private readonly IMapper mapper;
         private readonly IProfessionalRepository professionalRepository;
+        private readonly IProfessionalService professionalService;
         private readonly IClientRepository clientRepository;
-        private readonly IUsersTypeRepository usersTypeRepository;
+        private readonly IChecker checker;
+        private readonly IMapper mapper;
 
         public ClientProfessinalService(IClientProfessionalRepository clientProfessionalRepository, IMapper mapper, IProfessionalRepository professionalRepository,
-                                        IClientRepository clientRepository, IUsersTypeRepository usersTypeRepository)
+                                        IClientRepository clientRepository, IChecker checker, IProfessionalService professionalService)
         {
             this.clientProfessionalRepository = clientProfessionalRepository;
-            this.mapper = mapper;
             this.professionalRepository = professionalRepository;
+            this.professionalService = professionalService;
             this.clientRepository = clientRepository;
-            this.usersTypeRepository = usersTypeRepository;
+            this.checker = checker;
+            this.mapper = mapper;
         }
 
-        public List<ClientProfessionalViewModel> Get()
+        public List<ClientProfessionalViewModel> Get(string tokenId)
         {
+            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+
             List<ClientProfessionalViewModel> _clientProfessionalViewModel = new List<ClientProfessionalViewModel>();
 
             IEnumerable<ClientProfessional> _clientProfessionals = this.clientProfessionalRepository.GetAll();
@@ -61,8 +65,10 @@ namespace Training.Application.Services
             return _clientProfessionalViewModel;
         }
 
-        public ClientProfessionalViewModel GetById(string id)
+        public ClientProfessionalViewModel GetById(string tokenId, string id)
         {
+            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Professional");
+
             if (!Guid.TryParse(id, out Guid clientProfessionalId))
                 throw new Exception("Id is not valid");
 
@@ -90,8 +96,10 @@ namespace Training.Application.Services
             return _clientProfessionalViewModel;
         }
 
-        public List<ClientProfessionalViewModel> GetClientsByProfessionalId(string id)
+        public List<ClientProfessionalViewModel> GetClientsByProfessionalId(string tokenId, string id)
         {
+            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Professional");
+
             if (!Guid.TryParse(id, out Guid professionalId))
                 throw new Exception("Id is not valid");
 
@@ -125,8 +133,10 @@ namespace Training.Application.Services
             return _clientProfessionalViewModel;
         }
 
-        public ClientProfessionalViewModel Post(ClientProfessionalRequestViewModel clientProfessionalRequestViewModels)
+        public ClientProfessionalViewModel Post(string tokenId, ClientProfessionalRequestViewModel clientProfessionalRequestViewModels)
         {
+            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+
             Professional _professinal = this.professionalRepository.Find(x => x.Id == clientProfessionalRequestViewModels.ProfessionalId);
             if (_professinal == null)
                 throw new Exception("Professional not found");
@@ -154,8 +164,10 @@ namespace Training.Application.Services
             return _clientProfessionalViewModel;
         }
 
-        public ClientProfessionalViewModel Put(ClientProfessionalRequestUpdateViewModel clientProfessionalRequestUpdateViewModels)
+        public ClientProfessionalViewModel Put(string tokenId, ClientProfessionalRequestUpdateViewModel clientProfessionalRequestUpdateViewModels)
         {
+            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+
             ClientProfessional _clientProfessional = this.clientProfessionalRepository.Find(x => x.Id == clientProfessionalRequestUpdateViewModels.Id);
             if (_clientProfessional == null)
                 throw new Exception("Client-Professional Relationship not found");
@@ -187,11 +199,7 @@ namespace Training.Application.Services
                 || !Guid.TryParse(professionalId, out Guid validProfessionalId))
                 throw new Exception("Id is not valid");
 
-            Professional _professional = this.professionalRepository.Find(x => x.Id == validTokeId && !x.IsDeleted);
-
-            UsersType _usersType = this.usersTypeRepository.Find(x => x.Name == "Admin" && !x.IsDeleted);
-            if (_professional.UsersTypeId != _usersType.Id)
-                throw new Exception("You are not authorized to perform this operation");
+            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
 
             ClientProfessional _clientProfessional = this.clientProfessionalRepository.Find(x => x.ProfessionalId == validProfessionalId
                                                                                             && x.ClientId == validClientId && !x.IsDeleted);

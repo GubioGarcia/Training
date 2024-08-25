@@ -172,5 +172,21 @@ namespace Training.Application.Services
         {
             return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
+
+        public Guid PullUsersTypeId(string tokenId)
+        {
+            if (!Guid.TryParse(tokenId, out Guid id))
+                throw new Exception("Id is not valid");
+
+            Professional _professional = this.professionalRepository.Find(x => x.Id == id && !x.IsDeleted);
+            if (_professional == null)
+                throw new Exception("Professional not found");
+
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == _professional.UsersTypeId && !x.IsDeleted);
+            if (_usersType == null)
+                throw new Exception("User type not found");
+
+            return _usersType.Id;
+        }
     }
 }

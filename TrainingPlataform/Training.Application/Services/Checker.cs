@@ -4,11 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Training.Application.Interfaces;
+using Training.Domain.Entities;
+using Training.Domain.Interfaces;
 
 namespace Training.Application.Services
 {
     public class Checker : IChecker
     {
+        private readonly IUsersTypeRepository usersTypeRepository;
+
+        public Checker(IUsersTypeRepository usersTypeRepository)
+        {
+            this.usersTypeRepository = usersTypeRepository;
+        }
+
         public bool isNumber(string aux)
         {
             char[] _auxDigits = aux.ToCharArray();
@@ -75,6 +84,15 @@ namespace Training.Application.Services
                 throw new Exception("Fone is not valid");
 
             return isNumber(fone);
+        }
+
+        public bool IsValidUserType(Guid usersTypeId, string type)
+        {
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Name == type && !x.IsDeleted);
+            if (usersTypeId != _usersType.Id)
+                throw new Exception("You are not authorized to perform this operation");
+
+            return true;
         }
     }
 }

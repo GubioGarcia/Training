@@ -9,10 +9,11 @@ namespace Training.Application.Interfaces
 {
     public interface IUsersTypeService
     {
-        List<UsersTypeViewModel> Get();
-        UsersTypeViewModel GetById(string id);
-        bool Post(UsersTypeViewModel usersTypeViewModel);
-        bool Put(UsersTypeViewModel usersTypeViewModel);
-        bool Delete(string id);
+        List<UsersTypeViewModel> Get(string tokenId);
+        UsersTypeViewModel GetById(string tokenId, string id);
+        bool Post(string tokenId, UsersTypeViewModel usersTypeViewModel);
+        bool Put(string tokenId, UsersTypeViewModel usersTypeViewModel);
+        bool Delete(string tokenId, string id);
+        bool IsValidUserType(Guid usersTypeId, string type);
     }
 }

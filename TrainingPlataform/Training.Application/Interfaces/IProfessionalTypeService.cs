@@ -9,10 +9,10 @@ namespace Training.Application.Interfaces
 {
     public interface IProfessionalTypeService
     {
-        List<ProfessionalTypeViewModel> Get();
-        ProfessionalTypeViewModel GetById(string id);
-        bool Post(ProfessionalTypeViewModel professionalTypeViewModel);
-        bool Put(ProfessionalTypeViewModel professionalTypeViewModel);
-        bool Delete(string id);
+        List<ProfessionalTypeViewModel> Get(string tokenId);
+        ProfessionalTypeViewModel GetById(string tokenId, string id);
+        bool Post(string tokenId, ProfessionalTypeViewModel professionalTypeViewModel);
+        bool Put(string tokenId, ProfessionalTypeViewModel professionalTypeViewModel);
+        bool Delete(string tokenId, string id);
     }
 }
