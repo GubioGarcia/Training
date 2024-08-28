@@ -12,6 +12,8 @@ namespace Training.Application.Interfaces
     {
         List<ProfessionalMinimalFieldViewModel> Get();
         ProfessionalResponseViewModel GetByid(string id);
+        public ProfessionalResponseViewModel GetByCpf(string cpf);
+        //List<ProfessionalMinimalFieldViewModel> GetByName(string name);
         ProfessionalMinimalFieldViewModel Post(ProfessionalRequestViewModel professionalViewModel);
         ProfessionalResponseViewModel Put(ProfessionalRequestUpdateViewModel professionalViewModel);
         bool Delete(string id);

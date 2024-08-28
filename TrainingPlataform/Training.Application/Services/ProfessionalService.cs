@@ -11,6 +11,7 @@ using Training.Auth.Services;
 using Training.Application.ViewModels.ProfessionalViewModels;
 using Training.Application.ViewModels.AuthenticateViewModels;
 using Training.Application.Mapper;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Training.Application.Services
 {
@@ -57,6 +58,32 @@ namespace Training.Application.Services
             return mapper.Map<ProfessionalResponseViewModel>(_professional);
         }
 
+        public ProfessionalResponseViewModel GetByCpf(string cpf)
+        {
+            if (!checker.isValidCpf(cpf))
+                throw new Exception("CPF is not valid");
+
+            Professional _professional = this.professionalRepository.Find(x => x.Cpf == cpf && !x.IsDeleted);
+            if (_professional == null)
+                throw new Exception("Professional not found");
+
+            return mapper.Map<ProfessionalResponseViewModel>(_professional);
+        }
+        /*
+        public List<ProfessionalMinimalFieldViewModel> GetByName(string name)
+        {
+            if (name.IsNullOrEmpty())
+                throw new Exception("Name is required");
+
+            List<ProfessionalMinimalFieldViewModel> _professionalMinimalFieldViewModels = new List<ProfessionalMinimalFieldViewModel>();
+
+            IEnumerable<Professional> _professionals = this.professionalRepository.Query(x => x.Name.ToLower(), );
+
+            _professionalMinimalFieldViewModels = mapper.Map<List<ProfessionalMinimalFieldViewModel>>(_professionals);
+
+            return _professionalMinimalFieldViewModels;
+        }
+        */
         public ProfessionalMinimalFieldViewModel Post(ProfessionalRequestViewModel professionalRequestViewModel)
         {
             if (!checker.isValidCpf(professionalRequestViewModel.Cpf))

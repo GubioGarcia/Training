@@ -31,6 +31,12 @@ namespace TrainingPlataform.Controllers
             return Ok(this.professionalService.GetByid(id));
         }
 
+        [HttpGet("ProfessionalByCpf/{cpf}")]
+        public IActionResult GetByCpf(string cpf)
+        {
+            return Ok(this.professionalService.GetByCpf(cpf));
+        }
+
         [HttpPost]
         public IActionResult Post(ProfessionalRequestViewModel professionalRequestViewModel)
         {
