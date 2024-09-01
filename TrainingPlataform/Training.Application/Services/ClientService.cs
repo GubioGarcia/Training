@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -24,17 +25,15 @@ namespace Training.Application.Services
         private readonly IChecker checker;
         private readonly IMapper mapper;
         private readonly ManualMapperSetup manualMapper;
-        private readonly IClientProfessionalService clientProfessionalService;
 
         public ClientService(IClientRepository clientRepository, IUsersTypeRepository usersTypeRepository,
-                             IMapper mapper, IChecker checker, ManualMapperSetup manualMapper, IClientProfessionalService clientProfessionalService)
+                             IMapper mapper, IChecker checker, ManualMapperSetup manualMapper)
         {
             this.clientRepository = clientRepository;
             this.usersTypeRepository = usersTypeRepository;
             this.checker = checker;
             this.mapper = mapper;
             this.manualMapper = manualMapper;
-            this.clientProfessionalService = clientProfessionalService;
         }
 
         public List<ClientMinimalFieldViewModel> Get()
@@ -58,6 +57,32 @@ namespace Training.Application.Services
                 throw new Exception("Client not found");
 
             return mapper.Map<ClientResponseViewModel>(_client);
+        }
+
+        public ClientResponseViewModel GetByCpf(string cpf)
+        {
+            if (!checker.isValidCpf(cpf))
+                throw new Exception("CPF is not valid");
+
+            Client _client = this.clientRepository.Find(x => x.Cpf == cpf && !x.IsDeleted);
+            if (_client == null)
+                throw new Exception("Client not found");
+
+            return mapper.Map<ClientResponseViewModel>(_client);
+        }
+
+        public List<ClientMinimalFieldViewModel> GetByName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new Exception("Name is required");
+
+            List<ClientMinimalFieldViewModel> _clientMinimalFieldViewModels = new List<ClientMinimalFieldViewModel>();
+
+            IEnumerable<Client> _clients = this.clientRepository.Query(p => EF.Functions.Like(p.Name, $"%{name}%") && !p.IsDeleted);
+
+            _clientMinimalFieldViewModels = mapper.Map<List<ClientMinimalFieldViewModel>>(_clients);
+
+            return _clientMinimalFieldViewModels;
         }
 
         public ClientMinimalFieldViewModel Post(ClientRequestViewModel clientRequestViewModel)

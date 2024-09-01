@@ -31,6 +31,18 @@ namespace TrainingPlataform.Controllers
             return Ok(this.clientService.GetById(id));
         }
 
+        [HttpGet("ClientByCPF/{cpf}")]
+        public IActionResult GetByCpf(string cpf)
+        {
+            return Ok(this.clientService.GetByCpf(cpf));
+        }
+
+        [HttpGet("ClientByName/{name}")]
+        public IActionResult GetByName(string name)
+        {
+            return Ok(this.clientService.GetByName(name));
+        }
+
         [HttpPost]
         public IActionResult Post(ClientRequestViewModel clientRequestView)
         {

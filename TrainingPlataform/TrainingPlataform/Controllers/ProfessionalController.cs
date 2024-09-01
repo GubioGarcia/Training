@@ -22,39 +22,57 @@ namespace TrainingPlataform.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(this.professionalService.Get());
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.professionalService.Get(_tokenId));
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(string id)
         {
-            return Ok(this.professionalService.GetByid(id));
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.professionalService.GetByid(id, _tokenId));
         }
 
         [HttpGet("ProfessionalByCpf/{cpf}")]
         public IActionResult GetByCpf(string cpf)
         {
-            return Ok(this.professionalService.GetByCpf(cpf));
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.professionalService.GetByCpf(cpf, _tokenId));
+        }
+
+        [HttpGet("ProfessionalByName/{name}")]
+        public IActionResult GetByName(string name)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.professionalService.GetByName(name, _tokenId));
         }
 
         [HttpPost]
         public IActionResult Post(ProfessionalRequestViewModel professionalRequestViewModel)
         {
-            return Ok(this.professionalService.Post(professionalRequestViewModel));
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.professionalService.Post(professionalRequestViewModel, _tokenId));
         }
 
         [HttpPut]
         public IActionResult Put(ProfessionalRequestUpdateViewModel professionalRequestUpdateViewModel)
         {
-            return Ok(this.professionalService.Put(professionalRequestUpdateViewModel));
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.professionalService.Put(professionalRequestUpdateViewModel, _tokenId));
         }
 
         [HttpDelete]
-        public IActionResult Delete()
+        public IActionResult Delete(string id)
         {
-            string _professionalId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
             
-            return Ok(this.professionalService.Delete(_professionalId));
+            return Ok(this.professionalService.Delete(id, _tokenId));
         }
 
         [HttpPost("authenticate"), AllowAnonymous]

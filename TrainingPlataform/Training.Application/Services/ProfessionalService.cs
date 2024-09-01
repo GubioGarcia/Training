@@ -12,6 +12,7 @@ using Training.Application.ViewModels.ProfessionalViewModels;
 using Training.Application.ViewModels.AuthenticateViewModels;
 using Training.Application.Mapper;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 
 namespace Training.Application.Services
 {
@@ -35,8 +36,10 @@ namespace Training.Application.Services
             this.manualMapper = manualMapper;
         }
 
-        public List<ProfessionalMinimalFieldViewModel> Get()
+        public List<ProfessionalMinimalFieldViewModel> Get(string tokenId)
         {
+            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+
             List<ProfessionalMinimalFieldViewModel> _professionalMinimalFieldViewModels = new List<ProfessionalMinimalFieldViewModel>();
 
             IEnumerable<Professional> _professionals = this.professionalRepository.GetAll();
@@ -46,8 +49,10 @@ namespace Training.Application.Services
             return _professionalMinimalFieldViewModels;
         }
 
-        public ProfessionalResponseViewModel GetByid(string id)
+        public ProfessionalResponseViewModel GetByid(string id, string tokenId)
         {
+            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+
             if (!Guid.TryParse(id, out Guid professionalId))
                 throw new Exception("Id is not valid");
 
@@ -58,8 +63,10 @@ namespace Training.Application.Services
             return mapper.Map<ProfessionalResponseViewModel>(_professional);
         }
 
-        public ProfessionalResponseViewModel GetByCpf(string cpf)
+        public ProfessionalResponseViewModel GetByCpf(string cpf, string tokenId)
         {
+            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+
             if (!checker.isValidCpf(cpf))
                 throw new Exception("CPF is not valid");
 
@@ -69,23 +76,27 @@ namespace Training.Application.Services
 
             return mapper.Map<ProfessionalResponseViewModel>(_professional);
         }
-        /*
-        public List<ProfessionalMinimalFieldViewModel> GetByName(string name)
+
+        public List<ProfessionalMinimalFieldViewModel> GetByName(string name, string tokenId)
         {
-            if (name.IsNullOrEmpty())
+            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+
+            if (string.IsNullOrEmpty(name))
                 throw new Exception("Name is required");
 
             List<ProfessionalMinimalFieldViewModel> _professionalMinimalFieldViewModels = new List<ProfessionalMinimalFieldViewModel>();
 
-            IEnumerable<Professional> _professionals = this.professionalRepository.Query(x => x.Name.ToLower(), );
+            IEnumerable<Professional> _professionals = this.professionalRepository.Query(p => EF.Functions.Like(p.Name, $"%{name}%") && !p.IsDeleted);
 
             _professionalMinimalFieldViewModels = mapper.Map<List<ProfessionalMinimalFieldViewModel>>(_professionals);
 
             return _professionalMinimalFieldViewModels;
         }
-        */
-        public ProfessionalMinimalFieldViewModel Post(ProfessionalRequestViewModel professionalRequestViewModel)
+
+        public ProfessionalMinimalFieldViewModel Post(ProfessionalRequestViewModel professionalRequestViewModel, string tokenId)
         {
+            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+
             if (!checker.isValidCpf(professionalRequestViewModel.Cpf))
                 throw new Exception("CPF is not valid");
 
@@ -117,8 +128,10 @@ namespace Training.Application.Services
             return mapper.Map<ProfessionalMinimalFieldViewModel>(_professional);
         }
 
-        public ProfessionalResponseViewModel Put(ProfessionalRequestUpdateViewModel professionalRequestUpdateViewModel)
+        public ProfessionalResponseViewModel Put(ProfessionalRequestUpdateViewModel professionalRequestUpdateViewModel, string tokenId)
         {
+            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+
             Professional _professional = this.professionalRepository.Find(x => x.Id == professionalRequestUpdateViewModel.Id && !x.IsDeleted);
             if (_professional == null)
                 throw new Exception("Professional not found");
@@ -156,8 +169,10 @@ namespace Training.Application.Services
             return mapper.Map<ProfessionalResponseViewModel>(_professional); ;
         }
 
-        public bool Delete(string id)
+        public bool Delete(string id, string tokenId)
         {
+            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+
             if (!Guid.TryParse(id, out Guid professionalId))
                 throw new Exception("Id is not valid");
 
