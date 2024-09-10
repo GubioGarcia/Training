@@ -13,6 +13,7 @@ using Training.Application.ViewModels.AuthenticateViewModels;
 using Training.Application.Mapper;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace Training.Application.Services
 {
@@ -130,7 +131,20 @@ namespace Training.Application.Services
 
         public ProfessionalResponseViewModel Put(ProfessionalRequestUpdateViewModel professionalRequestUpdateViewModel, string tokenId)
         {
-            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+            //this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin"); 
+            if (!this.ValidUserType(tokenId, "Admin") && !this.ValidUserType(tokenId, "Professional"))
+                throw new Exception("You are not authorized to perform this operation");
+
+            #region 'Valid if logged in user is the same user tho be changed'
+
+            if (!Guid.TryParse(tokenId, out Guid validId))
+                throw new Exception("Id is not valid");
+
+            Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted);
+            if (_professionalLogged.Id != professionalRequestUpdateViewModel.Id)
+                throw new Exception("You are not authorized to perform this operation");
+
+            #endregion
 
             Professional _professional = this.professionalRepository.Find(x => x.Id == professionalRequestUpdateViewModel.Id && !x.IsDeleted);
             if (_professional == null)
@@ -229,6 +243,25 @@ namespace Training.Application.Services
                 throw new Exception("User type not found");
 
             return _usersType.Id;
+        }
+
+        public bool ValidUserType(string id, string userType)
+        {
+            if (!Guid.TryParse(id, out Guid validId))
+                throw new Exception("Id is not valid");
+
+            Professional _professional = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted);
+            if (_professional == null)
+                throw new Exception("Professional not found");
+
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == _professional.UsersTypeId && !x.IsDeleted);
+            if (_usersType == null)
+                throw new Exception("User type not found");
+
+            if (_usersType.Name.ToLower() != userType.ToLower())
+                return false;
+
+            return true;
         }
     }
 }

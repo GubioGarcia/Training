@@ -20,5 +20,6 @@ namespace Training.Application.Interfaces
 
         UserAuthenticateResponseViewModel Authenticate(UserAuthenticateRequestViewModel professional);
         Guid PullUsersTypeId(string tokenId);
+        bool ValidUserType(string id, string userType);
     }
 }
