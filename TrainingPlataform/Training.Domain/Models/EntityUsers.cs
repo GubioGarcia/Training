@@ -8,9 +8,11 @@ using Training.Domain.Interfaces;
 
 namespace Training.Domain.Models
 {
-    public class EntityUsers
+    public class EntityUsers : IIdentifiable
     {
         public Guid Id { get; set; }
+        public Guid UsersTypeId { get; set; }
+        public UsersType UsersType { get; set; }
         public bool IsActive { get; set; } = true;
         public string Cpf { get; set; }
         public string Password { get; set; }

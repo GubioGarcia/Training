@@ -31,7 +31,7 @@ namespace Training.Application.Services
 
             TEntity _user = this.repository.Find(x => x.Id == validId && !x.IsDeleted);
             if (_user == null)
-                throw new Exception($"User not found");
+                return false;
 
             UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == _user.UsersTypeId && !x.IsDeleted);
             if (_usersType == null)

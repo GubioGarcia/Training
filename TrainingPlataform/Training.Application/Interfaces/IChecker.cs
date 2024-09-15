@@ -11,7 +11,5 @@ namespace Training.Application.Interfaces
         bool isNumber(string aux);
         bool isValidCpf(string cpf);
         bool isValidFone(string fone);
-        bool IsValidUserType(Guid usersTypeId, string type);
-        //bool ValidUserType(string id, string userType);
     }
 }

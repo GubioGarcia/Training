@@ -8,11 +8,8 @@ using Training.Domain.Models;
 
 namespace Training.Domain.Entities
 {
-    public sealed class Client : EntityUsers, IIdentifiable
+    public sealed class Client : EntityUsers
     {
-        public Guid UsersTypeId { get; set; }
-        public UsersType UsersType { get; set; }
-
         public DateTime DateBirth { get; set; }
         public string InitialObjective { get; set; }
         public decimal Height { get; set; }

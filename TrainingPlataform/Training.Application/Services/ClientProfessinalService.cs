@@ -18,23 +18,28 @@ namespace Training.Application.Services
         private readonly IProfessionalRepository professionalRepository;
         private readonly IProfessionalService professionalService;
         private readonly IClientRepository clientRepository;
+        private readonly IUserServiceBase<Professional> userServiceBase;
         private readonly IChecker checker;
         private readonly IMapper mapper;
 
         public ClientProfessinalService(IClientProfessionalRepository clientProfessionalRepository, IMapper mapper, IProfessionalRepository professionalRepository,
-                                        IClientRepository clientRepository, IChecker checker, IProfessionalService professionalService)
+                                        IClientRepository clientRepository, IChecker checker, IProfessionalService professionalService, 
+                                        IUserServiceBase<Professional> userServiceBase)
         {
             this.clientProfessionalRepository = clientProfessionalRepository;
             this.professionalRepository = professionalRepository;
             this.professionalService = professionalService;
             this.clientRepository = clientRepository;
+            this.userServiceBase = userServiceBase;
             this.checker = checker;
             this.mapper = mapper;
         }
 
         public List<ClientProfessionalViewModel> Get(string tokenId)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             List<ClientProfessionalViewModel> _clientProfessionalViewModel = new List<ClientProfessionalViewModel>();
 
@@ -67,7 +72,9 @@ namespace Training.Application.Services
 
         public ClientProfessionalViewModel GetById(string tokenId, string id)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Professional");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             if (!Guid.TryParse(id, out Guid clientProfessionalId))
                 throw new Exception("Id is not valid");
@@ -98,7 +105,9 @@ namespace Training.Application.Services
 
         public List<ClientProfessionalViewModel> GetClientsByProfessionalId(string tokenId, string id)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Professional");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             if (!Guid.TryParse(id, out Guid professionalId))
                 throw new Exception("Id is not valid");
@@ -135,7 +144,9 @@ namespace Training.Application.Services
 
         public ClientProfessionalViewModel Post(string tokenId, ClientProfessionalRequestViewModel clientProfessionalRequestViewModels)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             Professional _professinal = this.professionalRepository.Find(x => x.Id == clientProfessionalRequestViewModels.ProfessionalId);
             if (_professinal == null)
@@ -166,7 +177,9 @@ namespace Training.Application.Services
 
         public ClientProfessionalViewModel Put(string tokenId, ClientProfessionalRequestUpdateViewModel clientProfessionalRequestUpdateViewModels)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             ClientProfessional _clientProfessional = this.clientProfessionalRepository.Find(x => x.Id == clientProfessionalRequestUpdateViewModels.Id);
             if (_clientProfessional == null)
@@ -199,7 +212,9 @@ namespace Training.Application.Services
                 || !Guid.TryParse(professionalId, out Guid validProfessionalId))
                 throw new Exception("Id is not valid");
 
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             ClientProfessional _clientProfessional = this.clientProfessionalRepository.Find(x => x.ProfessionalId == validProfessionalId
                                                                                             && x.ClientId == validClientId && !x.IsDeleted);

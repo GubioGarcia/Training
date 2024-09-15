@@ -15,6 +15,7 @@ using Training.Application.ViewModels.ProfessionalViewModels;
 using Training.Auth.Services;
 using Training.Domain.Entities;
 using Training.Domain.Interfaces;
+using Training.Domain.Models;
 
 namespace Training.Application.Services
 {
@@ -22,22 +23,31 @@ namespace Training.Application.Services
     {
         private readonly IClientRepository clientRepository;
         private readonly IUsersTypeRepository usersTypeRepository;
+        private readonly IUserServiceBase<Professional> userServiceBaseProfessional;
+        private readonly IUserServiceBase<Client> userServiceBaseClient;
+        private readonly ManualMapperSetup manualMapper;
         private readonly IChecker checker;
         private readonly IMapper mapper;
-        private readonly ManualMapperSetup manualMapper;
 
-        public ClientService(IClientRepository clientRepository, IUsersTypeRepository usersTypeRepository,
-                             IMapper mapper, IChecker checker, ManualMapperSetup manualMapper)
+        public ClientService(IClientRepository clientRepository, IUsersTypeRepository usersTypeRepository, ManualMapperSetup manualMapper,
+                             IMapper mapper, IChecker checker, IUserServiceBase<Professional> userServiceBaseProfessional,
+                             IUserServiceBase<Client> userServiceBaseClient)
         {
             this.clientRepository = clientRepository;
             this.usersTypeRepository = usersTypeRepository;
             this.checker = checker;
             this.mapper = mapper;
             this.manualMapper = manualMapper;
+            this.userServiceBaseProfessional = userServiceBaseProfessional;
+            this.userServiceBaseClient = userServiceBaseClient;
         }
 
-        public List<ClientMinimalFieldViewModel> Get()
+        public List<ClientMinimalFieldViewModel> Get(string tokenId)
         {
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new Exception("You are not authorized to perform this operation");
+
             List<ClientMinimalFieldViewModel> _clientMinimalFieldViewModels = new List<ClientMinimalFieldViewModel>();
 
             IEnumerable<Client> _clients = this.clientRepository.GetAll();
@@ -47,8 +57,24 @@ namespace Training.Application.Services
             return _clientMinimalFieldViewModels;
         }
 
-        public ClientResponseViewModel GetById(string id)
-        {
+        public ClientResponseViewModel GetById(string id, string tokenId)
+        {/*
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"])
+                && !this.userServiceBaseClient.IsLoggedInUserOfValidType(tokenId, ["Client"]))
+                throw new Exception("You are not authorized to perform this operation");
+
+            #region 'Valid if logged in user is the same user tho be changed'
+
+            if (!Guid.TryParse(tokenId, out Guid validId))
+                throw new Exception("Id is not valid");
+
+            Client _clientLogged = this.clientRepository.Find(x => x.Id == validId && !x.IsDeleted);
+            if (_clientLogged.Id != clientRequestUpdateViewModel.Id)
+                throw new Exception("You are not authorized to perform this operation");
+
+            #endregion
+            */
             if (!Guid.TryParse(id, out Guid clientId))
                 throw new Exception("Id is not valid");
 
@@ -59,8 +85,12 @@ namespace Training.Application.Services
             return mapper.Map<ClientResponseViewModel>(_client);
         }
 
-        public ClientResponseViewModel GetByCpf(string cpf)
+        public ClientResponseViewModel GetByCpf(string cpf, string tokenId)
         {
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new Exception("You are not authorized to perform this operation");
+
             if (!checker.isValidCpf(cpf))
                 throw new Exception("CPF is not valid");
 
@@ -71,8 +101,12 @@ namespace Training.Application.Services
             return mapper.Map<ClientResponseViewModel>(_client);
         }
 
-        public List<ClientMinimalFieldViewModel> GetByName(string name)
+        public List<ClientMinimalFieldViewModel> GetByName(string name, string tokenId)
         {
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new Exception("You are not authorized to perform this operation");
+
             if (string.IsNullOrEmpty(name))
                 throw new Exception("Name is required");
 
@@ -85,8 +119,12 @@ namespace Training.Application.Services
             return _clientMinimalFieldViewModels;
         }
 
-        public ClientMinimalFieldViewModel Post(ClientRequestViewModel clientRequestViewModel)
+        public ClientMinimalFieldViewModel Post(ClientRequestViewModel clientRequestViewModel, string tokenId)
         {
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new Exception("You are not authorized to perform this operation");
+
             if (!checker.isValidCpf(clientRequestViewModel.Cpf))
                 throw new Exception("CPF is not valid");
 
@@ -114,8 +152,31 @@ namespace Training.Application.Services
             return mapper.Map<ClientMinimalFieldViewModel>(_client);
         }
 
-        public ClientResponseViewModel Put(ClientRequestUpdateViewModel clientRequestUpdateViewModel)
-        {
+        public ClientResponseViewModel Put(ClientRequestUpdateViewModel clientRequestUpdateViewModel, string tokenId)
+        {/*
+            // Valida tipo de usuário com acesso ao método
+            if (this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+            {
+                Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted);
+                if (_professionalLogged.Id != professionalRequestUpdateViewModel.Id)
+                    throw new Exception("You are not authorized to perform this operation");
+            }
+
+            bool _isClient = this.userServiceBaseClient.IsLoggedInUserOfValidType(tokenId, ["Client"]);
+            if (!_isProfessional && !_isClient)
+                throw new Exception("You are not authorized to perform this operation");
+
+            #region 'Valid if logged in user is the same user tho be changed'
+
+            if (!Guid.TryParse(tokenId, out Guid validId))
+                throw new Exception("Id is not valid");
+
+            Client _clientLogged = this.clientRepository.Find(x => x.Id == validId && !x.IsDeleted);
+            if (_clientLogged.Id != clientRequestUpdateViewModel.Id)
+                throw new Exception("You are not authorized to perform this operation");
+
+            #endregion
+            */
             Client _client = this.clientRepository.Find(x => x.Id == clientRequestUpdateViewModel.Id);
             if (_client == null)
                 throw new Exception("Client not found");

@@ -14,6 +14,5 @@ namespace Training.Application.Interfaces
         bool Post(string tokenId, UsersTypeViewModel usersTypeViewModel);
         bool Put(string tokenId, UsersTypeViewModel usersTypeViewModel);
         bool Delete(string tokenId, string id);
-        bool IsValidUserType(Guid usersTypeId, string type);
     }
 }

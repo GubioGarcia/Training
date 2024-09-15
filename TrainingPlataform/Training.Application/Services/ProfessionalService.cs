@@ -14,6 +14,7 @@ using Training.Application.Mapper;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using Training.Domain.Models;
 
 namespace Training.Application.Services
 {
@@ -25,13 +26,15 @@ namespace Training.Application.Services
         private readonly IMapper mapper;
         private readonly IChecker checker;
         private readonly ManualMapperSetup manualMapper;
+        private readonly IUserServiceBase<Professional> userServiceBase;
 
         public ProfessionalService(IProfessionalRepository professionalRepository, IUsersTypeRepository usersTypeRepository, IProfessionalTypeRepository professionalTypeRepository, 
-                                   IMapper mapper, IChecker checker, ManualMapperSetup manualMapper) 
+                                   IMapper mapper, IChecker checker, ManualMapperSetup manualMapper, IUserServiceBase<Professional> userServiceBase) 
         {
             this.professionalRepository = professionalRepository;
             this.usersTypeRepository = usersTypeRepository;
             this.professionalTypeRepository = professionalTypeRepository;
+            this.userServiceBase = userServiceBase;
             this.mapper = mapper;
             this.checker = checker;
             this.manualMapper = manualMapper;
@@ -39,7 +42,9 @@ namespace Training.Application.Services
 
         public List<ProfessionalMinimalFieldViewModel> Get(string tokenId)
         {
-            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             List<ProfessionalMinimalFieldViewModel> _professionalMinimalFieldViewModels = new List<ProfessionalMinimalFieldViewModel>();
 
@@ -52,7 +57,9 @@ namespace Training.Application.Services
 
         public ProfessionalResponseViewModel GetByid(string id, string tokenId)
         {
-            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             if (!Guid.TryParse(id, out Guid professionalId))
                 throw new Exception("Id is not valid");
@@ -66,7 +73,9 @@ namespace Training.Application.Services
 
         public ProfessionalResponseViewModel GetByCpf(string cpf, string tokenId)
         {
-            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             if (!checker.isValidCpf(cpf))
                 throw new Exception("CPF is not valid");
@@ -80,7 +89,9 @@ namespace Training.Application.Services
 
         public List<ProfessionalMinimalFieldViewModel> GetByName(string name, string tokenId)
         {
-            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             if (string.IsNullOrEmpty(name))
                 throw new Exception("Name is required");
@@ -96,7 +107,9 @@ namespace Training.Application.Services
 
         public ProfessionalMinimalFieldViewModel Post(ProfessionalRequestViewModel professionalRequestViewModel, string tokenId)
         {
-            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             if (!checker.isValidCpf(professionalRequestViewModel.Cpf))
                 throw new Exception("CPF is not valid");
@@ -131,8 +144,8 @@ namespace Training.Application.Services
 
         public ProfessionalResponseViewModel Put(ProfessionalRequestUpdateViewModel professionalRequestUpdateViewModel, string tokenId)
         {
-            //this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin"); 
-            if (!this.ValidUserType(tokenId, "Admin") && !this.ValidUserType(tokenId, "Professional"))
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
                 throw new Exception("You are not authorized to perform this operation");
 
             #region 'Valid if logged in user is the same user tho be changed'
@@ -185,7 +198,9 @@ namespace Training.Application.Services
 
         public bool Delete(string id, string tokenId)
         {
-            this.checker.IsValidUserType(this.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             if (!Guid.TryParse(id, out Guid professionalId))
                 throw new Exception("Id is not valid");

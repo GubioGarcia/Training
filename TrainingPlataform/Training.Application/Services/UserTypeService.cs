@@ -16,22 +16,23 @@ namespace Training.Application.Services
     {
         private readonly IUsersTypeRepository usersTypeRepository;
         private readonly IProfessionalService professionalService;
+        private readonly UserServiceBase<Professional> userServiceBase;
         private readonly IChecker checker;
         private readonly IMapper mapper;
-        private readonly UserServiceBase<Professional> userServiceBase;
 
         public UsersTypeService(IUsersTypeRepository usersTypeRepository, IProfessionalService professionalService,
                                 IChecker checker, IMapper mapper, UserServiceBase<Professional> userServiceBase)
         {
             this.usersTypeRepository = usersTypeRepository;
             this.professionalService = professionalService;
+            this.userServiceBase = userServiceBase;
             this.checker = checker;
             this.mapper = mapper;
-            this.userServiceBase = userServiceBase;
         }
 
         public List<UsersTypeViewModel> Get(string tokenId)
         {
+            // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
                 throw new Exception("You are not authorized to perform this operation");
 
@@ -46,6 +47,7 @@ namespace Training.Application.Services
 
         public UsersTypeViewModel GetById(string tokenId, string id)
         {
+            // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
                 throw new Exception("You are not authorized to perform this operation");
 
@@ -61,6 +63,7 @@ namespace Training.Application.Services
 
         public bool Post(string tokenId, UsersTypeViewModel usersTypeViewModel)
         {
+            // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
                 throw new Exception("You are not authorized to perform this operation");
 
@@ -73,6 +76,7 @@ namespace Training.Application.Services
 
         public bool Put(string tokenId, UsersTypeViewModel usersTypeViewModel)
         {
+            // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
                 throw new Exception("You are not authorized to perform this operation");
 
@@ -89,6 +93,7 @@ namespace Training.Application.Services
 
         public bool Delete(string tokenId, string id)
         {
+            // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
                 throw new Exception("You are not authorized to perform this operation");
 
@@ -100,15 +105,6 @@ namespace Training.Application.Services
                 throw new Exception("User type not found");
 
             return this.usersTypeRepository.Delete(_usersType);
-        }
-
-        public bool IsValidUserType(Guid usersTypeId, string type)
-        {
-            UsersType _usersType = this.usersTypeRepository.Find(x => x.Name == type && !x.IsDeleted);
-            if (usersTypeId != _usersType.Id)
-                throw new Exception("You are not authorized to perform this operation");
-
-            return true;
         }
     }
 }

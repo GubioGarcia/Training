@@ -22,37 +22,49 @@ namespace TrainingPlataform.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(this.clientService.Get());
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.clientService.Get(_tokenId));
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(string id)
         {
-            return Ok(this.clientService.GetById(id));
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.clientService.GetById(id, _tokenId));
         }
 
         [HttpGet("ClientByCPF/{cpf}")]
         public IActionResult GetByCpf(string cpf)
         {
-            return Ok(this.clientService.GetByCpf(cpf));
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.clientService.GetByCpf(cpf, _tokenId));
         }
 
         [HttpGet("ClientByName/{name}")]
         public IActionResult GetByName(string name)
         {
-            return Ok(this.clientService.GetByName(name));
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.clientService.GetByName(name, _tokenId));
         }
 
         [HttpPost]
         public IActionResult Post(ClientRequestViewModel clientRequestView)
         {
-            return Ok(this.clientService.Post(clientRequestView));
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.clientService.Post(clientRequestView, _tokenId));
         }
 
         [HttpPut]
         public IActionResult Put(ClientRequestUpdateViewModel clientRequestUpdateViewModel)
         {
-            return Ok(this.clientService.Put(clientRequestUpdateViewModel));
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.clientService.Put(clientRequestUpdateViewModel, _tokenId));
         }
 
         [HttpDelete]

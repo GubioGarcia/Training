@@ -11,12 +11,12 @@ namespace Training.Application.Interfaces
 {
     public interface IClientService
     {
-        List<ClientMinimalFieldViewModel> Get();
-        ClientResponseViewModel GetById(string id);
-        ClientResponseViewModel GetByCpf(string cpf);
-        List<ClientMinimalFieldViewModel> GetByName(string name);
-        ClientMinimalFieldViewModel Post(ClientRequestViewModel clientRequestViewModel);
-        ClientResponseViewModel Put(ClientRequestUpdateViewModel ClientRequestUpdateViewModel);
+        List<ClientMinimalFieldViewModel> Get(string tokenId);
+        ClientResponseViewModel GetById(string id, string tokenId);
+        ClientResponseViewModel GetByCpf(string cpf, string tokenId);
+        List<ClientMinimalFieldViewModel> GetByName(string name, string tokenId);
+        ClientMinimalFieldViewModel Post(ClientRequestViewModel clientRequestViewModel, string tokenId);
+        ClientResponseViewModel Put(ClientRequestUpdateViewModel ClientRequestUpdateViewModel, string tokenId);
         bool Delete(string id);
         UserAuthenticateResponseViewModel Authenticate(UserAuthenticateRequestViewModel client);
     }

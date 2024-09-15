@@ -15,21 +15,25 @@ namespace Training.Application.Services
     {
         private readonly IProfessionalTypeRepository professionalTypeRepository;
         private readonly IProfessionalService professionalService;
+        private readonly UserServiceBase<Professional> userServiceBase;
         private readonly IChecker checker;
         private readonly IMapper mapper;
 
         public ProfessionalTypeService(IProfessionalTypeRepository professionalTypeRepository, IMapper mapper,
-                                       IProfessionalService professionalService, IChecker checker)
+                                       IProfessionalService professionalService, IChecker checker, UserServiceBase<Professional> userServiceBase)
         {
             this.professionalTypeRepository = professionalTypeRepository;
-            this.mapper = mapper;
             this.professionalService = professionalService;
+            this.userServiceBase = userServiceBase;
             this.checker = checker;
+            this.mapper = mapper;
         }
 
         public List<ProfessionalTypeViewModel> Get(string tokenId)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             List<ProfessionalTypeViewModel> _professionalTypeViewModels = new List<ProfessionalTypeViewModel>();
 
@@ -42,7 +46,9 @@ namespace Training.Application.Services
 
         public ProfessionalTypeViewModel GetById(string tokenId, string id)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             if (!Guid.TryParse(id, out Guid professionalTypeId))
                 throw new Exception("Id is not valid");
@@ -56,7 +62,9 @@ namespace Training.Application.Services
 
         public bool Post(string tokenId, ProfessionalTypeViewModel professionalTypeViewModel)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             ProfessionalType _professionalType = mapper.Map<ProfessionalType>(professionalTypeViewModel);
 
@@ -67,7 +75,9 @@ namespace Training.Application.Services
 
         public bool Put(string tokenId, ProfessionalTypeViewModel professionalTypeViewModel)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             ProfessionalType _professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalTypeViewModel.Id && !x.IsDeleted);
             if (_professionalType == null)
@@ -82,7 +92,9 @@ namespace Training.Application.Services
 
         public bool Delete(string tokenId, string id)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             if (!Guid.TryParse(id, out Guid professionalTypeId))
                 throw new Exception("Id is not valid");
