@@ -88,11 +88,30 @@ namespace Training.Application.Services
 
         public bool IsValidUserType(Guid usersTypeId, string type)
         {
-            UsersType _usersType = this.usersTypeRepository.Find(x => x.Name == type && !x.IsDeleted);
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Name.ToLower() == type.ToLower() && !x.IsDeleted);
             if (usersTypeId != _usersType.Id)
                 throw new Exception("You are not authorized to perform this operation");
 
             return true;
         }
+
+        //public bool ValidUserType(string userId, string[] validUserTypese)
+        //{
+        //    if (!Guid.TryParse(userId, out Guid validId))
+        //        throw new Exception("Id is not valid");
+
+        //    Professional _professional = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted);
+        //    if (_professional == null)
+        //        throw new Exception("Professional not found");
+
+        //    UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == _professional.UsersTypeId && !x.IsDeleted);
+        //    if (_usersType == null)
+        //        throw new Exception("User type not found");
+
+        //    if (_usersType.Name.ToLower() != userType.ToLower())
+        //        return false;
+
+        //    return true;
+        //}
     }
 }

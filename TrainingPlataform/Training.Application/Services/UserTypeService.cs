@@ -8,6 +8,7 @@ using Training.Application.Interfaces;
 using Training.Application.ViewModels;
 using Training.Domain.Entities;
 using Training.Domain.Interfaces;
+using Training.Domain.Models;
 
 namespace Training.Application.Services
 {
@@ -17,19 +18,22 @@ namespace Training.Application.Services
         private readonly IProfessionalService professionalService;
         private readonly IChecker checker;
         private readonly IMapper mapper;
+        private readonly UserServiceBase<Professional> userServiceBase;
 
         public UsersTypeService(IUsersTypeRepository usersTypeRepository, IProfessionalService professionalService,
-                                IChecker checker, IMapper mapper)
+                                IChecker checker, IMapper mapper, UserServiceBase<Professional> userServiceBase)
         {
             this.usersTypeRepository = usersTypeRepository;
             this.professionalService = professionalService;
             this.checker = checker;
             this.mapper = mapper;
+            this.userServiceBase = userServiceBase;
         }
 
         public List<UsersTypeViewModel> Get(string tokenId)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             List<UsersTypeViewModel> _usersTypeViewModels = new List<UsersTypeViewModel>();
 
@@ -42,7 +46,8 @@ namespace Training.Application.Services
 
         public UsersTypeViewModel GetById(string tokenId, string id)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             if (!Guid.TryParse(id, out Guid userId))
                 throw new Exception("Id is not valid");
@@ -56,7 +61,8 @@ namespace Training.Application.Services
 
         public bool Post(string tokenId, UsersTypeViewModel usersTypeViewModel)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             UsersType _usersType = mapper.Map<UsersType>(usersTypeViewModel);
 
@@ -67,7 +73,8 @@ namespace Training.Application.Services
 
         public bool Put(string tokenId, UsersTypeViewModel usersTypeViewModel)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == usersTypeViewModel.Id && !x.IsDeleted);
             if (_usersType == null)
@@ -82,7 +89,8 @@ namespace Training.Application.Services
 
         public bool Delete(string tokenId, string id)
         {
-            this.checker.IsValidUserType(this.professionalService.PullUsersTypeId(tokenId), "Admin");
+            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
+                throw new Exception("You are not authorized to perform this operation");
 
             if (!Guid.TryParse(id, out Guid userId))
                 throw new Exception("Id is not valid");

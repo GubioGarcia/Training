@@ -4,6 +4,7 @@ using Training.Application.Services;
 using Training.Data.Repositories;
 using Training.Domain.Entities;
 using Training.Domain.Interfaces;
+using Training.Domain.Models;
 using Training.Security;
 
 namespace Training.IoC
@@ -21,9 +22,15 @@ namespace Training.IoC
             services.AddScoped<IChecker, Checker>();
             services.AddScoped<IClientProfessionalService, ClientProfessinalService>();
 
+            services.AddScoped(typeof(IUserServiceBase<>), typeof(UserServiceBase<>));
+            services.AddScoped<UserServiceBase<Professional>>();
+            services.AddScoped<UserServiceBase<Client>>();
+
             #endregion
 
             #region Repositories
+
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddScoped<IUsersTypeRepository, UsersTypeRepository>();
             services.AddScoped<IProfessionalTypeRepository, ProfessionalTypeRepository>();
