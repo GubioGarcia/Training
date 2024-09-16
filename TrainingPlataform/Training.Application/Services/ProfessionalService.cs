@@ -148,20 +148,13 @@ namespace Training.Application.Services
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
                 throw new Exception("You are not authorized to perform this operation");
 
-            #region 'Valid if logged in user is the same user tho be changed'
-
             if (!Guid.TryParse(tokenId, out Guid validId))
                 throw new Exception("Id is not valid");
 
-            Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted);
-            if (_professionalLogged.Id != professionalRequestUpdateViewModel.Id)
+            // Valida se usuário a ser alterado é o usuário logado
+            Professional _professional = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted) ?? throw new Exception("Professional not found");
+            if (_professional.Id != professionalRequestUpdateViewModel.Id)
                 throw new Exception("You are not authorized to perform this operation");
-
-            #endregion
-
-            Professional _professional = this.professionalRepository.Find(x => x.Id == professionalRequestUpdateViewModel.Id && !x.IsDeleted);
-            if (_professional == null)
-                throw new Exception("Professional not found");
 
             if (professionalRequestUpdateViewModel.Cpf != null)
             {
