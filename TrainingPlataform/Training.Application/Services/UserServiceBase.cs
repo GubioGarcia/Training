@@ -42,5 +42,22 @@ namespace Training.Application.Services
 
             return true;
         }
+
+        // retorna o UserTpe do id
+        public string LoggedInUserType(string id)
+        {
+            if (!Guid.TryParse(id, out Guid validId))
+                throw new Exception("Id is not valid");
+
+            TEntity _user = this.repository.Find(x => x.Id == validId && !x.IsDeleted);
+            if (_user == null)
+                throw new Exception("User not found");
+
+            UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == _user.UsersTypeId && !x.IsDeleted);
+            if (_usersType == null)
+                throw new Exception("User type not found");
+
+            return _usersType.Name;
+        }
     }
 }
