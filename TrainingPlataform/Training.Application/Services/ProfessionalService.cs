@@ -144,17 +144,30 @@ namespace Training.Application.Services
 
         public ProfessionalResponseViewModel Put(ProfessionalRequestUpdateViewModel professionalRequestUpdateViewModel, string tokenId)
         {
-            // Valida tipo de usuário com acesso ao método
-            if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
-                throw new Exception("You are not authorized to perform this operation");
-
+            // Verifica se o ID é válido
             if (!Guid.TryParse(tokenId, out Guid validId))
                 throw new Exception("Id is not valid");
 
-            // Valida se usuário a ser alterado é o usuário logado
-            Professional _professional = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted) ?? throw new Exception("Professional not found");
-            if (_professional.Id != professionalRequestUpdateViewModel.Id)
+            // Recebe o tipo do usuário logado e instância profissional logado
+            string loggedInUserType = this.userServiceBase.LoggedInUserType(tokenId);
+            Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
+                                                ?? throw new Exception("Professional not found");
+
+            // Se o usuário logado for do tipo 'Professional', usuário só pode alterar seu próprio registro
+            if (loggedInUserType.Equals("Professional", StringComparison.OrdinalIgnoreCase))
+            {
+                if (_professionalLogged.Id != professionalRequestUpdateViewModel.Id)
+                    throw new Exception("You are not authorized to perform this operation");
+            }
+            // Se o usuário logado não for 'Admin' ou 'Professional', a operação não é autorizada
+            else if (!loggedInUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+            {
                 throw new Exception("You are not authorized to perform this operation");
+            }
+
+            // Busca o profissional a ser atualizado
+            Professional _professional = this.professionalRepository.Find(x => x.Id == professionalRequestUpdateViewModel.Id && !x.IsDeleted)
+                                        ?? throw new Exception("Professional not found");
 
             if (professionalRequestUpdateViewModel.Cpf != null)
             {
