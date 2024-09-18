@@ -27,15 +27,15 @@ namespace TrainingPlataform.Controllers
             return Ok(this.professionalService.Get(_tokenId));
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetById(string id)
+        [HttpGet("{id:guid}")]
+        public IActionResult GetById(Guid id)
         {
             string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
 
             return Ok(this.professionalService.GetByid(id, _tokenId));
         }
 
-        [HttpGet("ProfessionalByCpf/{cpf}")]
+        [HttpGet("ProfessionalByCpf/{cpf:length(11)}")]
         public IActionResult GetByCpf(string cpf)
         {
             string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
@@ -43,7 +43,7 @@ namespace TrainingPlataform.Controllers
             return Ok(this.professionalService.GetByCpf(cpf, _tokenId));
         }
 
-        [HttpGet("ProfessionalByName/{name}")]
+        [HttpGet("ProfessionalByName/{name:minlength(1)}")]
         public IActionResult GetByName(string name)
         {
             string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);

@@ -11,7 +11,7 @@ namespace Training.Application.Interfaces
     public interface IProfessionalService
     {
         List<ProfessionalMinimalFieldViewModel> Get(string tokenId);
-        ProfessionalResponseViewModel GetByid(string id, string tokenId);
+        ProfessionalResponseViewModel GetByid(Guid id, string tokenId);
         public ProfessionalResponseViewModel GetByCpf(string cpf, string tokenId);
         List<ProfessionalMinimalFieldViewModel> GetByName(string name, string tokenId);
         ProfessionalMinimalFieldViewModel Post(ProfessionalRequestViewModel professionalViewModel, string tokenId);

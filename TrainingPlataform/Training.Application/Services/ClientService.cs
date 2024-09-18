@@ -60,45 +60,35 @@ namespace Training.Application.Services
             Professional _professional = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
                                          ?? throw new Exception("Professional not found");
 
-            // objeto que receba os clientes relacionados ao professional
+            // objeto que recebe os clientes relacionados ao professional
             IEnumerable<ClientProfessional> _clientProfessionalRelations = this.clientProfessionalRepository
                                             .Query(x => x.ProfessionalId == _professional.Id && !x.IsDeleted).ToList();
-
             if (!_clientProfessionalRelations.Any())
                 throw new Exception("No clients found for this professional");
 
-            // Obtem os ClientId dos registros encontrados
+            // Obtem os ClientId dos registros encontrados, busca os clientes correspondentes e mapeia para a ViewModel
             List<Guid> _clientIds = _clientProfessionalRelations.Select(x => x.ClientId).ToList();
-
-            // Busca os clientes correspondentes
             IEnumerable<Client> _clients = this.clientRepository.Query(x => _clientIds.Contains(x.Id) && !x.IsDeleted).ToList();
-
-            // Mapear os clientes para ClientMinimalFieldViewModel
             List<ClientMinimalFieldViewModel> _clientMinimalFieldViewModels = this.mapper.Map<List<ClientMinimalFieldViewModel>>(_clients);
 
             return _clientMinimalFieldViewModels;
         }
 
-        public ClientResponseViewModel GetById(string id, string tokenId)
-        {/*
-            // Valida tipo de usuário com acesso ao método
-            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"])
-                && !this.userServiceBaseClient.IsLoggedInUserOfValidType(tokenId, ["Client"]))
-                throw new Exception("You are not authorized to perform this operation");
-
-            #region 'Valid if logged in user is the same user tho be changed'
-
+        // Acessado apenas se o cliente pesquisado estiver vinculado com o professional
+        public ClientResponseViewModel GetById(Guid clientId, string tokenId)
+        {
             if (!Guid.TryParse(tokenId, out Guid validId))
                 throw new Exception("Id is not valid");
 
-            Client _clientLogged = this.clientRepository.Find(x => x.Id == validId && !x.IsDeleted);
-            if (_clientLogged.Id != clientRequestUpdateViewModel.Id)
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Professional"]))
                 throw new Exception("You are not authorized to perform this operation");
 
-            #endregion
-            */
-            if (!Guid.TryParse(id, out Guid clientId))
-                throw new Exception("Id is not valid");
+            Professional _professional = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
+                                         ?? throw new Exception("Professional not found");
+
+            ClientProfessional _clientProfessional = this.clientProfessionalRepository.Find(x => x.Professional.Id == _professional.Id
+                                                    && x.ClientId == clientId && !x.IsDeleted) ?? throw new Exception("Client not found");
 
             Client _client = this.clientRepository.Find(x => x.Id == clientId && !x.IsDeleted);
             if (_client == null)
@@ -107,36 +97,59 @@ namespace Training.Application.Services
             return mapper.Map<ClientResponseViewModel>(_client);
         }
 
+        // Acessado apenas se o cliente pesquisado estiver vinculado com o professional
         public ClientResponseViewModel GetByCpf(string cpf, string tokenId)
         {
+            if (!Guid.TryParse(tokenId, out Guid validId))
+                throw new Exception("Id is not valid");
+
             // Valida tipo de usuário com acesso ao método
-            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Professional"]))
                 throw new Exception("You are not authorized to perform this operation");
 
             if (!checker.isValidCpf(cpf))
                 throw new Exception("CPF is not valid");
 
+            // recebe o professional logado
+            Professional _professional = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
+                                         ?? throw new Exception("Professional not found");
+
+            // recebe o cliente a ser retornado
             Client _client = this.clientRepository.Find(x => x.Cpf == cpf && !x.IsDeleted);
             if (_client == null)
                 throw new Exception("Client not found");
 
+            // valida se o professional logado tem relacionamento com o cliente a ser retornado
+            ClientProfessional _clientProfessional = this.clientProfessionalRepository.Find(x => x.Professional.Id == _professional.Id
+                                                    && x.ClientId == _client.Id && !x.IsDeleted) ?? throw new Exception("Client not found");
+
             return mapper.Map<ClientResponseViewModel>(_client);
         }
 
+        // Retorna apenas os clientes vinculados com o professional logado
         public List<ClientMinimalFieldViewModel> GetByName(string name, string tokenId)
         {
+            if (!Guid.TryParse(tokenId, out Guid validId))
+                throw new Exception("Id is not valid");
+
             // Valida tipo de usuário com acesso ao método
-            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Professional"]))
                 throw new Exception("You are not authorized to perform this operation");
 
-            if (string.IsNullOrEmpty(name))
-                throw new Exception("Name is required");
+            Professional _professional = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
+                                         ?? throw new Exception("Professional not found");
 
-            List<ClientMinimalFieldViewModel> _clientMinimalFieldViewModels = new List<ClientMinimalFieldViewModel>();
+            // objeto que recebe os clientes relacionados ao professional
+            IEnumerable<ClientProfessional> _clientProfessionalRelations = this.clientProfessionalRepository
+                                            .Query(x => x.ProfessionalId == _professional.Id && !x.IsDeleted).ToList();
+            if (!_clientProfessionalRelations.Any())
+                throw new Exception("No clients found for this professional");
 
-            IEnumerable<Client> _clients = this.clientRepository.Query(p => EF.Functions.Like(p.Name, $"%{name}%") && !p.IsDeleted);
-
-            _clientMinimalFieldViewModels = mapper.Map<List<ClientMinimalFieldViewModel>>(_clients);
+            // Obtem os ClientId dos registros encontrados, busca os clientes correspondentes e mapeia para a ViewModel
+            List<Guid> _clientIds = _clientProfessionalRelations.Select(x => x.ClientId).ToList();
+            IEnumerable<Client> _clients = this.clientRepository.Query(x => _clientIds.Contains(x.Id)
+                                            && EF.Functions.Like(x.Name, $"%{name}%")&& !x.IsDeleted).ToList();
+            List<ClientMinimalFieldViewModel> _clientMinimalFieldViewModels = this.mapper.Map<List<ClientMinimalFieldViewModel>>(_clients);
 
             return _clientMinimalFieldViewModels;
         }

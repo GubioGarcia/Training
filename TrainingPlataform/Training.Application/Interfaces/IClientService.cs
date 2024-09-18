@@ -12,7 +12,7 @@ namespace Training.Application.Interfaces
     public interface IClientService
     {
         List<ClientMinimalFieldViewModel> Get(string tokenId);
-        ClientResponseViewModel GetById(string id, string tokenId);
+        ClientResponseViewModel GetById(Guid id, string tokenId);
         ClientResponseViewModel GetByCpf(string cpf, string tokenId);
         List<ClientMinimalFieldViewModel> GetByName(string name, string tokenId);
         ClientMinimalFieldViewModel Post(ClientRequestViewModel clientRequestViewModel, string tokenId);

@@ -55,16 +55,13 @@ namespace Training.Application.Services
             return _professionalMinimalFieldViewModels;
         }
 
-        public ProfessionalResponseViewModel GetByid(string id, string tokenId)
+        public ProfessionalResponseViewModel GetByid(Guid professionalid, string tokenId)
         {
             // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
                 throw new Exception("You are not authorized to perform this operation");
 
-            if (!Guid.TryParse(id, out Guid professionalId))
-                throw new Exception("Id is not valid");
-
-            Professional _professional = this.professionalRepository.Find(x => x.Id == professionalId && !x.IsDeleted);
+            Professional _professional = this.professionalRepository.Find(x => x.Id == professionalid && !x.IsDeleted);
             if (_professional == null)
                 throw new Exception("Professional not found");
 
