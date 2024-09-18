@@ -10,6 +10,7 @@ using Training.Application.Interfaces;
 using Training.Application.Mapper;
 using Training.Application.ViewModels;
 using Training.Application.ViewModels.AuthenticateViewModels;
+using Training.Application.ViewModels.ClientProfessionalViewModels;
 using Training.Application.ViewModels.ClientViewModels;
 using Training.Application.ViewModels.ProfessionalViewModels;
 using Training.Auth.Services;
@@ -22,37 +23,58 @@ namespace Training.Application.Services
     public class ClientService : IClientService
     {
         private readonly IClientRepository clientRepository;
+        private readonly IProfessionalRepository professionalRepository;
+        private readonly IClientProfessionalRepository clientProfessionalRepository;
         private readonly IUsersTypeRepository usersTypeRepository;
+        private readonly ManualMapperSetup manualMapper;
         private readonly IUserServiceBase<Professional> userServiceBaseProfessional;
         private readonly IUserServiceBase<Client> userServiceBaseClient;
-        private readonly ManualMapperSetup manualMapper;
         private readonly IChecker checker;
         private readonly IMapper mapper;
 
-        public ClientService(IClientRepository clientRepository, IUsersTypeRepository usersTypeRepository, ManualMapperSetup manualMapper,
-                             IMapper mapper, IChecker checker, IUserServiceBase<Professional> userServiceBaseProfessional,
-                             IUserServiceBase<Client> userServiceBaseClient)
+        public ClientService(IClientRepository clientRepository, IProfessionalRepository professionalRepository, IUsersTypeRepository usersTypeRepository, 
+                             IClientProfessionalRepository clientProfessionalRepository, ManualMapperSetup manualMapper, IMapper mapper, IChecker checker,
+                              IUserServiceBase<Professional> userServiceBaseProfessional, IUserServiceBase<Client> userServiceBaseClient)
         {
             this.clientRepository = clientRepository;
+            this.professionalRepository = professionalRepository;
+            this.clientProfessionalRepository = clientProfessionalRepository;
             this.usersTypeRepository = usersTypeRepository;
-            this.checker = checker;
-            this.mapper = mapper;
-            this.manualMapper = manualMapper;
             this.userServiceBaseProfessional = userServiceBaseProfessional;
             this.userServiceBaseClient = userServiceBaseClient;
+            this.manualMapper = manualMapper;
+            this.checker = checker;
+            this.mapper = mapper;
         }
 
+        // Acessado apenas pelo professional logado e visualiza apenas os clientes vinculados a ele
         public List<ClientMinimalFieldViewModel> Get(string tokenId)
         {
+            if (!Guid.TryParse(tokenId, out Guid validId))
+                throw new Exception("Id is not valid");
+
             // Valida tipo de usuário com acesso ao método
-            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Professional"]))
                 throw new Exception("You are not authorized to perform this operation");
 
-            List<ClientMinimalFieldViewModel> _clientMinimalFieldViewModels = new List<ClientMinimalFieldViewModel>();
+            Professional _professional = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
+                                         ?? throw new Exception("Professional not found");
 
-            IEnumerable<Client> _clients = this.clientRepository.GetAll();
+            // objeto que receba os clientes relacionados ao professional
+            IEnumerable<ClientProfessional> _clientProfessionalRelations = this.clientProfessionalRepository
+                                            .Query(x => x.ProfessionalId == _professional.Id && !x.IsDeleted).ToList();
 
-            _clientMinimalFieldViewModels = mapper.Map<List<ClientMinimalFieldViewModel>>(_clients);
+            if (!_clientProfessionalRelations.Any())
+                throw new Exception("No clients found for this professional");
+
+            // Obtem os ClientId dos registros encontrados
+            List<Guid> _clientIds = _clientProfessionalRelations.Select(x => x.ClientId).ToList();
+
+            // Busca os clientes correspondentes
+            IEnumerable<Client> _clients = this.clientRepository.Query(x => _clientIds.Contains(x.Id) && !x.IsDeleted).ToList();
+
+            // Mapear os clientes para ClientMinimalFieldViewModel
+            List<ClientMinimalFieldViewModel> _clientMinimalFieldViewModels = this.mapper.Map<List<ClientMinimalFieldViewModel>>(_clients);
 
             return _clientMinimalFieldViewModels;
         }
