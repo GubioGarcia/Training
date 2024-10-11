@@ -43,7 +43,7 @@ namespace Training.Application.Services
             return true;
         }
 
-        // retorna o UserTpe do id
+        // retorna o UserType do id
         public string LoggedInUserType(string id)
         {
             if (!Guid.TryParse(id, out Guid validId))

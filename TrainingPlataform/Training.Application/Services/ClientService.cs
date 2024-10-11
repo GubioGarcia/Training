@@ -24,6 +24,7 @@ namespace Training.Application.Services
     {
         private readonly IClientRepository clientRepository;
         private readonly IProfessionalRepository professionalRepository;
+        private readonly IClientProfessionalService clientProfessionalService;
         private readonly IClientProfessionalRepository clientProfessionalRepository;
         private readonly IUsersTypeRepository usersTypeRepository;
         private readonly ManualMapperSetup manualMapper;
@@ -33,11 +34,12 @@ namespace Training.Application.Services
         private readonly IMapper mapper;
 
         public ClientService(IClientRepository clientRepository, IProfessionalRepository professionalRepository, IUsersTypeRepository usersTypeRepository, 
-                             IClientProfessionalRepository clientProfessionalRepository, ManualMapperSetup manualMapper, IMapper mapper, IChecker checker,
-                              IUserServiceBase<Professional> userServiceBaseProfessional, IUserServiceBase<Client> userServiceBaseClient)
+                             IClientProfessionalRepository clientProfessionalRepository, IClientProfessionalService clientProfessionalService, ManualMapperSetup manualMapper,
+                             IMapper mapper, IChecker checker, IUserServiceBase<Professional> userServiceBaseProfessional, IUserServiceBase<Client> userServiceBaseClient)
         {
             this.clientRepository = clientRepository;
             this.professionalRepository = professionalRepository;
+            this.clientProfessionalService = clientProfessionalService;
             this.clientProfessionalRepository = clientProfessionalRepository;
             this.usersTypeRepository = usersTypeRepository;
             this.userServiceBaseProfessional = userServiceBaseProfessional;
@@ -154,10 +156,14 @@ namespace Training.Application.Services
             return _clientMinimalFieldViewModels;
         }
 
+        // Acessado apenas por usuário do tipo 'Professional', cria relação automática cliente/professional
         public ClientMinimalFieldViewModel Post(ClientRequestViewModel clientRequestViewModel, string tokenId)
         {
+            if (!Guid.TryParse(tokenId, out Guid professionalId))
+                throw new Exception("Id is not valid");
+
             // Valida tipo de usuário com acesso ao método
-            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Professional"]))
                 throw new Exception("You are not authorized to perform this operation");
 
             if (!checker.isValidCpf(clientRequestViewModel.Cpf))
@@ -184,38 +190,39 @@ namespace Training.Application.Services
 
             this.clientRepository.Create(_client);
 
+            // Gera relacionamento do client com professional logado
+            ClientProfessionalRequestViewModel _clientProfessionalRequestViewModel = new ClientProfessionalRequestViewModel();
+            _clientProfessionalRequestViewModel.ProfessionalId = professionalId;
+            _clientProfessionalRequestViewModel.ClientId = _client.Id;
+            this.clientProfessionalService.Post(tokenId, _clientProfessionalRequestViewModel);
+
             return mapper.Map<ClientMinimalFieldViewModel>(_client);
         }
 
+        // Acessado apenas pelo próprio usuário cliente logado ou pelo usuário professional se possuir relação com o cliente a ser alterado
         public ClientResponseViewModel Put(ClientRequestUpdateViewModel clientRequestUpdateViewModel, string tokenId)
-        {/*
-            // Valida tipo de usuário com acesso ao método
-            if (this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
-            {
-                Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted);
-                if (_professionalLogged.Id != professionalRequestUpdateViewModel.Id)
-                    throw new Exception("You are not authorized to perform this operation");
-            }
-
-            bool _isClient = this.userServiceBaseClient.IsLoggedInUserOfValidType(tokenId, ["Client"]);
-            if (!_isProfessional && !_isClient)
-                throw new Exception("You are not authorized to perform this operation");
-
-            #region 'Valid if logged in user is the same user tho be changed'
-
+        {
             if (!Guid.TryParse(tokenId, out Guid validId))
                 throw new Exception("Id is not valid");
 
-            Client _clientLogged = this.clientRepository.Find(x => x.Id == validId && !x.IsDeleted);
-            if (_clientLogged.Id != clientRequestUpdateViewModel.Id)
-                throw new Exception("You are not authorized to perform this operation");
-
-            #endregion
-            */
+            // Valida tipo de usuário com acesso ao método
+            if (this.userServiceBaseClient.IsLoggedInUserOfValidType(tokenId, ["Client"]))
+            {
+                Client _clientLogged = this.clientRepository.Find(x => x.Id == validId && !x.IsDeleted);
+                if (_clientLogged.Id != clientRequestUpdateViewModel.Id)
+                    throw new Exception("You are not authorized to perform this operation");
+            } else if (this.userServiceBaseClient.IsLoggedInUserOfValidType(tokenId, ["Professional"]))
+            {
+                Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted);
+                ClientProfessional _clientProfessional = this.clientProfessionalRepository.Find(x => x.ProfessionalId == _professionalLogged.Id && x.ClientId == clientRequestUpdateViewModel.Id);
+                if (_clientProfessional == null)
+                    throw new Exception("You are not authorized to perform this operation");
+            }
+            
             Client _client = this.clientRepository.Find(x => x.Id == clientRequestUpdateViewModel.Id);
             if (_client == null)
                 throw new Exception("Client not found");
-            
+     
             if (clientRequestUpdateViewModel.Cpf != null)
             {
                 if (!checker.isValidCpf(clientRequestUpdateViewModel.Cpf))
