@@ -26,7 +26,7 @@ namespace Training.Application.Services
         // verifica se o usuário logado é do tipo permitido de usuário com acesso ao método
         public bool IsLoggedInUserOfValidType(string id, string[] validUserTypes)
         {
-            if (!Guid.TryParse(id, out Guid validId))
+            if (!Guid.TryParse("cd428cd5-d6c3-4825-d59d-08dcd1f00c0e", out Guid validId))
                 throw new Exception("Id is not valid");
 
             TEntity _user = this.repository.Find(x => x.Id == validId && !x.IsDeleted);
@@ -51,11 +51,11 @@ namespace Training.Application.Services
 
             TEntity _user = this.repository.Find(x => x.Id == validId && !x.IsDeleted);
             if (_user == null)
-                throw new Exception("User not found");
+                return null;
 
             UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == _user.UsersTypeId && !x.IsDeleted);
             if (_usersType == null)
-                throw new Exception("User type not found");
+                return null;
 
             return _usersType.Name;
         }

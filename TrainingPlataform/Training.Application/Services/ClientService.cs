@@ -171,7 +171,7 @@ namespace Training.Application.Services
 
             Client _client = this.clientRepository.Find(x => x.Cpf == clientRequestViewModel.Cpf);
             if (_client != null)
-                throw new Exception("There is already a professional registered with this CPF");
+                throw new Exception("There is already a client registered with this CPF");
 
             if (!checker.isValidFone(clientRequestViewModel.Fone))
                 throw new Exception("Phone is not valid");
@@ -194,6 +194,7 @@ namespace Training.Application.Services
             ClientProfessionalRequestViewModel _clientProfessionalRequestViewModel = new ClientProfessionalRequestViewModel();
             _clientProfessionalRequestViewModel.ProfessionalId = professionalId;
             _clientProfessionalRequestViewModel.ClientId = _client.Id;
+            _clientProfessionalRequestViewModel.DescriptionProfessional = "Novo cliente";
             this.clientProfessionalService.Post(tokenId, _clientProfessionalRequestViewModel);
 
             return mapper.Map<ClientMinimalFieldViewModel>(_client);
@@ -205,20 +206,25 @@ namespace Training.Application.Services
             if (!Guid.TryParse(tokenId, out Guid validId))
                 throw new Exception("Id is not valid");
 
-            // Valida tipo de usuário com acesso ao método
-            if (this.userServiceBaseClient.IsLoggedInUserOfValidType(tokenId, ["Client"]))
+            // Recebe tipo do usuário logado
+            string _userTypeLogged = userServiceBaseClient.LoggedInUserType(tokenId);
+            if (_userTypeLogged == null || _userTypeLogged == "") _userTypeLogged = userServiceBaseProfessional.LoggedInUserType(tokenId);
+            else if (_userTypeLogged == null || _userTypeLogged == "") throw new Exception("You are not authorized to perform this operation");
+
+            // Valida se usuário logado possui acesso liberado ao método
+            if (_userTypeLogged == "Client")
             {
                 Client _clientLogged = this.clientRepository.Find(x => x.Id == validId && !x.IsDeleted);
                 if (_clientLogged.Id != clientRequestUpdateViewModel.Id)
                     throw new Exception("You are not authorized to perform this operation");
-            } else if (this.userServiceBaseClient.IsLoggedInUserOfValidType(tokenId, ["Professional"]))
+            } else if (_userTypeLogged == "Professional")
             {
                 Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted);
                 ClientProfessional _clientProfessional = this.clientProfessionalRepository.Find(x => x.ProfessionalId == _professionalLogged.Id && x.ClientId == clientRequestUpdateViewModel.Id);
                 if (_clientProfessional == null)
                     throw new Exception("You are not authorized to perform this operation");
             }
-            
+
             Client _client = this.clientRepository.Find(x => x.Id == clientRequestUpdateViewModel.Id);
             if (_client == null)
                 throw new Exception("Client not found");
