@@ -82,15 +82,28 @@ namespace Training.Application.Services
             if (!Guid.TryParse(tokenId, out Guid validId))
                 throw new Exception("Id is not valid");
 
-            // Valida tipo de usuário com acesso ao método
-            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Professional"]))
+            // Recebe tipo do usuário logado
+            string _userTypeLogged = userServiceBaseClient.LoggedInUserType(tokenId);
+            if (_userTypeLogged == null || _userTypeLogged == "")
+                _userTypeLogged = userServiceBaseProfessional.LoggedInUserType(tokenId);
+            else if (_userTypeLogged == null || _userTypeLogged == "") 
                 throw new Exception("You are not authorized to perform this operation");
 
-            Professional _professional = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
-                                         ?? throw new Exception("Professional not found");
+            // Valida se usuário logado possui acesso liberado ao método
+            if (_userTypeLogged == "Client")
+            {
+                Client _clientLogged = this.clientRepository.Find(x => x.Id == validId && !x.IsDeleted);
+                if (_clientLogged.Id != clientId)
+                    throw new Exception("You are not authorized to perform this operation");
+            }
+            else if (_userTypeLogged == "Professional")
+            {
+                Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
+                                             ?? throw new Exception("Professional not found");
 
-            ClientProfessional _clientProfessional = this.clientProfessionalRepository.Find(x => x.Professional.Id == _professional.Id
-                                                    && x.ClientId == clientId && !x.IsDeleted) ?? throw new Exception("Client not found");
+                ClientProfessional _clientProfessional = this.clientProfessionalRepository.Find(x => x.Professional.Id == _professionalLogged.Id
+                                                        && x.ClientId == clientId && !x.IsDeleted) ?? throw new Exception("Client not found");
+            }
 
             Client _client = this.clientRepository.Find(x => x.Id == clientId && !x.IsDeleted);
             if (_client == null)
@@ -212,8 +225,10 @@ namespace Training.Application.Services
 
             // Recebe tipo do usuário logado
             string _userTypeLogged = userServiceBaseClient.LoggedInUserType(tokenId);
-            if (_userTypeLogged == null || _userTypeLogged == "") _userTypeLogged = userServiceBaseProfessional.LoggedInUserType(tokenId);
-            else if (_userTypeLogged == null || _userTypeLogged == "") throw new Exception("You are not authorized to perform this operation");
+            if (_userTypeLogged == null || _userTypeLogged == "")
+                _userTypeLogged = userServiceBaseProfessional.LoggedInUserType(tokenId);
+            else if (_userTypeLogged == null || _userTypeLogged == "")
+                throw new Exception("You are not authorized to perform this operation");
 
             // Valida se usuário logado possui acesso liberado ao método
             if (_userTypeLogged == "Client")
