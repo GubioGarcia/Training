@@ -169,7 +169,11 @@ namespace Training.Application.Services
             if (!checker.isValidCpf(clientRequestViewModel.Cpf))
                 throw new Exception("CPF is not valid");
 
-            Client _client = this.clientRepository.Find(x => x.Cpf == clientRequestViewModel.Cpf);
+            // Verifica se já existe cliente cadastrado com o CPF, entre os clientes relacionados ao profissional
+            Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == professionalId && !x.IsDeleted);
+            List<Guid> _clientProfessionalRelations = this.clientProfessionalRepository
+                                                      .Query(x => x.ProfessionalId == _professionalLogged.Id).Select(x => x.ClientId).ToList();
+            Client _client = this.clientRepository.Find(x => x.Cpf == clientRequestViewModel.Cpf && _clientProfessionalRelations.Contains(x.Id));
             if (_client != null)
                 throw new Exception("There is already a client registered with this CPF");
 
