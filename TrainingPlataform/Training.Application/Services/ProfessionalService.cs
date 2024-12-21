@@ -15,6 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using Training.Domain.Models;
+using Template.CrossCutting.ExceptionHandler.Extensions;
+using System.Net;
 
 namespace Training.Application.Services
 {
@@ -44,15 +46,22 @@ namespace Training.Application.Services
         {
             // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
-                throw new Exception("You are not authorized to perform this operation");
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.NotFound);
 
-            List<ProfessionalMinimalFieldViewModel> _professionalMinimalFieldViewModels = new List<ProfessionalMinimalFieldViewModel>();
+            try
+            {
+                List<ProfessionalMinimalFieldViewModel> _professionalMinimalFieldViewModels = new List<ProfessionalMinimalFieldViewModel>();
 
-            IEnumerable<Professional> _professionals = this.professionalRepository.GetAll();
+                IEnumerable<Professional> _professionals = this.professionalRepository.GetAll();
 
-            _professionalMinimalFieldViewModels = mapper.Map<List<ProfessionalMinimalFieldViewModel>>(_professionals);
-            
-            return _professionalMinimalFieldViewModels;
+                _professionalMinimalFieldViewModels = mapper.Map<List<ProfessionalMinimalFieldViewModel>>(_professionals);
+
+                return _professionalMinimalFieldViewModels;
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException(ex.Message, HttpStatusCode.BadRequest);
+            }
         }
 
         public ProfessionalResponseViewModel GetByid(Guid professionalid, string tokenId)

@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
 using Training.Auth.Services;
 using Training.Application.Mapper;
+using Template.CrossCutting.ExceptionHandler.Providers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +19,8 @@ builder.Services.AddControllersWithViews();
 
 // Add services to context.
 builder.Services.AddDbContext<TrainingContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("TrainingDB")
-    ).EnableSensitiveDataLogging());
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TrainingDB"))
+           .EnableSensitiveDataLogging());
 
 // Register application services.
 NativeInjector.RegisterServices(builder.Services);
@@ -39,21 +40,21 @@ var key = Encoding.ASCII.GetBytes(jwtSettings.Secret);
 #region Authentication
 
 builder.Services.AddAuthentication(x =>
-    {
-        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }).AddJwtBearer(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
     {   // configuração objeto JwtBearer
-        x.RequireHttpsMetadata = false;
-        x.SaveToken = true;
-        x.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
 
 #endregion
 
@@ -63,9 +64,14 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+// Determinar se o ambiente é "Desenvolvimento" ou similar
+var includeStackTrace = app.Environment.IsEnvironment(Environments.Development) ||
+                        app.Environment.IsEnvironment("Testing");
+
+app.UseExceptionHandlerMiddleware(includeStackTrace);
 
 var serviceProvider = builder.Services.BuildServiceProvider();
 var TokenJwtSettings = serviceProvider.GetRequiredService<IOptions<JwtSettings>>();
@@ -84,8 +90,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 #endregion
-
-app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Template.CrossCutting.ExceptionHandler.Extensions;
 using Training.Application.Interfaces;
 using Training.Application.ViewModels.AuthenticateViewModels;
 using Training.Application.ViewModels.ProfessionalViewModels;
