@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ExceptionHandler\ExceptionHandler.csproj" />
+    <ProjectReference Include="..\ExceptionHandler\Training.ExceptionHandler.csproj" />
     <ProjectReference Include="..\Training.Application\Training.Application.csproj" />
     <ProjectReference Include="..\Training.Auth\Training.Auth.csproj" />
     <ProjectReference Include="..\Training.Data\Training.Data.csproj" />

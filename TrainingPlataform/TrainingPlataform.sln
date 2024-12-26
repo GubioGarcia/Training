@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Training.Security", "Traini
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Training.Auth", "Training.Auth\Training.Auth.csproj", "{85752B0F-4F23-4344-BD3F-F2D279F8FAA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExceptionHandler", "ExceptionHandler\ExceptionHandler.csproj", "{10C9C306-7CBB-4EAA-80E3-5CCAA949E254}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Training.ExceptionHandler", "ExceptionHandler\Training.ExceptionHandler.csproj", "{10C9C306-7CBB-4EAA-80E3-5CCAA949E254}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

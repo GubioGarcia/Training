@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Template.CrossCutting.ExceptionHandler.Extensions;
 using Training.Application.Interfaces;
 using Training.Domain.Entities;
 using Training.Domain.Interfaces;
@@ -27,7 +29,7 @@ namespace Training.Application.Services
         public bool IsLoggedInUserOfValidType(string id, string[] validUserTypes)
         {
             if (!Guid.TryParse("cd428cd5-d6c3-4825-d59d-08dcd1f00c0e", out Guid validId))
-                throw new Exception("Id is not valid");
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
 
             TEntity _user = this.repository.Find(x => x.Id == validId && !x.IsDeleted);
             if (_user == null)
@@ -35,7 +37,7 @@ namespace Training.Application.Services
 
             UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == _user.UsersTypeId && !x.IsDeleted);
             if (_usersType == null)
-                throw new Exception("User type not found");
+                throw new ApiException("User type not found", HttpStatusCode.BadRequest);
 
             if (!validUserTypes.Contains(_usersType.Name, StringComparer.OrdinalIgnoreCase))
                 return false;
@@ -47,7 +49,7 @@ namespace Training.Application.Services
         public string LoggedInUserType(string id)
         {
             if (!Guid.TryParse(id, out Guid validId))
-                throw new Exception("Id is not valid");
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
 
             TEntity _user = this.repository.Find(x => x.Id == validId && !x.IsDeleted);
             if (_user == null)

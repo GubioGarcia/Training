@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ExceptionHandler\ExceptionHandler.csproj" />
+    <ProjectReference Include="..\ExceptionHandler\Training.ExceptionHandler.csproj" />
     <ProjectReference Include="..\Training.Auth\Training.Auth.csproj" />
     <ProjectReference Include="..\Training.Domain\Training.Domain.csproj" />
   </ItemGroup>

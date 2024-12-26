@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 using System;
 using System.Net;
 using Template.CrossCutting.ExceptionHandler.Extensions;
-using Template.CrossCutting.ExceptionHandler.ViewModels;
+using Training.ExceptionHandler.ViewModels;
 
-namespace Template.CrossCutting.ExceptionHandler.Providers
+namespace Training.ExceptionHandler.Providers
 {
     public static class ExceptionHandlerMiddleware
     {

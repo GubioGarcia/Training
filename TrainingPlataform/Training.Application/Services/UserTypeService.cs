@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Template.CrossCutting.ExceptionHandler.Extensions;
 using Training.Application.Interfaces;
 using Training.Application.ViewModels;
 using Training.Domain.Entities;
@@ -34,29 +36,36 @@ namespace Training.Application.Services
         {
             // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
-                throw new Exception("You are not authorized to perform this operation");
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
 
-            List<UsersTypeViewModel> _usersTypeViewModels = new List<UsersTypeViewModel>();
+            try
+            {
+                List<UsersTypeViewModel> _usersTypeViewModels = new List<UsersTypeViewModel>();
 
-            IEnumerable<UsersType> _usersTypes = this.usersTypeRepository.GetAll();
+                IEnumerable<UsersType> _usersTypes = this.usersTypeRepository.GetAll();
 
-            _usersTypeViewModels = mapper.Map<List<UsersTypeViewModel>>(_usersTypes);
+                _usersTypeViewModels = mapper.Map<List<UsersTypeViewModel>>(_usersTypes);
 
-            return _usersTypeViewModels;
+                return _usersTypeViewModels;
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public UsersTypeViewModel GetById(string tokenId, string id)
         {
             // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
-                throw new Exception("You are not authorized to perform this operation");
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
 
             if (!Guid.TryParse(id, out Guid userId))
-                throw new Exception("Id is not valid");
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
 
             UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == userId && !x.IsDeleted);
             if (_usersType == null)
-                throw new Exception("User type not found");
+                throw new ApiException("User type not found", HttpStatusCode.NotFound);
 
             return mapper.Map<UsersTypeViewModel>(_usersType);
         }
@@ -65,44 +74,58 @@ namespace Training.Application.Services
         {
             // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
-                throw new Exception("You are not authorized to perform this operation");
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
 
-            UsersType _usersType = mapper.Map<UsersType>(usersTypeViewModel);
+            try
+            {
+                UsersType _usersType = mapper.Map<UsersType>(usersTypeViewModel);
 
-            this.usersTypeRepository.Create(_usersType);
+                this.usersTypeRepository.Create(_usersType);
 
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public bool Put(string tokenId, UsersTypeViewModel usersTypeViewModel)
         {
             // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
-                throw new Exception("You are not authorized to perform this operation");
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
 
             UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == usersTypeViewModel.Id && !x.IsDeleted);
             if (_usersType == null)
-                throw new Exception("User not found");
+                throw new ApiException("User not found", HttpStatusCode.NotFound);
 
-            _usersType = mapper.Map<UsersType>(usersTypeViewModel);
+            try
+            {
+                _usersType = mapper.Map<UsersType>(usersTypeViewModel);
 
-            this.usersTypeRepository.Update(_usersType);
+                this.usersTypeRepository.Update(_usersType);
 
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public bool Delete(string tokenId, string id)
         {
             // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
-                throw new Exception("You are not authorized to perform this operation");
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
 
             if (!Guid.TryParse(id, out Guid userId))
-                throw new Exception("Id is not valid");
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
 
             UsersType _usersType = this.usersTypeRepository.Find(x => x.Id == userId && !x.IsDeleted);
             if (_usersType == null)
-                throw new Exception("User type not found");
+                throw new ApiException("User type not found", HttpStatusCode.NotFound);
 
             return this.usersTypeRepository.Delete(_usersType);
         }

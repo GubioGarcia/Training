@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Template.CrossCutting.ExceptionHandler.Extensions;
 using Training.Application.Interfaces;
 using Training.Application.ViewModels;
 using Training.Domain.Entities;
@@ -33,29 +35,36 @@ namespace Training.Application.Services
         {
             // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
-                throw new Exception("You are not authorized to perform this operation");
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
 
-            List<ProfessionalTypeViewModel> _professionalTypeViewModels = new List<ProfessionalTypeViewModel>();
+            try
+            {
+                List<ProfessionalTypeViewModel> _professionalTypeViewModels = new List<ProfessionalTypeViewModel>();
 
-            IEnumerable<ProfessionalType> _professionalTypes = this.professionalTypeRepository.GetAll();
+                IEnumerable<ProfessionalType> _professionalTypes = this.professionalTypeRepository.GetAll();
 
-            _professionalTypeViewModels = mapper.Map<List<ProfessionalTypeViewModel>>(_professionalTypes);
+                _professionalTypeViewModels = mapper.Map<List<ProfessionalTypeViewModel>>(_professionalTypes);
 
-            return _professionalTypeViewModels;
+                return _professionalTypeViewModels;
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public ProfessionalTypeViewModel GetById(string tokenId, string id)
         {
             // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
-                throw new Exception("You are not authorized to perform this operation");
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
 
             if (!Guid.TryParse(id, out Guid professionalTypeId))
-                throw new Exception("Id is not valid");
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
 
             ProfessionalType _professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalTypeId && !x.IsDeleted);
             if (_professionalType == null)
-                throw new Exception("Professional type not found");
+                throw new ApiException("Professional type not found", HttpStatusCode.NotFound);
 
             return mapper.Map<ProfessionalTypeViewModel>(_professionalType);
         }
@@ -64,44 +73,58 @@ namespace Training.Application.Services
         {
             // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
-                throw new Exception("You are not authorized to perform this operation");
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
 
-            ProfessionalType _professionalType = mapper.Map<ProfessionalType>(professionalTypeViewModel);
+            try
+            {
+                ProfessionalType _professionalType = mapper.Map<ProfessionalType>(professionalTypeViewModel);
 
-            this.professionalTypeRepository.Create(_professionalType);
+                this.professionalTypeRepository.Create(_professionalType);
 
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public bool Put(string tokenId, ProfessionalTypeViewModel professionalTypeViewModel)
         {
             // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
-                throw new Exception("You are not authorized to perform this operation");
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
 
             ProfessionalType _professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalTypeViewModel.Id && !x.IsDeleted);
             if (_professionalType == null)
-                throw new Exception("Professional type not found");
+                throw new ApiException("Professional type not found", HttpStatusCode.NotFound);
 
-            _professionalType = mapper.Map<ProfessionalType>(professionalTypeViewModel);
+            try
+            {
+                _professionalType = mapper.Map<ProfessionalType>(professionalTypeViewModel);
 
-            this.professionalTypeRepository.Update(_professionalType);
+                this.professionalTypeRepository.Update(_professionalType);
 
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
         }
 
         public bool Delete(string tokenId, string id)
         {
             // Valida tipo de usuário com acesso ao método
             if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin"]))
-                throw new Exception("You are not authorized to perform this operation");
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
 
             if (!Guid.TryParse(id, out Guid professionalTypeId))
-                throw new Exception("Id is not valid");
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
 
             ProfessionalType _professionalType = this.professionalTypeRepository.Find(x => x.Id == professionalTypeId && !x.IsDeleted);
             if (_professionalType == null)
-                throw new Exception("Professional type not found");
+                throw new ApiException("Professional type not found", HttpStatusCode.NotFound);
 
             this.professionalTypeRepository.Delete(_professionalType);
 

@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
 using Training.Auth.Services;
 using Training.Application.Mapper;
-using Template.CrossCutting.ExceptionHandler.Providers;
+using Training.ExceptionHandler.Providers;
 
 var builder = WebApplication.CreateBuilder(args);
 

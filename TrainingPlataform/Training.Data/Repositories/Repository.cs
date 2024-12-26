@@ -46,7 +46,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -79,7 +78,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -104,7 +102,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -146,7 +143,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -161,7 +157,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -174,7 +169,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -191,7 +185,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -204,7 +197,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -222,7 +214,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -235,7 +226,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -253,7 +243,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -272,7 +261,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -291,7 +279,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -310,7 +297,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -324,7 +310,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -339,7 +324,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -352,7 +336,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -369,7 +352,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -382,7 +364,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -399,7 +380,6 @@ namespace Training.Data.Repositories
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

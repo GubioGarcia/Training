@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Serialization;
 using System.Net;
 
-namespace Template.CrossCutting.ExceptionHandler.ViewModels
+namespace Training.ExceptionHandler.ViewModels
 {
     internal class ExceptionViewModel
     {
