@@ -14,7 +14,7 @@ namespace Training.Domain.Entities
 
         public String Name { get; set; }
         public String Description { get; set; }
-        public DateTime DateUpdated { get; set; } = DateTime.Now;
+        public DateTime? DateUpdated { get; set; }
         public bool IsDeleted { get; set; } = false;
     }
 }

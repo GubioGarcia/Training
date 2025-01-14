@@ -11,7 +11,7 @@ namespace Training.Domain.Entities
         public Guid Id { get; set; }
         public Guid? ProfessionalId { get; set; }
         public Professional Professional { get; set; }
-        public Guid? WorkoutCategoryId { get; set; }
+        public Guid WorkoutCategoryId { get; set; }
         public WorkoutCategory WorkoutCategory { get; set; }
         public Guid MuscleGroupId { get; set; }
         public MuscleGroup MuscleGroup { get; set; }
@@ -19,7 +19,7 @@ namespace Training.Domain.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public string? UrlMedia { get; set; }
-        public DateTime DateUpdated { get; set; } = DateTime.Now;
+        public DateTime? DateUpdated { get; set; }
         public bool IsDeleted { get; set; } = false;
     }
 }

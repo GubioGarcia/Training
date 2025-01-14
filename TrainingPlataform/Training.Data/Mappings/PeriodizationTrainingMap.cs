@@ -19,7 +19,7 @@ namespace Training.Data.Mappings
             builder.Property(x => x.DateStart).IsRequired();
             builder.Property(x => x.DateEnd).IsRequired();
             builder.Property(x => x.WeeklyTrainingFrequency).IsRequired();
-            builder.Property(x => x.DateUpdated).IsRequired().HasDefaultValue(DateTime.Now);
+            builder.Property(x => x.DateUpdated).IsRequired().HasDefaultValue("GETDATE()");
             builder.Property(x => x.IsDeleted).IsRequired().HasDefaultValue(false);
 
             builder.HasOne(x => x.Professional)

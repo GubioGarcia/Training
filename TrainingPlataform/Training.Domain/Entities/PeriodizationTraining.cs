@@ -19,7 +19,7 @@ namespace Training.Domain.Entities
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
         public int WeeklyTrainingFrequency { get; set; }
-        public DateTime DateUpdated { get; set; } = DateTime.Now;
+        public DateTime? DateUpdated { get; set; }
         public bool IsDeleted { get; set; } = false;
 
         public ICollection<Training> Trainings { get; set; } = [];
