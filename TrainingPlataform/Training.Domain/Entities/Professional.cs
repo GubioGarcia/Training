@@ -15,5 +15,10 @@ namespace Training.Domain.Entities
         public ProfessionalType ProfessionalType { get; set; }
         public string? ProfessionalRegistration { get; set; }
         public int CurrentNumberClients { get; set; }
+
+        public ICollection<WorkoutCategory> WorkoutCategorys { get; set; }
+        public ICollection<MuscleGroup> MuscleGroups { get; set; }
+        public ICollection<Exercise> Exercises { get; set; }
+        public ICollection<Training> Trainings { get; set; } = [];
     }
 }

@@ -23,6 +23,7 @@ namespace Training.Domain.Models
         public DateTime? DateUpdated { get; set; }
         public bool IsDeleted { get; set; } = false;
 
-        public ICollection<ClientProfessional> ClientProfessionals { get; set; } = new List<ClientProfessional>();
+        public ICollection<ClientProfessional> ClientProfessionals { get; set; } = [];
+        public ICollection<PeriodizationTraining> PeriodizationTrainings { get; set; } = [];
     }
 }
