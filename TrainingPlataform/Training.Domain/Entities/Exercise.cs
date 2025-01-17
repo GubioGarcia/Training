@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Training.Domain.Entities
 {
-    public class Exercise
+    public sealed class Exercise
     {
         public Guid Id { get; set; }
         public Guid? ProfessionalId { get; set; }

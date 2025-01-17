@@ -28,7 +28,7 @@ namespace Training.Application.Services
         // verifica se o usuário logado é do tipo permitido de usuário com acesso ao método
         public bool IsLoggedInUserOfValidType(string id, string[] validUserTypes)
         {
-            if (!Guid.TryParse("cd428cd5-d6c3-4825-d59d-08dcd1f00c0e", out Guid validId))
+            if (!Guid.TryParse(id, out Guid validId))
                 throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
 
             TEntity _user = this.repository.Find(x => x.Id == validId && !x.IsDeleted);

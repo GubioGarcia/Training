@@ -4,17 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Training.Domain.Entities
+namespace Training.Application.ViewModels
 {
-    public sealed class WorkoutCategory
+    public class MuscleGroupViewModel
     {
         public Guid Id { get; set; }
         public Guid? ProfessionalId { get; set; }
-        public Professional Professional { get; set; }
-
         public string Name { get; set; }
         public string Description { get; set; }
-        public DateTime? DateUpdated { get; set; }
-        public bool IsDeleted { get; set; } = false;
+        public DateTime DateUpdated { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

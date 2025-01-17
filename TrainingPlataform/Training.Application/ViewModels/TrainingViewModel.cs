@@ -4,17 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Training.Domain.Entities
+namespace Training.Application.ViewModels
 {
-    public sealed class Training
+    public class TrainingViewModel
     {
         public Guid Id { get; set; }
         public Guid PeriodizationId { get; set; }
-        public PeriodizationTraining PeriodizationTraining { get; set; }
-
         public string Name { get; set; }
         public string Description { get; set; }
-        public DateTime? DateUpdated { get; set; }
-        public bool IsDeleted { get; set; } = false;
+        public DateTime DateUpdated { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

@@ -20,6 +20,7 @@ namespace Training.Application.AutoMapper
 
             CreateMap<UsersTypeViewModel, UsersType>();
             CreateMap<ProfessionalTypeViewModel, ProfessionalType>();
+            CreateMap<MuscleGroupViewModel, MuscleGroup>();
 
             CreateMap<ProfessionalMinimalFieldViewModel, Professional>();
             CreateMap<ProfessionalResponseViewModel, Professional>();
@@ -41,6 +42,7 @@ namespace Training.Application.AutoMapper
 
             CreateMap<UsersType, UsersTypeViewModel>();
             CreateMap<ProfessionalType, ProfessionalTypeViewModel>();
+            CreateMap<MuscleGroup, MuscleGroupViewModel>();
 
             CreateMap<Professional, ProfessionalMinimalFieldViewModel>();
             CreateMap<Professional, ProfessionalResponseViewModel>();
