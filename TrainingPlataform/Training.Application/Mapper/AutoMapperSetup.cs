@@ -21,6 +21,10 @@ namespace Training.Application.AutoMapper
             CreateMap<UsersTypeViewModel, UsersType>();
             CreateMap<ProfessionalTypeViewModel, ProfessionalType>();
             CreateMap<MuscleGroupViewModel, MuscleGroup>();
+            CreateMap<WorkoutCategoryViewModel, WorkoutCategory>();
+            CreateMap<ExerciseViewModel, Exercise>();
+            CreateMap<TrainingViewModel, Domain.Entities.Training>();
+            CreateMap<PeriodizationTrainingViewModel, PeriodizationTraining>();
 
             CreateMap<ProfessionalMinimalFieldViewModel, Professional>();
             CreateMap<ProfessionalResponseViewModel, Professional>();
@@ -43,6 +47,10 @@ namespace Training.Application.AutoMapper
             CreateMap<UsersType, UsersTypeViewModel>();
             CreateMap<ProfessionalType, ProfessionalTypeViewModel>();
             CreateMap<MuscleGroup, MuscleGroupViewModel>();
+            CreateMap<WorkoutCategory, WorkoutCategoryViewModel>();
+            CreateMap<Exercise, ExerciseViewModel>();
+            CreateMap<Domain.Entities.Training, TrainingViewModel>();
+            CreateMap<PeriodizationTraining, PeriodizationTrainingViewModel>();
 
             CreateMap<Professional, ProfessionalMinimalFieldViewModel>();
             CreateMap<Professional, ProfessionalResponseViewModel>();
