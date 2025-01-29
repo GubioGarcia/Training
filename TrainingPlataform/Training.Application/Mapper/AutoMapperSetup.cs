@@ -8,6 +8,7 @@ using Training.Application.ViewModels;
 using Training.Application.ViewModels.ClientProfessionalViewModels;
 using Training.Application.ViewModels.ClientViewModels;
 using Training.Application.ViewModels.ProfessionalViewModels;
+using Training.Application.ViewModels.WorkoutCategoryViewModels;
 using Training.Domain.Entities;
 
 namespace Training.Application.AutoMapper

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Template.CrossCutting.ExceptionHandler.Extensions;
 using Training.Application.Interfaces;
-using Training.Application.ViewModels;
+using Training.Application.ViewModels.WorkoutCategoryViewModels;
 using Training.Domain.Entities;
 using Training.Domain.Interfaces;
 
@@ -47,5 +47,12 @@ namespace Training.Application.Services
                 throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
             }
         }
+
+        //public WorkoutCategoryViewModel Post(string tokenId, WorkoutCategoryRequestViewModel workoutCategoryRequestViewModel)
+        //{
+        //    // Valida tipo de usuário com acesso ao método
+        //    if (!this.userServiceBase.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+        //        throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
+        //}
     }
 }

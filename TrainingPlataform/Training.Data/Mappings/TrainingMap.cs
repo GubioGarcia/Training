@@ -20,7 +20,7 @@ namespace Training.Domain.Entities
 
             builder.HasOne(x => x.PeriodizationTraining)
                    .WithMany(p => p.Trainings)
-                   .HasForeignKey(x => x.PeriodizationId)
+                   .HasForeignKey(x => x.PeriodizationTrainingId)
                    .OnDelete(DeleteBehavior.Restrict);
         }
     }

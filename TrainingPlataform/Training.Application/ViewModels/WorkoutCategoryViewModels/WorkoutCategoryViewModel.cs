@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Training.Application.ViewModels
+namespace Training.Application.ViewModels.WorkoutCategoryViewModels
 {
-    public  class WorkoutCategoryViewModel
+    public class WorkoutCategoryViewModel
     {
         public Guid Id { get; set; }
         public Guid? ProfessionaId { get; set; }

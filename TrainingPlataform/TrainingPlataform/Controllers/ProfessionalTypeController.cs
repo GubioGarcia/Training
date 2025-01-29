@@ -9,7 +9,7 @@ namespace TrainingPlataform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController, Authorize]
-    public class ProfessionalTypeController : Controller
+    public class ProfessionalTypeController : ControllerBase
     {
         private readonly IProfessionalTypeService professionalTypeService;
 

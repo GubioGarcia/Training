@@ -9,7 +9,7 @@ namespace Training.Domain.Entities
     public sealed class Training
     {
         public Guid Id { get; set; }
-        public Guid PeriodizationId { get; set; }
+        public Guid PeriodizationTrainingId { get; set; }
         public PeriodizationTraining PeriodizationTraining { get; set; }
 
         public string Name { get; set; }

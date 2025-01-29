@@ -8,7 +8,7 @@ namespace TrainingPlataform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController, Authorize]
-    public class MuscleGroupController : Controller
+    public class MuscleGroupController : ControllerBase
     {
         private readonly IMuscleGroupService muscleGroupService;
 

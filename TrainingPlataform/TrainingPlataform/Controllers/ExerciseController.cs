@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Training.Application.Interfaces;
 using Training.Application.Services;
 using Training.Auth.Services;
 
@@ -8,11 +9,11 @@ namespace TrainingPlataform.Controllers
 {
     [Route("api/[controller]")]
     [ApiController, Authorize]
-    public class ExerciseController : Controller
+    public class ExerciseController : ControllerBase
     {
-        private readonly ExerciseService exerciseService;
+        private readonly IExerciseService exerciseService;
 
-        public ExerciseController(ExerciseService exerciseService)
+        public ExerciseController(IExerciseService exerciseService)
         {
             this.exerciseService = exerciseService;
         }
