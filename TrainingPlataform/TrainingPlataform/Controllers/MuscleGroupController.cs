@@ -24,5 +24,29 @@ namespace TrainingPlataform.Controllers
 
             return Ok(this.muscleGroupService.Get(_tokenId));
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(Guid id)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.muscleGroupService.GetById(id, _tokenId));
+        }
+
+        [HttpGet("MuscleGroupByName/{name:minlength(1)}")]
+        public IActionResult GetByName(string name)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.muscleGroupService.GetByName(name, _tokenId));
+        }
+
+        [HttpGet("MuscleGroupByProfessional/{id}")]
+        public IActionResult GetByProfessional(Guid id)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.muscleGroupService.GetByProfessional(id, _tokenId));
+        }
     }
 }

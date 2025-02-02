@@ -93,9 +93,9 @@ namespace Training.Application.Services
 
             // Recebe tipo do usuário logado
             string _userTypeLogged = userServiceBaseClient.LoggedInUserType(tokenId);
-            if (_userTypeLogged == null || _userTypeLogged == "")
+            if (string.IsNullOrEmpty(_userTypeLogged))
                 _userTypeLogged = userServiceBaseProfessional.LoggedInUserType(tokenId);
-            else if (_userTypeLogged == null || _userTypeLogged == "") 
+            if (string.IsNullOrEmpty(_userTypeLogged))
                 throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
 
             // Valida se usuário logado possui acesso liberado ao método
@@ -174,7 +174,7 @@ namespace Training.Application.Services
                 // Obtem os ClientId dos registros encontrados, busca os clientes correspondentes e mapeia para a ViewModel
                 List<Guid> _clientIds = _clientProfessionalRelations.Select(x => x.ClientId).ToList();
                 IEnumerable<Client> _clients = this.clientRepository.Query(x => _clientIds.Contains(x.Id)
-                                                && EF.Functions.Like(x.Name, $"%{name}%")&& !x.IsDeleted).ToList();
+                                                && EF.Functions.Like(x.Name, $"%{name}%") && !x.IsDeleted).ToList();
                 List<ClientMinimalFieldViewModel> _clientMinimalFieldViewModels = this.mapper.Map<List<ClientMinimalFieldViewModel>>(_clients);
 
                 return _clientMinimalFieldViewModels;
@@ -248,9 +248,9 @@ namespace Training.Application.Services
 
             // Recebe tipo do usuário logado
             string _userTypeLogged = userServiceBaseClient.LoggedInUserType(tokenId);
-            if (_userTypeLogged == null || _userTypeLogged == "")
+            if (string.IsNullOrEmpty(_userTypeLogged))
                 _userTypeLogged = userServiceBaseProfessional.LoggedInUserType(tokenId);
-            else if (_userTypeLogged == null || _userTypeLogged == "")
+            if (string.IsNullOrEmpty(_userTypeLogged))
                 throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
 
             // Valida se usuário logado possui acesso liberado ao método
