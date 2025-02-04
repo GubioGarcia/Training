@@ -28,12 +28,36 @@ namespace TrainingPlataform.Controllers
             return Ok(this.workoutCategoryService.Get(_tokenId));
         }
 
-        //[HttpPost]
-        //public IActionResult Post(WorkoutCategoryRequestViewModel workoutCategoryRequestViewModels)
-        //{
-        //    string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+        [HttpGet("{id}")]
+        public IActionResult GetById(Guid id)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
 
-        //    return Ok(this.workoutCategorylService.Post(_tokenId, workoutCategoryRequestViewModels));
-        //}
+            return Ok(this.workoutCategoryService.GetById(id, _tokenId));
+        }
+
+        [HttpGet("WorkoutCategoryByName/{name:minlength(1)}")]
+        public IActionResult GetByName(string name)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.workoutCategoryService.GetByName(name, _tokenId));
+        }
+
+        [HttpGet("WorkoutCategoryByProfessional/{id}")]
+        public IActionResult GetByProfessional(Guid id)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.workoutCategoryService.GetByProfessional(id, _tokenId));
+        }
+
+        [HttpPost]
+        public IActionResult Post(WorkoutCategoryRequestViewModel workoutCategoryRequestViewModel)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.workoutCategoryService.Post(_tokenId, workoutCategoryRequestViewModel));
+        }
     }
 }

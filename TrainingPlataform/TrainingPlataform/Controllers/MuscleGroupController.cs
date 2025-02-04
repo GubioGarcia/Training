@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Training.Application.Interfaces;
+using Training.Application.ViewModels.MuscleGroupViewModels;
 using Training.Auth.Services;
 
 namespace TrainingPlataform.Controllers
@@ -47,6 +48,14 @@ namespace TrainingPlataform.Controllers
             string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
 
             return Ok(this.muscleGroupService.GetByProfessional(id, _tokenId));
+        }
+
+        [HttpPost]
+        public IActionResult Post(MuscleGroupRequestViewModel _muscleGroupRequestViewModel)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.muscleGroupService.Post(_tokenId, _muscleGroupRequestViewModel));
         }
     }
 }

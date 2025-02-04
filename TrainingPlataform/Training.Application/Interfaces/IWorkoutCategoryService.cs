@@ -10,6 +10,9 @@ namespace Training.Application.Interfaces
     public interface IWorkoutCategoryService
     {
         List<WorkoutCategoryViewModel> Get(string tokenId);
-        //WorkoutCategoryViewModel Post(string tokenId, WorkoutCategoryRequestViewModel workoutCategoryRequestViewModel);
+        WorkoutCategoryViewModel GetById(Guid id, string tokenId);
+        List<WorkoutCategoryViewModel> GetByName(string name, string tokenId);
+        List<WorkoutCategoryViewModel> GetByProfessional(Guid id, string tokenId);
+        WorkoutCategoryViewModel Post(string tokenId, WorkoutCategoryRequestViewModel workoutCategoryRequestViewModel);
     }
 }

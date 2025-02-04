@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Template.CrossCutting.ExceptionHandler.Extensions;
 using Training.Application.Interfaces;
-using Training.Application.ViewModels;
 using Training.Application.ViewModels.ClientViewModels;
+using Training.Application.ViewModels.MuscleGroupViewModels;
 using Training.Application.ViewModels.ProfessionalViewModels;
+using Training.Application.ViewModels.WorkoutCategoryViewModels;
 using Training.Domain.Entities;
 using Training.Domain.Interfaces;
 
@@ -200,6 +201,61 @@ namespace Training.Application.Services
                 }
 
                 return mapper.Map<List<MuscleGroupViewModel>>(_muscleGroups);
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public MuscleGroupViewModel Post(string tokenId, MuscleGroupRequestViewModel muscleGroupRequestViewModel)
+        {
+            if (!Guid.TryParse(tokenId, out Guid validId))
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
+            if (muscleGroupRequestViewModel == null)
+                throw new ApiException("Muscle Group is required", HttpStatusCode.BadRequest);
+            if (string.IsNullOrEmpty(muscleGroupRequestViewModel.Name))
+                throw new ApiException("Name is required", HttpStatusCode.BadRequest);
+            if (string.IsNullOrEmpty(muscleGroupRequestViewModel.Description))
+                throw new ApiException("Description is required", HttpStatusCode.BadRequest);
+
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
+
+            string loggedInUserType = this.userServiceBaseProfessional.LoggedInUserType(tokenId);
+            Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
+                                                ?? throw new ApiException("Professional not found", HttpStatusCode.NotFound);
+
+            // Verifica se já existe registro (global ou associado a um profissional)
+            MuscleGroup _muscleGroupExisting = this.muscleGroupRepository.Find(x => !x.IsDeleted &&
+                                                            x.Name.ToLower() == muscleGroupRequestViewModel.Name.ToLower());
+
+            if (_muscleGroupExisting != null)
+            {
+                if (loggedInUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase) && _muscleGroupExisting.ProfessionalId == null)
+                {
+                    throw new ApiException("Workout Category already exists");
+                }
+                else if (_muscleGroupExisting.ProfessionalId == null || _muscleGroupExisting.ProfessionalId == validId)
+                {
+                    throw new ApiException("Workout Category already exists");
+                }
+            }
+
+            // Criar o registro Muscle Group
+            MuscleGroup _muscleGroup = new()
+            {
+                Name = muscleGroupRequestViewModel.Name,
+                Description = muscleGroupRequestViewModel.Description,
+                ProfessionalId = loggedInUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase) ? null : validId,
+                DateUpdated = DateTime.UtcNow,
+                IsDeleted = false
+            };
+
+            try
+            {
+                muscleGroupRepository.Create(_muscleGroup);
+                return mapper.Map<MuscleGroupViewModel>(_muscleGroup);
             }
             catch (Exception ex)
             {

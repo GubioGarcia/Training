@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Training.Application.ViewModels
+namespace Training.Application.ViewModels.MuscleGroupViewModels
 {
     public class MuscleGroupViewModel
     {
@@ -13,6 +13,5 @@ namespace Training.Application.ViewModels
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime DateUpdated { get; set; }
-        public bool IsDeleted { get; set; }
     }
 }

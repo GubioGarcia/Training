@@ -9,10 +9,9 @@ namespace Training.Application.ViewModels.WorkoutCategoryViewModels
     public class WorkoutCategoryViewModel
     {
         public Guid Id { get; set; }
-        public Guid? ProfessionaId { get; set; }
+        public Guid? ProfessionalId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime DateUpdated { get; set; }
-        public bool IsDeleted { get; set; }
     }
 }
