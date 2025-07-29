@@ -214,17 +214,17 @@ namespace Training.Application.Services
                 throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
             if (muscleGroupRequestViewModel == null)
                 throw new ApiException("Muscle Group is required", HttpStatusCode.BadRequest);
-            if (string.IsNullOrEmpty(muscleGroupRequestViewModel.Name))
+            if (string.IsNullOrWhiteSpace(muscleGroupRequestViewModel.Name))
                 throw new ApiException("Name is required", HttpStatusCode.BadRequest);
-            if (string.IsNullOrEmpty(muscleGroupRequestViewModel.Description))
+            if (string.IsNullOrWhiteSpace(muscleGroupRequestViewModel.Description))
                 throw new ApiException("Description is required", HttpStatusCode.BadRequest);
 
             if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
                 throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
 
-            string loggedInUserType = this.userServiceBaseProfessional.LoggedInUserType(tokenId);
             Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
                                                 ?? throw new ApiException("Professional not found", HttpStatusCode.NotFound);
+            string loggedInUserType = this.userServiceBaseProfessional.LoggedInUserType(tokenId);
 
             // Verifica se já existe registro (global ou associado a um profissional)
             MuscleGroup _muscleGroupExisting = this.muscleGroupRepository.Find(x => !x.IsDeleted &&
@@ -260,6 +260,108 @@ namespace Training.Application.Services
             catch (Exception ex)
             {
                 throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public MuscleGroupViewModel Put(string tokenId, MuscleGroupUpdateViewModel muscleGroupUpdateViewModel)
+        {
+            if (!Guid.TryParse(tokenId, out Guid validId))
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
+            if (muscleGroupUpdateViewModel == null)
+                throw new ApiException("Muscle Group is required", HttpStatusCode.BadRequest);
+            if (string.IsNullOrWhiteSpace(muscleGroupUpdateViewModel.Name))
+                throw new ApiException("Name is required", HttpStatusCode.BadRequest);
+            if (string.IsNullOrWhiteSpace(muscleGroupUpdateViewModel.Description))
+                throw new ApiException("Description is required", HttpStatusCode.BadRequest);
+
+            // Verifica se o usuário logado é Admin ou Professional
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.Forbidden);
+
+            // Busca o Professional logado e verifica se ele existe e não está deletado
+            Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
+                                                ?? throw new ApiException("Professional not found", HttpStatusCode.NotFound);
+
+            // Busca o grupo muscular e garante que ele não esteja deletado
+            MuscleGroup _muscleGroup = this.muscleGroupRepository.Find(x => x.Id == muscleGroupUpdateViewModel.Id && !x.IsDeleted)
+                ?? throw new ApiException("Muscle group not found", HttpStatusCode.BadRequest);
+
+            // Obtém o tipo do usuário logado
+            string loggedInUserType = this.userServiceBaseProfessional.LoggedInUserType(tokenId);
+
+            if (loggedInUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+            {
+                // Admin pode modificar se professionalId for null ou pertencer ao mesmo usuário
+                if (_muscleGroup.ProfessionalId == null || _muscleGroup.ProfessionalId == validId)
+                {
+                    _muscleGroup.Name = muscleGroupUpdateViewModel.Name;
+                    _muscleGroup.Description = muscleGroupUpdateViewModel.Description;
+                    _muscleGroup.DateUpdated = DateTime.UtcNow;
+
+                    this.muscleGroupRepository.Update(_muscleGroup);
+                }
+                else
+                {
+                    throw new ApiException("You are not authorized to modify this record", HttpStatusCode.Forbidden);
+                }
+            }
+            else if (loggedInUserType.Equals("Professional", StringComparison.OrdinalIgnoreCase))
+            {
+                // Professional só pode modificar se for o dono do registro
+                if (_muscleGroup.ProfessionalId == validId)
+                {
+                    _muscleGroup.Name = muscleGroupUpdateViewModel.Name;
+                    _muscleGroup.Description = muscleGroupUpdateViewModel.Description;
+                    _muscleGroup.DateUpdated = DateTime.UtcNow;
+
+                    this.muscleGroupRepository.Update(_muscleGroup);
+                }
+                else
+                {
+                    throw new ApiException("You are not authorized to modify this record", HttpStatusCode.Forbidden);
+                }
+            }
+
+            return mapper.Map<MuscleGroupViewModel>(_muscleGroup);
+        }
+
+        public void Delete(string tokenId, Guid id)
+        {
+            if (!Guid.TryParse(tokenId, out Guid validId))
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
+
+            // Verifica se o usuário logado é Admin ou Professional
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.Forbidden);
+
+            // Busca o Professional logado e verifica se ele existe e não está deletado
+            Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
+                                                ?? throw new ApiException("Professional not found", HttpStatusCode.NotFound);
+
+            // Busca o grupo muscular e garante que ele não esteja deletado
+            MuscleGroup _muscleGroup = this.muscleGroupRepository.Find(x => x.Id == id)
+                ?? throw new ApiException("Muscle group not found", HttpStatusCode.BadRequest);
+            if (_muscleGroup.IsDeleted == true)
+                throw new ApiException("Muscle groupis already deleted", HttpStatusCode.BadRequest);
+
+            // Obtém o tipo do usuário logado
+            string loggedInUserType = this.userServiceBaseProfessional.LoggedInUserType(tokenId);
+
+            if (loggedInUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+            {
+                // Admin pode deletar se professionalId for null ou pertencer ao mesmo usuário
+                if (_muscleGroup.ProfessionalId == null || _muscleGroup.ProfessionalId == validId)
+                    this.muscleGroupRepository.IsDeleted(_muscleGroup);
+                else
+                    throw new ApiException("You are not authorized to modify this record", HttpStatusCode.Forbidden);
+            }
+            else if (loggedInUserType.Equals("Professional", StringComparison.OrdinalIgnoreCase))
+            {
+                // Professional só pode deletar se for o dono do registro
+                if (_muscleGroup.ProfessionalId == validId)
+                    this.muscleGroupRepository.IsDeleted(_muscleGroup);
+                else
+                    throw new ApiException("You are not authorized to modify this record", HttpStatusCode.Forbidden);
             }
         }
     }

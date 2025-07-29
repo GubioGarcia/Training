@@ -10,5 +10,6 @@ namespace Training.Domain.Interfaces
     public interface IMuscleGroupRepository : IRepository<MuscleGroup>
     {
         IEnumerable<MuscleGroup> GetAll();
+        bool IsDeleted(MuscleGroup model);
     }
 }

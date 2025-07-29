@@ -211,9 +211,9 @@ namespace Training.Application.Services
                 throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
             if (workoutCategoryRequestViewModel == null)
                 throw new ApiException("Workout Category is required", HttpStatusCode.BadRequest);
-            if (string.IsNullOrEmpty(workoutCategoryRequestViewModel.Name))
+            if (string.IsNullOrWhiteSpace(workoutCategoryRequestViewModel.Name))
                 throw new ApiException("Name is required", HttpStatusCode.BadRequest);
-            if (string.IsNullOrEmpty(workoutCategoryRequestViewModel.Description))
+            if (string.IsNullOrWhiteSpace(workoutCategoryRequestViewModel.Description))
                 throw new ApiException("Description is required", HttpStatusCode.BadRequest);
 
             if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))

@@ -57,5 +57,22 @@ namespace TrainingPlataform.Controllers
 
             return Ok(this.muscleGroupService.Post(_tokenId, _muscleGroupRequestViewModel));
         }
+
+        [HttpPut]
+        public IActionResult Put(MuscleGroupUpdateViewModel _muscleGroupUpdateViewModel)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.muscleGroupService.Put(_tokenId, _muscleGroupUpdateViewModel));
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            this.muscleGroupService.Delete(_tokenId, id);
+            return Ok();
+        }
     }
 }

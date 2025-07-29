@@ -14,5 +14,7 @@ namespace Training.Application.Interfaces
         List<MuscleGroupViewModel> GetByName(string name, string tokenId);
         List<MuscleGroupViewModel> GetByProfessional(Guid id, string tokenId);
         MuscleGroupViewModel Post(string tokenId, MuscleGroupRequestViewModel muscleGroupRequestViewModel);
+        MuscleGroupViewModel Put(string tokenId, MuscleGroupUpdateViewModel muscleGroupUpdateViewModel);
+        void Delete(string tokenId, Guid id);
     }
 }
