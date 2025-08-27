@@ -1,16 +1,17 @@
-using Microsoft.EntityFrameworkCore;
-using Training.Application.AutoMapper;
-using Training.Data.Context;
-using Training.Swagger;
-using Training.IoC;
-using System.Text;
-using Training.Auth.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Training.Auth.Services;
+using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
+using System.Text;
+using Training.Application.AutoMapper;
 using Training.Application.Mapper;
+using Training.Auth.Models;
+using Training.Auth.Services;
+using Training.Data.Context;
 using Training.ExceptionHandler.Providers;
+using Training.IoC;
+using Training.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,14 @@ NativeInjector.RegisterServices(builder.Services);
 
 builder.Services.AddAutoMapper(typeof(AutoMapperSetup));
 builder.Services.AddSwaggerConfiguration();
+
+// Register the Swagger generator, defining 1 or more Swagger documents.
+builder.Services.AddSwaggerGen(c =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
 
 builder.Services.AddScoped<ManualMapperSetup>();
 
