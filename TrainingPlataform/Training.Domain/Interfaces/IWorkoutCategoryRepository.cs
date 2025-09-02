@@ -11,5 +11,6 @@ namespace Training.Domain.Interfaces
     public interface IWorkoutCategoryRepository : IRepository<WorkoutCategory>
     {
         IEnumerable<WorkoutCategory> GetAll();
+        bool IsDeleted(WorkoutCategory model);
     }
 }

@@ -259,5 +259,107 @@ namespace Training.Application.Services
                 throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
             }
         }
+
+        public WorkoutCategoryViewModel Put(string tokenId, WorkoutCategoryUpdateViewModel workoutCategoryUpdateViewModel)
+        {
+            if (!Guid.TryParse(tokenId, out Guid validId))
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
+            if (workoutCategoryUpdateViewModel == null)
+                throw new ApiException("Workout Category is required", HttpStatusCode.BadRequest);
+            if (string.IsNullOrWhiteSpace(workoutCategoryUpdateViewModel.Name))
+                throw new ApiException("Name is required", HttpStatusCode.BadRequest);
+            if (string.IsNullOrWhiteSpace(workoutCategoryUpdateViewModel.Description))
+                throw new ApiException("Description is required", HttpStatusCode.BadRequest);
+
+            // Verifica se o usuário logado é Admin ou Professional
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
+
+            // Busca o Professional logado, verifica se ele existe e não está deletado
+            Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
+                                                ?? throw new ApiException("Professional not found", HttpStatusCode.NotFound);
+
+            // Busca o WorkoutCategory a ser atualizado, verifica se ele existe e não está deletado
+            WorkoutCategory _workoutCategory = this.workoutCategoryRepository.Find(x => x.Id == workoutCategoryUpdateViewModel.Id && !x.IsDeleted)
+                                                ?? throw new ApiException("Workout Category not found", HttpStatusCode.NotFound);
+            
+            // Verifica se o usuário logado tem permissão para atualizar a categoria
+            string loggedInUserType = this.userServiceBaseProfessional.LoggedInUserType(tokenId);
+
+            if (!loggedInUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+            {
+                // Admin pode modificar se professionalId for null ou pertencer ao mesmo usuário
+                if (_workoutCategory.ProfessionalId == null || _workoutCategory.ProfessionalId != validId)
+                {
+                    _workoutCategory.Name = workoutCategoryUpdateViewModel.Name;
+                    _workoutCategory.Description = workoutCategoryUpdateViewModel.Description;
+                    _workoutCategory.DateUpdated = DateTime.UtcNow;
+
+                    this.workoutCategoryRepository.Update(_workoutCategory);
+                }
+                else
+                {
+                    throw new ApiException("You are not authorized to update this workout category", HttpStatusCode.BadRequest);
+                }
+            }
+            else if (loggedInUserType.Equals("Professional", StringComparison.OrdinalIgnoreCase))
+            {
+                // Professional só pode modificar se professionalId pertencer ao mesmo usuário
+                if (_workoutCategory.ProfessionalId == validId)
+                {
+                    _workoutCategory.Name = workoutCategoryUpdateViewModel.Name;
+                    _workoutCategory.Description = workoutCategoryUpdateViewModel.Description;
+                    _workoutCategory.DateUpdated = DateTime.UtcNow;
+
+                    this.workoutCategoryRepository.Update(_workoutCategory);
+                }
+                else
+                {
+                    throw new ApiException("You are not authorized to update this workout category", HttpStatusCode.BadRequest);
+                }
+            }
+
+            return mapper.Map<WorkoutCategoryViewModel>(_workoutCategory);
+        }
+
+        public void Delete(string tokenId, Guid id)
+        {
+            if (!Guid.TryParse(tokenId, out Guid validId))
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
+
+            // Verifica se o usuário logado é Admin ou Professional
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
+
+            // Busca o Professional logado, verifica se ele existe e não está deletado
+            Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
+                                                ?? throw new ApiException("Professional not found", HttpStatusCode.NotFound);
+
+            // Busca o WorkoutCategory a ser deletado, garante que não está deletado
+            WorkoutCategory _workoutCategory = this.workoutCategoryRepository.Find(x => x.Id == id)
+                                                ?? throw new ApiException("Workout Category not found", HttpStatusCode.NotFound);
+            if (_workoutCategory.IsDeleted)
+                throw new ApiException("Workout Category not found", HttpStatusCode.NotFound);
+
+            // Obtém o tipo do usuário logado
+            string loggedInUserType = this.userServiceBaseProfessional.LoggedInUserType(tokenId);
+
+            if (loggedInUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+            {
+                // Admin pode deletar se professionalId for null ou pertencer ao mesmo usuário
+                if (_workoutCategory.ProfessionalId == null || _workoutCategory.ProfessionalId == validId)
+                    this.workoutCategoryRepository.IsDeleted(_workoutCategory);
+                else
+                    throw new ApiException("You are not authorized to delete this workout category", HttpStatusCode.BadRequest);
+            }
+            else if (loggedInUserType.Equals("Professional", StringComparison.OrdinalIgnoreCase))
+            {
+                // Professional só pode deletar se professionalId pertencer ao mesmo usuário
+                if (_workoutCategory.ProfessionalId == validId)
+                    this.workoutCategoryRepository.IsDeleted(_workoutCategory);
+                else
+                    throw new ApiException("You are not authorized to delete this workout category", HttpStatusCode.BadRequest);
+            }
+        }
     }
 }
