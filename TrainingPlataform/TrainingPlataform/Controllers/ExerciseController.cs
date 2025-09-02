@@ -18,6 +18,10 @@ namespace TrainingPlataform.Controllers
             this.exerciseService = exerciseService;
         }
 
+        /// <summary>
+        /// Obtém a lista de todos os exercícios disponíveis, buscando exercícios base do sistema e exercícios personalizados do profissional logado.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Get()
         {
