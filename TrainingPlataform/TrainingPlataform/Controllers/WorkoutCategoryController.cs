@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Training.Application.Interfaces;
 using Training.Application.Services;
 using Training.Application.ViewModels.ClientProfessionalViewModels;
+using Training.Application.ViewModels.MuscleGroupViewModels;
 using Training.Application.ViewModels.WorkoutCategoryViewModels;
 using Training.Auth.Services;
 
@@ -53,11 +54,28 @@ namespace TrainingPlataform.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(WorkoutCategoryRequestViewModel workoutCategoryRequestViewModel)
+        public IActionResult Post(WorkoutCategoryRequestViewModel _workoutCategoryRequestViewModel)
         {
             string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
 
-            return Ok(this.workoutCategoryService.Post(_tokenId, workoutCategoryRequestViewModel));
+            return Ok(this.workoutCategoryService.Post(_tokenId, _workoutCategoryRequestViewModel));
+        }
+
+        [HttpPut]
+        public IActionResult Put(WorkoutCategoryUpdateViewModel _workoutCategoryUpdateViewModel)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.workoutCategoryService.Put(_tokenId, _workoutCategoryUpdateViewModel));
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            this.workoutCategoryService.Delete(_tokenId, id);
+            return Ok();
         }
     }
 }

@@ -14,5 +14,7 @@ namespace Training.Application.Interfaces
         List<WorkoutCategoryViewModel> GetByName(string name, string tokenId);
         List<WorkoutCategoryViewModel> GetByProfessional(Guid id, string tokenId);
         WorkoutCategoryViewModel Post(string tokenId, WorkoutCategoryRequestViewModel workoutCategoryRequestViewModel);
+        WorkoutCategoryViewModel Put(string tokenId, WorkoutCategoryUpdateViewModel workoutCategoryUpdateViewModel);
+        void Delete(string tokenId, Guid id);
     }
 }
