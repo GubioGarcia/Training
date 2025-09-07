@@ -9,19 +9,12 @@ namespace Training.Domain.Entities
     public sealed class PeriodizationTraining
     {
         public Guid Id { get; set; }
-        public Guid ProfessionalId { get; set; }
-        public Professional Professional { get; set; }
-        public Guid ClientId { get; set; }
-        public Client Client { get; set; }
-
-        public String Name { get; set; }
-        public String Description { get; set; }
-        public DateTime DateStart { get; set; }
-        public DateTime DateEnd { get; set; }
-        public int WeeklyTrainingFrequency { get; set; }
+        public Guid PeriodizationId { get; set; }
+        public Guid TrainingId { get; set; }
         public DateTime? DateUpdated { get; set; }
         public bool IsDeleted { get; set; } = false;
 
-        public ICollection<Training> Trainings { get; set; } = [];
+        public Periodization Periodization { get; set; }
+        public Training Training { get; set; }
     }
 }

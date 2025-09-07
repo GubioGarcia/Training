@@ -25,6 +25,7 @@ namespace Training.IoC
             services.AddScoped<IWorkoutCategoryService, WorkoutCategoryService>();
             services.AddScoped<IExerciseService, ExerciseService>();
             services.AddScoped<ITrainingService, TrainingService>();
+            services.AddScoped<IPeriodizationService, PeriodizationService>();
             services.AddScoped<IPeriodizationTrainingService, PeriodizationTrainingService>();
 
             services.AddScoped(typeof(IUserServiceBase<>), typeof(UserServiceBase<>));
@@ -46,6 +47,7 @@ namespace Training.IoC
             services.AddScoped<IWorkoutCategoryRepository, WorkoutCategoryRepository>();
             services.AddScoped<IExerciseRepository, ExerciseRepository>();
             services.AddScoped<ITrainingRepository, TrainingRepository>();
+            services.AddScoped<IPeriodizationRepository, PeriodizationRepository>();
             services.AddScoped<IPeriodizationTrainingRepository, PeriodizationTrainingRepository>();
 
             #endregion

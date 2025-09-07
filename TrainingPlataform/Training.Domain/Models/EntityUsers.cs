@@ -24,6 +24,6 @@ namespace Training.Domain.Models
         public bool IsDeleted { get; set; } = false;
 
         public ICollection<ClientProfessional> ClientProfessionals { get; set; } = [];
-        public ICollection<PeriodizationTraining> PeriodizationTrainings { get; set; } = [];
+        public ICollection<Periodization> Periodizations { get; set; } = [];
     }
 }

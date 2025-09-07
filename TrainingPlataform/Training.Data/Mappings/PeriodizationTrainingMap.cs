@@ -14,22 +14,17 @@ namespace Training.Data.Mappings
         public void Configure(EntityTypeBuilder<PeriodizationTraining> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Name).IsRequired().HasMaxLength(255);
-            builder.Property(x => x.Description).IsRequired().HasMaxLength(500);
-            builder.Property(x => x.DateStart).IsRequired();
-            builder.Property(x => x.DateEnd).IsRequired();
-            builder.Property(x => x.WeeklyTrainingFrequency).IsRequired();
-            builder.Property(x => x.DateUpdated).IsRequired().HasDefaultValue("GETDATE()");
+            builder.Property(x => x.DateUpdated).IsRequired().HasDefaultValueSql("GETDATE()");
             builder.Property(x => x.IsDeleted).IsRequired().HasDefaultValue(false);
 
-            builder.HasOne(x => x.Professional)
+            builder.HasOne(x => x.Periodization)
                    .WithMany(p => p.PeriodizationTrainings)
-                   .HasForeignKey(x => x.ProfessionalId)
+                   .HasForeignKey(x => x.PeriodizationId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.Client)
-                   .WithMany(p => p.PeriodizationTrainings)
-                   .HasForeignKey(x => x.ClientId)
+            builder.HasOne(x => x.Training)
+                   .WithMany(t => t.PeriodizationTrainings)
+                   .HasForeignKey(x => x.TrainingId)
                    .OnDelete(DeleteBehavior.Restrict);
         }
     }

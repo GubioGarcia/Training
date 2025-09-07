@@ -32,6 +32,8 @@ namespace Training.Data.Context
             modelBuilder.ApplyConfiguration(new ClientMap());
             modelBuilder.ApplyConfiguration(new ClientProfessionalMap());
 
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TrainingContext).Assembly);
+
             modelBuilder.ApplyGlobalConfiguration();
             modelBuilder.SeedData();
 

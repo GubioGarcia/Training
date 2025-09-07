@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Training.Domain.Entities;
 
 namespace Training.Application.ViewModels
 {
     public class PeriodizationTrainingViewModel
     {
         public Guid Id { get; set; }
-        public Guid ProfessionalId { get; set; }
-        public Guid ClientId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public DateTime DateStart { get; set; }
-        public DateTime DateEnd { get; set; }
-        public int WeeklyTrainingFrequency { get; set; }
+        public Guid PeriodizationId { get; set; }
+        public Guid TrainingId { get; set; }
         public DateTime DateUpdated { get; set; }
         public bool IsDeleted { get; set; }
     }
