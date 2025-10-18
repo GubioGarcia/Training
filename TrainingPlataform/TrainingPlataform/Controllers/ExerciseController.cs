@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Training.Application.Interfaces;
-using Training.Application.Services;
+using Training.Application.ViewModels.ExerciseViewModels;
 using Training.Auth.Services;
 
 namespace TrainingPlataform.Controllers
@@ -93,6 +93,46 @@ namespace TrainingPlataform.Controllers
             string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
 
             return Ok(this.exerciseService.GetByWorkoutCategory(id, _tokenId));
+        }
+
+        /// <summary>
+        /// Cria um exercício.
+        /// </summary>
+        /// <param name="_exerciseRequesteViewModel">Dados do exercício a ser criado.</param>
+        /// <returns>Objeto ExerciseRequesteViewModel criado.</returns>
+        [HttpPost]
+        public IActionResult Post(ExerciseRequestViewModel _exerciseRequesteViewModel)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.exerciseService.Post(_tokenId, _exerciseRequesteViewModel));
+        }
+
+        /// <summary>
+        /// Atualiza um exercício existente.
+        /// </summary>
+        /// <param name="_exerciseUpdateViewModel">Dados atualizados do exercício.</param>
+        /// <returns>Objeto ExerciseUpdateViewModel atualizado.</returns>
+        [HttpPut]
+        public IActionResult Put(ExerciseUpdateViewModel _exerciseUpdateViewModel)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.exerciseService.Put(_tokenId, _exerciseUpdateViewModel));
+        }
+
+        /// <summary>
+        /// Exclui um exercício com base no ID informado.
+        /// </summary>
+        /// <param name="id">Identificador do exercício a ser excluído.</param>
+        /// <returns>Resposta HTTP indicando sucesso da operação.</returns>
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            this.exerciseService.Delete(_tokenId, id);
+            return Ok();
         }
     }
 }

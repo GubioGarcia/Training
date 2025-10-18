@@ -342,7 +342,7 @@ namespace Training.Application.Services
             MuscleGroup _muscleGroup = this.muscleGroupRepository.Find(x => x.Id == id)
                 ?? throw new ApiException("Muscle group not found", HttpStatusCode.BadRequest);
             if (_muscleGroup.IsDeleted == true)
-                throw new ApiException("Muscle groupis already deleted", HttpStatusCode.BadRequest);
+                throw new ApiException("Muscle group already deleted", HttpStatusCode.BadRequest);
 
             // Obtém o tipo do usuário logado
             string loggedInUserType = this.userServiceBaseProfessional.LoggedInUserType(tokenId);
