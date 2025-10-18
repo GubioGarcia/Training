@@ -144,7 +144,7 @@ namespace Training.Application.Services
 
                 if (loggedInUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase))
                 {
-                    _muscleGroups = [.. this.muscleGroupRepository.Query(x => EF.Functions.Like(x.Name, $"%{name}")
+                    _muscleGroups = [.. this.muscleGroupRepository.Query(x => EF.Functions.Like(x.Name, $"%{name}%")
                                                                                        && !x.IsDeleted)];
 
                     if (_muscleGroups.Count == 0)

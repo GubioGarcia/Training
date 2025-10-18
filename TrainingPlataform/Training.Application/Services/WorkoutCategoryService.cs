@@ -141,7 +141,7 @@ namespace Training.Application.Services
 
                 if (loggedInUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase))
                 {
-                    _workoutCategory = [.. this.workoutCategoryRepository.Query(x => EF.Functions.Like(x.Name, $"%{name}")
+                    _workoutCategory = [.. this.workoutCategoryRepository.Query(x => EF.Functions.Like(x.Name, $"%{name}%")
                                                                                        && !x.IsDeleted)];
 
                     if (_workoutCategory.Count == 0)
