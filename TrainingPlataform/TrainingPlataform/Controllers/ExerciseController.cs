@@ -98,14 +98,14 @@ namespace TrainingPlataform.Controllers
         /// <summary>
         /// Cria um exercício.
         /// </summary>
-        /// <param name="_exerciseRequesteViewModel">Dados do exercício a ser criado.</param>
-        /// <returns>Objeto ExerciseRequesteViewModel criado.</returns>
+        /// <param name="_exerciseRequestViewModel">Dados do exercício a ser criado.</param>
+        /// <returns>Objeto ExerciseRequestViewModel criado.</returns>
         [HttpPost]
-        public IActionResult Post(ExerciseRequestViewModel _exerciseRequesteViewModel)
+        public IActionResult Post(ExerciseRequestViewModel _exerciseRequestViewModel)
         {
             string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
 
-            return Ok(this.exerciseService.Post(_tokenId, _exerciseRequesteViewModel));
+            return Ok(this.exerciseService.Post(_tokenId, _exerciseRequestViewModel));
         }
 
         /// <summary>

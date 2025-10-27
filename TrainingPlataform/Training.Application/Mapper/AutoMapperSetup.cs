@@ -9,6 +9,7 @@ using Training.Application.ViewModels.ClientProfessionalViewModels;
 using Training.Application.ViewModels.ClientViewModels;
 using Training.Application.ViewModels.ExerciseViewModels;
 using Training.Application.ViewModels.MuscleGroupViewModels;
+using Training.Application.ViewModels.PeriodizationViewModels;
 using Training.Application.ViewModels.ProfessionalViewModels;
 using Training.Application.ViewModels.WorkoutCategoryViewModels;
 using Training.Domain.Entities;

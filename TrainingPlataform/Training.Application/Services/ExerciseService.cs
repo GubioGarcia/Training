@@ -106,7 +106,7 @@ namespace Training.Application.Services
                                              ?? throw new ApiException("Professional not found", HttpStatusCode.NotFound);
 
                     if (_professionalLogged.Id != _exercise.ProfessionalId)
-                        throw new ApiException("Muscle Group not found", HttpStatusCode.NotFound);
+                        throw new ApiException("Exercise not found", HttpStatusCode.NotFound);
                 }
                 else if (_exercise.ProfessionalId != null && _userTypeLogged == "Client")
                 {

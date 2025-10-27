@@ -10,5 +10,6 @@ namespace Training.Domain.Interfaces
     public interface IPeriodizationRepository : IRepository<Periodization>
     {
         IEnumerable<Periodization> GetAll();
+        bool IsDeleted(Periodization model);
     }
 }

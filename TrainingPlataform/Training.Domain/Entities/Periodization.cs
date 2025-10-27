@@ -9,8 +9,8 @@ namespace Training.Domain.Entities
     public sealed class Periodization
     {
         public Guid Id { get; set; }
-        public Guid ProfessionalId { get; set; }
-        public Guid ClientId { get; set; }
+        public Guid? ProfessionalId { get; set; }
+        public Guid? ClientId { get; set; }
 
         public String Name { get; set; }
         public String Description { get; set; }
