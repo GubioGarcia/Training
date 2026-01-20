@@ -9,6 +9,9 @@ namespace Training.Domain.Entities
     public sealed class Training
     {
         public Guid Id { get; set; }
+        public Guid? ProfessionalId { get; set; }
+        public Professional Professional { get; set; }
+
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime? DateUpdated { get; set; }
