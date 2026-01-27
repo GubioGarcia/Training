@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +10,7 @@ using System.Threading.Tasks;
 using Template.CrossCutting.ExceptionHandler.Extensions;
 using Training.Application.Interfaces;
 using Training.Application.ViewModels.PeriodizationViewModels;
+using Training.Application.ViewModels.TrainingViewModels;
 using Training.Domain.Entities;
 using Training.Domain.Interfaces;
 
@@ -68,6 +71,10 @@ namespace Training.Application.Services
                 }
 
                 return mapper.Map<List<PeriodizationViewModel>>(_periodizations);
+            }
+            catch (ApiException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -153,6 +160,10 @@ namespace Training.Application.Services
 
                 return mapper.Map<List<PeriodizationViewModel>>(_periodizations);
             }
+            catch (ApiException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
@@ -201,6 +212,134 @@ namespace Training.Application.Services
                 }
 
                 return mapper.Map<List<PeriodizationViewModel>>(_periodizations);
+            }
+            catch (ApiException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public List<PeriodizationViewModel> GetByName(string name, string tokenId)
+        {
+            if (!Guid.TryParse(tokenId, out Guid validId))
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
+
+            // Valida tipo de usuário com acesso ao método
+            if (!this.userServiceBaseProfessional.IsLoggedInUserOfValidType(tokenId, ["Admin", "Professional"]))
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
+
+            // Recebe o tipo do usuário logado e instância profissional logado
+            string loggedInUserType = this.userServiceBaseProfessional.LoggedInUserType(tokenId);
+            Professional _professionalLogged = this.professionalRepository.Find(x => x.Id == validId && !x.IsDeleted)
+                                                ?? throw new ApiException("Professional not found", HttpStatusCode.NotFound);
+
+            try
+            {
+                List<Periodization> _periodization = [];
+
+                if (loggedInUserType.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+                {
+                    _periodization = [.. this.periodizationRepository.Query(x => EF.Functions.Like(x.Name, $"%{name}%")
+                                                                                       && !x.IsDeleted)];
+
+                    if (_periodization.Count == 0)
+                        throw new ApiException("No periodization with this name were found", HttpStatusCode.NotFound);
+                }
+                else
+                {
+                    _periodization = [.. this.periodizationRepository.Query(x => !x.IsDeleted && EF.Functions.Like(x.Name, $"%{name}%") &&
+                                                                          (x.ProfessionalId == validId || x.ProfessionalId == null))];
+
+                    if (_periodization.Count == 0)
+                        throw new ApiException("No periodization with this name were found", HttpStatusCode.NotFound);
+                }
+
+                return mapper.Map<List<PeriodizationViewModel>>(_periodization);
+            }
+            catch (ApiException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public List<PeriodizationViewModel> GetByDateRange( string tokenId, DateTime dateStart, DateTime dateEnd)
+        {
+            if (!Guid.TryParse(tokenId, out Guid loggedUserId))
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
+
+            // Identifica tipo de usuário logado
+            string userType = userServiceBaseClient.LoggedInUserType(tokenId) ?? userServiceBaseProfessional.LoggedInUserType(tokenId);
+            if (string.IsNullOrEmpty(userType))
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
+
+            if (userType != "Client" && userType != "Professional")
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
+
+            try
+            {
+                IQueryable<Periodization> query = periodizationRepository.Query(x => !x.IsDeleted && x.DateStart <= dateEnd &&  x.DateEnd >= dateStart);
+
+                if (userType == "Client") query = query.Where(x => x.ClientId == loggedUserId);
+                else query = query.Where(x => x.ProfessionalId == loggedUserId); // Professional
+
+                List<Periodization> periodizations = query.ToList();
+
+                if (periodizations.Count == 0)
+                    throw new ApiException("No periodizations found for this period", HttpStatusCode.NotFound);
+
+                return mapper.Map<List<PeriodizationViewModel>>(periodizations);
+            }
+            catch (ApiException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException($"An unexpected error occurred: {ex.Message}", HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public List<PeriodizationViewModel> GetByWeeklyFrequency(string tokenId, int weeklyTrainingFrequency)
+        {
+            if (!Guid.TryParse(tokenId, out Guid loggedUserId))
+                throw new ApiException("Id is not valid", HttpStatusCode.BadRequest);
+
+            if (weeklyTrainingFrequency <= 0)
+                throw new ApiException("Weekly training frequency must be greater than zero", HttpStatusCode.BadRequest);
+
+            // Identifica tipo de usuário logado
+            string userType = userServiceBaseClient.LoggedInUserType(tokenId) ?? userServiceBaseProfessional.LoggedInUserType(tokenId);
+            if (string.IsNullOrEmpty(userType))
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
+
+            if (userType != "Client" && userType != "Professional")
+                throw new ApiException("You are not authorized to perform this operation", HttpStatusCode.BadRequest);
+
+            try
+            {
+                IQueryable<Periodization> query = periodizationRepository.Query(x => !x.IsDeleted && x.WeeklyTrainingFrequency == weeklyTrainingFrequency);
+
+                if (userType == "Client") query = query.Where(x => x.ClientId == loggedUserId);
+                else query = query.Where(x => x.ProfessionalId == loggedUserId); // Professional
+
+                List<Periodization> periodizations = query.ToList();
+
+                if (periodizations.Count == 0)
+                    throw new ApiException("No periodizations were found for this weekly frequency", HttpStatusCode.NotFound);
+
+                return mapper.Map<List<PeriodizationViewModel>>(periodizations);
+            }
+            catch (ApiException)
+            {
+                throw;
             }
             catch (Exception ex)
             {

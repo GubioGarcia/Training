@@ -72,6 +72,46 @@ namespace TrainingPlataform.Controllers
         }
 
         /// <summary>
+        /// Retorna uma lista de periodizações com base no nome informado.
+        /// </summary>
+        /// <param name="name">Nome da periodização.</param>
+        /// <returns>Objeto PeriodizãtionViewModel correspondente.</returns>
+        [HttpGet("PeriodizationByName/{name:minlength(1)}")]
+        public IActionResult GetByName(string name)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.periodizationService.GetByName(name, _tokenId));
+        }
+
+        /// <summary>
+        /// Retorna as periodizações que se iniciam em um determinado período.
+        /// </summary>
+        /// <param name="DateStart">Data de início do período.</param>
+        /// <param name="DateEnd">Data de fim do período.</param>
+        /// <returns>Lista de periodizações que se iniciam no período determinado.</returns>
+        [HttpGet("PeriodizationByDateRange")]
+        public IActionResult GetByDateRange([FromQuery] DateTime dateStart, [FromQuery] DateTime dateEnd)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.periodizationService.GetByDateRange(_tokenId, dateStart, dateEnd));
+        }
+
+        /// <summary>
+        /// Retorna as periodizações que possuem a frequência semanal indicada.
+        /// </summary>
+        /// <param name="weeklyTrainingFrequency">Frequência semanal de treino.</param>
+        /// <returns>Lista de periodizações.</returns>
+        [HttpGet("PeriodizationByWeeklyFrequency/{weeklyTrainingFrequency}")]
+        public IActionResult GetByWeeklyFrequency(int weeklyTrainingFrequency)
+        {
+            string _tokenId = TokenService.GetValueFromClaim(HttpContext.User.Identity, ClaimTypes.NameIdentifier);
+
+            return Ok(this.periodizationService.GetByWeeklyFrequency(_tokenId, weeklyTrainingFrequency));
+        }
+
+        /// <summary>
         /// Cria uma periodização de treino.
         /// </summary>
         /// <param name="_periodizationRequestViewModel">Dados da periodização a ser criada.</param>
