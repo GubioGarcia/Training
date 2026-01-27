@@ -10,5 +10,6 @@ namespace Training.Domain.Interfaces
     public interface ITrainingRepository : IRepository<Entities.Training>
     {
         IEnumerable<Entities.Training> GetAll();
+        bool IsDeleted(Domain.Entities.Training model);
     }
 }
